@@ -1,0 +1,10 @@
+prefix=/usr/local
+libdir=/usr/local/lib
+includedir=/usr/local/include/ns3.25
+
+Name: libns3-brite
+Description: ns-3 module ns3-brite
+Version: 3.25
+Libs: -L${libdir} -Wl,-Bdynamic -lns3.25-brite-debug -L/home/sappy/BRITE -lbrite -ldl
+Cflags: -I${includedir} -DNS3_BRITE -I/home/sappy/BRITE -I/home/sappy/BRITE/Models
+Requires: libns3.25-network-debug libns3.25-core-debug libns3.25-internet-debug libns3.25-point-to-point-debug

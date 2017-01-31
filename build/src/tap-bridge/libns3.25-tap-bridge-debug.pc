@@ -1,0 +1,10 @@
+prefix=/usr/local
+libdir=/usr/local/lib
+includedir=/usr/local/include/ns3.25
+
+Name: libns3-tap-bridge
+Description: ns-3 module ns3-tap-bridge
+Version: 3.25
+Libs: -L${libdir} -Wl,-Bdynamic -lns3.25-tap-bridge-debug
+Cflags: -I${includedir}
+Requires: libns3.25-internet-debug libns3.25-network-debug libns3.25-core-debug

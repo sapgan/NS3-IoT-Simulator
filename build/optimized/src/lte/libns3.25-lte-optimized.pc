@@ -1,0 +1,10 @@
+prefix=/usr/local
+libdir=/usr/local/lib
+includedir=/usr/local/include/ns3.25
+
+Name: libns3-lte
+Description: ns-3 module ns3-lte
+Version: 3.25
+Libs: -L${libdir} -Wl,--whole-archive,-Bstatic -lns3.25-lte-optimized
+Cflags: -I${includedir}
+Requires: libns3.25-core-optimized libns3.25-network-optimized libns3.25-spectrum-optimized libns3.25-stats-optimized libns3.25-buildings-optimized libns3.25-virtual-net-device-optimized libns3.25-point-to-point-optimized libns3.25-applications-optimized libns3.25-internet-optimized libns3.25-csma-optimized libns3.25-fd-net-device-optimized
