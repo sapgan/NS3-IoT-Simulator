@@ -1,0 +1,7 @@
+define ZLIB 20160412
+
+load_on vendor
+
+<libs>
+all -> z
+</libs>

@@ -1,0 +1,11 @@
+define DIFFIE_HELLMAN 20131128
+
+<header:public>
+dh.h
+</header:public>
+
+<requires>
+dl_algo
+dl_group
+numbertheory
+</requires>

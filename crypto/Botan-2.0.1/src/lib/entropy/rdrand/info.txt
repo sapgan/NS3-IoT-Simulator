@@ -1,0 +1,9 @@
+define ENTROPY_SRC_RDRAND 20131128
+
+<requires>
+rdrand_rng
+</requires>
+
+<header:internal>
+rdrand.h
+</header:internal>

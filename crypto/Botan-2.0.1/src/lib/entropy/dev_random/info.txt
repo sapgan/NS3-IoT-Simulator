@@ -1,0 +1,23 @@
+define ENTROPY_SRC_DEV_RANDOM 20131128
+
+<header:internal>
+dev_random.h
+</header:internal>
+
+<os>
+aix
+android
+cygwin
+darwin
+dragonfly
+freebsd
+haiku
+hpux
+hurd
+irix
+linux
+netbsd
+openbsd
+qnx
+solaris
+</os>

@@ -1,0 +1,14 @@
+load_on auto
+
+define BIGINT 20131128
+
+<header:public>
+bigint.h
+divide.h
+</header:public>
+
+<requires>
+mp
+hex
+rng
+</requires>

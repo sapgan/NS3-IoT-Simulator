@@ -1,0 +1,8 @@
+define MCEIES 20150706
+
+<requires>
+aes
+mce
+ocb
+kdf1
+</requires>

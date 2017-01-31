@@ -1,0 +1,13 @@
+define FFI 20151015
+
+<requires>
+aead
+kdf
+pbkdf
+pubkey
+x509
+#tls
+system_rng
+auto_rng
+</requires>
+

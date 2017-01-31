@@ -1,0 +1,7 @@
+define BZIP2 20160412
+
+load_on vendor
+
+<libs>
+all -> bz2
+</libs>

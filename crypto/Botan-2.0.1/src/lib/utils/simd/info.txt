@@ -1,0 +1,5 @@
+define SIMD_32 20131128
+
+<header:internal>
+simd_32.h
+</header:internal>
