@@ -1,4 +1,4 @@
-# project ns (3.25) configured on Wed Feb  1 19:03:05 2017 by
+# project ns (3.25) configured on Wed Feb  1 19:39:53 2017 by
 # waf 1.8.19 (abi 98, python 2070cf0 on linux2)
 # using ./waf configure --build-profile=optimized --out=/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized --with-pybindgen=/home/sappy/Thesis/ns-allinone-3.25/pybindgen-0.17.0.post49+ng0e4e3bc --enable-mpi --enable-static
 #
@@ -526,27 +526,27 @@ Checking for compilation flag -march=native support
 ==>
 int main() { return 0; }
 <==
-[1/1] Compiling [32mbuild/optimized/.conf_check_e91e20b0baeb934522bc5ad0af9c51f4/test.cpp[0m
+[1/1] Compiling [32mbuild/optimized/.conf_check_5524e302c94a4066fc393f3dc22aa91d/test.cpp[0m
 
-['/usr/bin/g++', '-std=c++11', '-march=native', '-DNS3_BUILD_PROFILE_OPTIMIZED', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_e91e20b0baeb934522bc5ad0af9c51f4/testbuild/test.cpp.1.o']
+['/usr/bin/g++', '-std=c++11', '-march=native', '-DNS3_BUILD_PROFILE_OPTIMIZED', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_5524e302c94a4066fc393f3dc22aa91d/testbuild/test.cpp.1.o']
 ok
 ------------------------------------------------------
 Checking for compilation flag -Wl,--soname=foo support
 ==>
 int main() { return 0; }
 <==
-[1/1] Compiling [32mbuild/optimized/.conf_check_e91e20b0baeb934522bc5ad0af9c51f4/test.cpp[0m
+[1/1] Compiling [32mbuild/optimized/.conf_check_5524e302c94a4066fc393f3dc22aa91d/test.cpp[0m
 
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-Wl,--soname=foo', '-DNS3_BUILD_PROFILE_OPTIMIZED', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_e91e20b0baeb934522bc5ad0af9c51f4/testbuild/test.cpp.1.o']
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-Wl,--soname=foo', '-DNS3_BUILD_PROFILE_OPTIMIZED', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_5524e302c94a4066fc393f3dc22aa91d/testbuild/test.cpp.1.o']
 ok
 ----------------------------------------------------------------
 Checking for compilation flags -Wl,--whole-archive,-B... support
 ==>
 int main() { return 0; }
 <==
-[1/1] Compiling [32mbuild/optimized/.conf_check_e91e20b0baeb934522bc5ad0af9c51f4/test.cpp[0m
+[1/1] Compiling [32mbuild/optimized/.conf_check_5524e302c94a4066fc393f3dc22aa91d/test.cpp[0m
 
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_e91e20b0baeb934522bc5ad0af9c51f4/testbuild/test.cpp.1.o']
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_5524e302c94a4066fc393f3dc22aa91d/testbuild/test.cpp.1.o']
 ok
 ----------------------------------------------------------------
 Checking boost includes
@@ -591,12 +591,12 @@ Checking for boost linkage
 int main() { boost::system::error_code c; }
 
 <==
-[1/2] Compiling [32mbuild/optimized/.conf_check_d5b810e5cb2f466d5addb08bd51cf52d/test.cpp[0m
+[1/2] Compiling [32mbuild/optimized/.conf_check_22ad597c08170582556c9959271eaa73/test.cpp[0m
 
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-I/usr/include', '-DNS3_BUILD_PROFILE_OPTIMIZED', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_d5b810e5cb2f466d5addb08bd51cf52d/testbuild/test.cpp.1.o']
-[2/2] Linking [33mbuild/optimized/.conf_check_d5b810e5cb2f466d5addb08bd51cf52d/testbuild/testprog[0m
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-I/usr/include', '-DNS3_BUILD_PROFILE_OPTIMIZED', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_22ad597c08170582556c9959271eaa73/testbuild/test.cpp.1.o']
+[2/2] Linking [33mbuild/optimized/.conf_check_22ad597c08170582556c9959271eaa73/testbuild/testprog[0m
 
-['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_d5b810e5cb2f466d5addb08bd51cf52d/testbuild/testprog', '-Wl,-Bstatic', '-L/usr/lib/x86_64-linux-gnu', '-Wl,-Bdynamic', '-L/usr/lib/x86_64-linux-gnu', '-lboost_system', '-lboost_signals', '-lboost_filesystem']
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_22ad597c08170582556c9959271eaa73/testbuild/testprog', '-Wl,-Bstatic', '-L/usr/lib/x86_64-linux-gnu', '-Wl,-Bdynamic', '-L/usr/lib/x86_64-linux-gnu', '-lboost_system', '-lboost_signals', '-lboost_filesystem']
 ok
 ----------------------------------------------------------------
 Checking for click location
@@ -632,9 +632,9 @@ int main(int argc, char **argv) {
 }
 
 <==
-[1/2] Compiling [32mbuild/optimized/.conf_check_df2c718b4579e15f9e079ffb536f9020/test.cpp[0m
+[1/2] Compiling [32mbuild/optimized/.conf_check_1d6dd901ca0996b8189f1637bd5e44e3/test.cpp[0m
 
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_df2c718b4579e15f9e079ffb536f9020/testbuild/test.cpp.1.o']
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_1d6dd901ca0996b8189f1637bd5e44e3/testbuild/test.cpp.1.o']
 err: ../test.cpp: In function ‘int main(int, char**)’:
 ../test.cpp:5:7: error: ‘uint128_t’ was not declared in this scope
   if ((uint128_t *) 0) return 0;
@@ -656,8 +656,8 @@ from /home/sappy/Thesis/ns-allinone-3.25/ns-3.25/src/core: Test does not build: 
     raise Errors.BuildError(self.producer.error)
 BuildError: Build failed
  -> task in 'testprog' failed (exit status 1): 
-	{task 140473727647504: cxx test.cpp -> test.cpp.1.o}
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_df2c718b4579e15f9e079ffb536f9020/testbuild/test.cpp.1.o']
+	{task 139733064458000: cxx test.cpp -> test.cpp.1.o}
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_1d6dd901ca0996b8189f1637bd5e44e3/testbuild/test.cpp.1.o']
 
 not found
 from /home/sappy/Thesis/ns-allinone-3.25/ns-3.25/src/core: The configuration failed
@@ -674,12 +674,12 @@ int main(int argc, char **argv) {
 }
 
 <==
-[1/2] Compiling [32mbuild/optimized/.conf_check_2289a9d9c63197baf071e6f3dbf7a034/test.cpp[0m
+[1/2] Compiling [32mbuild/optimized/.conf_check_bbb39641698e992638b9659f31f511c6/test.cpp[0m
 
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_2289a9d9c63197baf071e6f3dbf7a034/testbuild/test.cpp.1.o']
-[2/2] Linking [33mbuild/optimized/.conf_check_2289a9d9c63197baf071e6f3dbf7a034/testbuild/testprog[0m
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_bbb39641698e992638b9659f31f511c6/testbuild/test.cpp.1.o']
+[2/2] Linking [33mbuild/optimized/.conf_check_bbb39641698e992638b9659f31f511c6/testbuild/testprog[0m
 
-['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_2289a9d9c63197baf071e6f3dbf7a034/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_bbb39641698e992638b9659f31f511c6/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
 ----------------------------------------------------------------
 Checking high precision implementation
@@ -695,12 +695,12 @@ int main(int argc, char **argv) {
 }
 
 <==
-[1/2] Compiling [32mbuild/optimized/.conf_check_51bb8e27f2ee5dc4db0cb4b3e5b8fcbb/test.cpp[0m
+[1/2] Compiling [32mbuild/optimized/.conf_check_7cd4a73b27bb856ff89cc7ada036bd8c/test.cpp[0m
 
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_51bb8e27f2ee5dc4db0cb4b3e5b8fcbb/testbuild/test.cpp.1.o']
-[2/2] Linking [33mbuild/optimized/.conf_check_51bb8e27f2ee5dc4db0cb4b3e5b8fcbb/testbuild/testprog[0m
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_7cd4a73b27bb856ff89cc7ada036bd8c/testbuild/test.cpp.1.o']
+[2/2] Linking [33mbuild/optimized/.conf_check_7cd4a73b27bb856ff89cc7ada036bd8c/testbuild/testprog[0m
 
-['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_51bb8e27f2ee5dc4db0cb4b3e5b8fcbb/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_7cd4a73b27bb856ff89cc7ada036bd8c/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
 ----------------------------------------------------------------
 Checking for header inttypes.h
@@ -713,12 +713,12 @@ int main(int argc, char **argv) {
 }
 
 <==
-[1/2] Compiling [32mbuild/optimized/.conf_check_0e88fe5fed62987c9e3256c1c4930e0e/test.cpp[0m
+[1/2] Compiling [32mbuild/optimized/.conf_check_e416510ec4810380a132537088d10c43/test.cpp[0m
 
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_STDINT_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_0e88fe5fed62987c9e3256c1c4930e0e/testbuild/test.cpp.1.o']
-[2/2] Linking [33mbuild/optimized/.conf_check_0e88fe5fed62987c9e3256c1c4930e0e/testbuild/testprog[0m
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_STDINT_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_e416510ec4810380a132537088d10c43/testbuild/test.cpp.1.o']
+[2/2] Linking [33mbuild/optimized/.conf_check_e416510ec4810380a132537088d10c43/testbuild/testprog[0m
 
-['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_0e88fe5fed62987c9e3256c1c4930e0e/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_e416510ec4810380a132537088d10c43/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
 ----------------------------------------------------------------
 Checking for header sys/inttypes.h
@@ -731,9 +731,9 @@ int main(int argc, char **argv) {
 }
 
 <==
-[1/2] Compiling [32mbuild/optimized/.conf_check_99bc86eb3e23e077e645129f2c99b483/test.cpp[0m
+[1/2] Compiling [32mbuild/optimized/.conf_check_7c4cb1a879d96f79b841e0ede210af21/test.cpp[0m
 
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_STDINT_H=1', '-DHAVE_INTTYPES_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_99bc86eb3e23e077e645129f2c99b483/testbuild/test.cpp.1.o']
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_STDINT_H=1', '-DHAVE_INTTYPES_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_7c4cb1a879d96f79b841e0ede210af21/testbuild/test.cpp.1.o']
 err: ../test.cpp:1:26: fatal error: sys/inttypes.h: No such file or directory
 compilation terminated.
 
@@ -744,8 +744,8 @@ from /home/sappy/Thesis/ns-allinone-3.25/ns-3.25/src/core: Test does not build: 
     raise Errors.BuildError(self.producer.error)
 BuildError: Build failed
  -> task in 'testprog' failed (exit status 1): 
-	{task 140473727647312: cxx test.cpp -> test.cpp.1.o}
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_STDINT_H=1', '-DHAVE_INTTYPES_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_99bc86eb3e23e077e645129f2c99b483/testbuild/test.cpp.1.o']
+	{task 139733064246032: cxx test.cpp -> test.cpp.1.o}
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_STDINT_H=1', '-DHAVE_INTTYPES_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_7c4cb1a879d96f79b841e0ede210af21/testbuild/test.cpp.1.o']
 
 not found
 from /home/sappy/Thesis/ns-allinone-3.25/ns-3.25/src/core: The configuration failed
@@ -760,12 +760,12 @@ int main(int argc, char **argv) {
 }
 
 <==
-[1/2] Compiling [32mbuild/optimized/.conf_check_a5f8e2a209973bd13753a1dca3c8d5ef/test.cpp[0m
+[1/2] Compiling [32mbuild/optimized/.conf_check_0c02347503fc8846f7dc841a135e2d8f/test.cpp[0m
 
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_STDINT_H=1', '-DHAVE_INTTYPES_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_a5f8e2a209973bd13753a1dca3c8d5ef/testbuild/test.cpp.1.o']
-[2/2] Linking [33mbuild/optimized/.conf_check_a5f8e2a209973bd13753a1dca3c8d5ef/testbuild/testprog[0m
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_STDINT_H=1', '-DHAVE_INTTYPES_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_0c02347503fc8846f7dc841a135e2d8f/testbuild/test.cpp.1.o']
+[2/2] Linking [33mbuild/optimized/.conf_check_0c02347503fc8846f7dc841a135e2d8f/testbuild/testprog[0m
 
-['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_a5f8e2a209973bd13753a1dca3c8d5ef/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_0c02347503fc8846f7dc841a135e2d8f/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
 ----------------------------------------------------------------
 Checking for header sys/stat.h
@@ -778,12 +778,12 @@ int main(int argc, char **argv) {
 }
 
 <==
-[1/2] Compiling [32mbuild/optimized/.conf_check_0d38ff16f53f361edcaefed4f7b83814/test.cpp[0m
+[1/2] Compiling [32mbuild/optimized/.conf_check_1316be1f090925149d65adec41dde368/test.cpp[0m
 
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_STDINT_H=1', '-DHAVE_INTTYPES_H=1', '-DHAVE_SYS_TYPES_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_0d38ff16f53f361edcaefed4f7b83814/testbuild/test.cpp.1.o']
-[2/2] Linking [33mbuild/optimized/.conf_check_0d38ff16f53f361edcaefed4f7b83814/testbuild/testprog[0m
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_STDINT_H=1', '-DHAVE_INTTYPES_H=1', '-DHAVE_SYS_TYPES_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_1316be1f090925149d65adec41dde368/testbuild/test.cpp.1.o']
+[2/2] Linking [33mbuild/optimized/.conf_check_1316be1f090925149d65adec41dde368/testbuild/testprog[0m
 
-['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_0d38ff16f53f361edcaefed4f7b83814/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_1316be1f090925149d65adec41dde368/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
 ----------------------------------------------------------------
 Checking for header dirent.h
@@ -796,12 +796,12 @@ int main(int argc, char **argv) {
 }
 
 <==
-[1/2] Compiling [32mbuild/optimized/.conf_check_a1f24c123d7dbcb28da8c96174ce8ef5/test.cpp[0m
+[1/2] Compiling [32mbuild/optimized/.conf_check_aae3eda4b673499aef46a3fe7ca3d1f2/test.cpp[0m
 
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_STDINT_H=1', '-DHAVE_INTTYPES_H=1', '-DHAVE_SYS_TYPES_H=1', '-DHAVE_SYS_STAT_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_a1f24c123d7dbcb28da8c96174ce8ef5/testbuild/test.cpp.1.o']
-[2/2] Linking [33mbuild/optimized/.conf_check_a1f24c123d7dbcb28da8c96174ce8ef5/testbuild/testprog[0m
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_STDINT_H=1', '-DHAVE_INTTYPES_H=1', '-DHAVE_SYS_TYPES_H=1', '-DHAVE_SYS_STAT_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_aae3eda4b673499aef46a3fe7ca3d1f2/testbuild/test.cpp.1.o']
+[2/2] Linking [33mbuild/optimized/.conf_check_aae3eda4b673499aef46a3fe7ca3d1f2/testbuild/testprog[0m
 
-['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_a1f24c123d7dbcb28da8c96174ce8ef5/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_aae3eda4b673499aef46a3fe7ca3d1f2/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
 ----------------------------------------------------------------
 Checking for header stdlib.h
@@ -814,12 +814,12 @@ int main(int argc, char **argv) {
 }
 
 <==
-[1/2] Compiling [32mbuild/optimized/.conf_check_ee13db9e94710b7bf27ed9d35db58208/test.cpp[0m
+[1/2] Compiling [32mbuild/optimized/.conf_check_54cb146c834b7dc67b017b1720e75f43/test.cpp[0m
 
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_STDINT_H=1', '-DHAVE_INTTYPES_H=1', '-DHAVE_SYS_TYPES_H=1', '-DHAVE_SYS_STAT_H=1', '-DHAVE_DIRENT_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_ee13db9e94710b7bf27ed9d35db58208/testbuild/test.cpp.1.o']
-[2/2] Linking [33mbuild/optimized/.conf_check_ee13db9e94710b7bf27ed9d35db58208/testbuild/testprog[0m
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_STDINT_H=1', '-DHAVE_INTTYPES_H=1', '-DHAVE_SYS_TYPES_H=1', '-DHAVE_SYS_STAT_H=1', '-DHAVE_DIRENT_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_54cb146c834b7dc67b017b1720e75f43/testbuild/test.cpp.1.o']
+[2/2] Linking [33mbuild/optimized/.conf_check_54cb146c834b7dc67b017b1720e75f43/testbuild/testprog[0m
 
-['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_ee13db9e94710b7bf27ed9d35db58208/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_54cb146c834b7dc67b017b1720e75f43/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
 ----------------------------------------------------------------
 Checking for header signal.h
@@ -832,12 +832,12 @@ int main(int argc, char **argv) {
 }
 
 <==
-[1/2] Compiling [32mbuild/optimized/.conf_check_5a831a38b8182da401e8cda913d51f92/test.cpp[0m
+[1/2] Compiling [32mbuild/optimized/.conf_check_dfa45fcc21494f25235d419a9cae0028/test.cpp[0m
 
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_STDINT_H=1', '-DHAVE_INTTYPES_H=1', '-DHAVE_SYS_TYPES_H=1', '-DHAVE_SYS_STAT_H=1', '-DHAVE_DIRENT_H=1', '-DHAVE_STDLIB_H=1', '-DHAVE_GETENV=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_5a831a38b8182da401e8cda913d51f92/testbuild/test.cpp.1.o']
-[2/2] Linking [33mbuild/optimized/.conf_check_5a831a38b8182da401e8cda913d51f92/testbuild/testprog[0m
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_STDINT_H=1', '-DHAVE_INTTYPES_H=1', '-DHAVE_SYS_TYPES_H=1', '-DHAVE_SYS_STAT_H=1', '-DHAVE_DIRENT_H=1', '-DHAVE_STDLIB_H=1', '-DHAVE_GETENV=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_dfa45fcc21494f25235d419a9cae0028/testbuild/test.cpp.1.o']
+[2/2] Linking [33mbuild/optimized/.conf_check_dfa45fcc21494f25235d419a9cae0028/testbuild/testprog[0m
 
-['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_5a831a38b8182da401e8cda913d51f92/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_dfa45fcc21494f25235d419a9cae0028/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
 ----------------------------------------------------------------
 Checking for header pthread.h
@@ -852,12 +852,12 @@ int main ()
 }
 
 <==
-[1/2] Compiling [32mbuild/optimized/.conf_check_434e49f49cfce54c029f872da69bc136/test.cpp[0m
+[1/2] Compiling [32mbuild/optimized/.conf_check_383b36195dd0258c58afcd432637f408/test.cpp[0m
 
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-pthread', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_STDINT_H=1', '-DHAVE_INTTYPES_H=1', '-DHAVE_SYS_TYPES_H=1', '-DHAVE_SYS_STAT_H=1', '-DHAVE_DIRENT_H=1', '-DHAVE_STDLIB_H=1', '-DHAVE_GETENV=1', '-DHAVE_SIGNAL_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_434e49f49cfce54c029f872da69bc136/testbuild/test.cpp.1.o']
-[2/2] Linking [33mbuild/optimized/.conf_check_434e49f49cfce54c029f872da69bc136/testbuild/testprog[0m
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-pthread', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_STDINT_H=1', '-DHAVE_INTTYPES_H=1', '-DHAVE_SYS_TYPES_H=1', '-DHAVE_SYS_STAT_H=1', '-DHAVE_DIRENT_H=1', '-DHAVE_STDLIB_H=1', '-DHAVE_GETENV=1', '-DHAVE_SIGNAL_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_383b36195dd0258c58afcd432637f408/testbuild/test.cpp.1.o']
+[2/2] Linking [33mbuild/optimized/.conf_check_383b36195dd0258c58afcd432637f408/testbuild/testprog[0m
 
-['/usr/bin/g++', '-pthread', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_434e49f49cfce54c029f872da69bc136/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
+['/usr/bin/g++', '-pthread', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_383b36195dd0258c58afcd432637f408/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
 ----------------------------------------------------------------
 Checking for header stdint.h
@@ -870,12 +870,12 @@ int main(int argc, char **argv) {
 }
 
 <==
-[1/2] Compiling [32mbuild/optimized/.conf_check_51bb8e27f2ee5dc4db0cb4b3e5b8fcbb/test.cpp[0m
+[1/2] Compiling [32mbuild/optimized/.conf_check_7cd4a73b27bb856ff89cc7ada036bd8c/test.cpp[0m
 
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_INTTYPES_H=1', '-DHAVE_SYS_TYPES_H=1', '-DHAVE_SYS_STAT_H=1', '-DHAVE_DIRENT_H=1', '-DHAVE_STDLIB_H=1', '-DHAVE_GETENV=1', '-DHAVE_SIGNAL_H=1', '-DHAVE_PTHREAD_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_51bb8e27f2ee5dc4db0cb4b3e5b8fcbb/testbuild/test.cpp.1.o']
-[2/2] Linking [33mbuild/optimized/.conf_check_51bb8e27f2ee5dc4db0cb4b3e5b8fcbb/testbuild/testprog[0m
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_INTTYPES_H=1', '-DHAVE_SYS_TYPES_H=1', '-DHAVE_SYS_STAT_H=1', '-DHAVE_DIRENT_H=1', '-DHAVE_STDLIB_H=1', '-DHAVE_GETENV=1', '-DHAVE_SIGNAL_H=1', '-DHAVE_PTHREAD_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_7cd4a73b27bb856ff89cc7ada036bd8c/testbuild/test.cpp.1.o']
+[2/2] Linking [33mbuild/optimized/.conf_check_7cd4a73b27bb856ff89cc7ada036bd8c/testbuild/testprog[0m
 
-['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_51bb8e27f2ee5dc4db0cb4b3e5b8fcbb/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_7cd4a73b27bb856ff89cc7ada036bd8c/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
 ----------------------------------------------------------------
 Checking for header inttypes.h
@@ -888,12 +888,12 @@ int main(int argc, char **argv) {
 }
 
 <==
-[1/2] Compiling [32mbuild/optimized/.conf_check_0e88fe5fed62987c9e3256c1c4930e0e/test.cpp[0m
+[1/2] Compiling [32mbuild/optimized/.conf_check_e416510ec4810380a132537088d10c43/test.cpp[0m
 
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_SYS_TYPES_H=1', '-DHAVE_SYS_STAT_H=1', '-DHAVE_DIRENT_H=1', '-DHAVE_STDLIB_H=1', '-DHAVE_GETENV=1', '-DHAVE_SIGNAL_H=1', '-DHAVE_PTHREAD_H=1', '-DHAVE_STDINT_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_0e88fe5fed62987c9e3256c1c4930e0e/testbuild/test.cpp.1.o']
-[2/2] Linking [33mbuild/optimized/.conf_check_0e88fe5fed62987c9e3256c1c4930e0e/testbuild/testprog[0m
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_SYS_TYPES_H=1', '-DHAVE_SYS_STAT_H=1', '-DHAVE_DIRENT_H=1', '-DHAVE_STDLIB_H=1', '-DHAVE_GETENV=1', '-DHAVE_SIGNAL_H=1', '-DHAVE_PTHREAD_H=1', '-DHAVE_STDINT_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_e416510ec4810380a132537088d10c43/testbuild/test.cpp.1.o']
+[2/2] Linking [33mbuild/optimized/.conf_check_e416510ec4810380a132537088d10c43/testbuild/testprog[0m
 
-['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_0e88fe5fed62987c9e3256c1c4930e0e/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_e416510ec4810380a132537088d10c43/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
 ----------------------------------------------------------------
 Checking for header sys/inttypes.h
@@ -906,9 +906,9 @@ int main(int argc, char **argv) {
 }
 
 <==
-[1/2] Compiling [32mbuild/optimized/.conf_check_99bc86eb3e23e077e645129f2c99b483/test.cpp[0m
+[1/2] Compiling [32mbuild/optimized/.conf_check_7c4cb1a879d96f79b841e0ede210af21/test.cpp[0m
 
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_SYS_TYPES_H=1', '-DHAVE_SYS_STAT_H=1', '-DHAVE_DIRENT_H=1', '-DHAVE_STDLIB_H=1', '-DHAVE_GETENV=1', '-DHAVE_SIGNAL_H=1', '-DHAVE_PTHREAD_H=1', '-DHAVE_STDINT_H=1', '-DHAVE_INTTYPES_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_99bc86eb3e23e077e645129f2c99b483/testbuild/test.cpp.1.o']
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_SYS_TYPES_H=1', '-DHAVE_SYS_STAT_H=1', '-DHAVE_DIRENT_H=1', '-DHAVE_STDLIB_H=1', '-DHAVE_GETENV=1', '-DHAVE_SIGNAL_H=1', '-DHAVE_PTHREAD_H=1', '-DHAVE_STDINT_H=1', '-DHAVE_INTTYPES_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_7c4cb1a879d96f79b841e0ede210af21/testbuild/test.cpp.1.o']
 err: ../test.cpp:1:26: fatal error: sys/inttypes.h: No such file or directory
 compilation terminated.
 
@@ -919,8 +919,8 @@ from /home/sappy/Thesis/ns-allinone-3.25/ns-3.25/src/core: Test does not build: 
     raise Errors.BuildError(self.producer.error)
 BuildError: Build failed
  -> task in 'testprog' failed (exit status 1): 
-	{task 140473726817296: cxx test.cpp -> test.cpp.1.o}
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_SYS_TYPES_H=1', '-DHAVE_SYS_STAT_H=1', '-DHAVE_DIRENT_H=1', '-DHAVE_STDLIB_H=1', '-DHAVE_GETENV=1', '-DHAVE_SIGNAL_H=1', '-DHAVE_PTHREAD_H=1', '-DHAVE_STDINT_H=1', '-DHAVE_INTTYPES_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_99bc86eb3e23e077e645129f2c99b483/testbuild/test.cpp.1.o']
+	{task 139733063705616: cxx test.cpp -> test.cpp.1.o}
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_SYS_TYPES_H=1', '-DHAVE_SYS_STAT_H=1', '-DHAVE_DIRENT_H=1', '-DHAVE_STDLIB_H=1', '-DHAVE_GETENV=1', '-DHAVE_SIGNAL_H=1', '-DHAVE_PTHREAD_H=1', '-DHAVE_STDINT_H=1', '-DHAVE_INTTYPES_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_7c4cb1a879d96f79b841e0ede210af21/testbuild/test.cpp.1.o']
 
 not found
 from /home/sappy/Thesis/ns-allinone-3.25/ns-3.25/src/core: The configuration failed
@@ -934,12 +934,12 @@ int main(int argc, char **argv) {
 }
 
 <==
-[1/2] Compiling [32mbuild/optimized/.conf_check_37e7c4db6700fbad96546356d0b1a892/test.cpp[0m
+[1/2] Compiling [32mbuild/optimized/.conf_check_782de0b05e608520a36defae7ad6bcc5/test.cpp[0m
 
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-pthread', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_SYS_TYPES_H=1', '-DHAVE_SYS_STAT_H=1', '-DHAVE_DIRENT_H=1', '-DHAVE_STDLIB_H=1', '-DHAVE_GETENV=1', '-DHAVE_SIGNAL_H=1', '-DHAVE_PTHREAD_H=1', '-DHAVE_STDINT_H=1', '-DHAVE_INTTYPES_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_37e7c4db6700fbad96546356d0b1a892/testbuild/test.cpp.1.o']
-[2/2] Linking [33mbuild/optimized/.conf_check_37e7c4db6700fbad96546356d0b1a892/testbuild/testprog[0m
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-pthread', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_SYS_TYPES_H=1', '-DHAVE_SYS_STAT_H=1', '-DHAVE_DIRENT_H=1', '-DHAVE_STDLIB_H=1', '-DHAVE_GETENV=1', '-DHAVE_SIGNAL_H=1', '-DHAVE_PTHREAD_H=1', '-DHAVE_STDINT_H=1', '-DHAVE_INTTYPES_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_782de0b05e608520a36defae7ad6bcc5/testbuild/test.cpp.1.o']
+[2/2] Linking [33mbuild/optimized/.conf_check_782de0b05e608520a36defae7ad6bcc5/testbuild/testprog[0m
 
-['/usr/bin/g++', '-pthread', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_37e7c4db6700fbad96546356d0b1a892/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic', '-lrt']
+['/usr/bin/g++', '-pthread', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_782de0b05e608520a36defae7ad6bcc5/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic', '-lrt']
 yes
 ----------------------------------------------------------------
 Checking for header sys/ioctl.h
@@ -952,12 +952,12 @@ int main(int argc, char **argv) {
 }
 
 <==
-[1/2] Compiling [32mbuild/optimized/.conf_check_f2584c69f66ac6d9ead01cf12f027007/test.cpp[0m
+[1/2] Compiling [32mbuild/optimized/.conf_check_c44e34a5a133710c2dbdc096e46a11ad/test.cpp[0m
 
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_f2584c69f66ac6d9ead01cf12f027007/testbuild/test.cpp.1.o']
-[2/2] Linking [33mbuild/optimized/.conf_check_f2584c69f66ac6d9ead01cf12f027007/testbuild/testprog[0m
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_c44e34a5a133710c2dbdc096e46a11ad/testbuild/test.cpp.1.o']
+[2/2] Linking [33mbuild/optimized/.conf_check_c44e34a5a133710c2dbdc096e46a11ad/testbuild/testprog[0m
 
-['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_f2584c69f66ac6d9ead01cf12f027007/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_c44e34a5a133710c2dbdc096e46a11ad/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
 ----------------------------------------------------------------
 Checking for header net/if.h
@@ -970,12 +970,12 @@ int main(int argc, char **argv) {
 }
 
 <==
-[1/2] Compiling [32mbuild/optimized/.conf_check_309de5552bcf8604d7834684405065b8/test.cpp[0m
+[1/2] Compiling [32mbuild/optimized/.conf_check_ae6bf65e6496a2d6afa98ea0e5af02bc/test.cpp[0m
 
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE_SYS_IOCTL_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_309de5552bcf8604d7834684405065b8/testbuild/test.cpp.1.o']
-[2/2] Linking [33mbuild/optimized/.conf_check_309de5552bcf8604d7834684405065b8/testbuild/testprog[0m
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE_SYS_IOCTL_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_ae6bf65e6496a2d6afa98ea0e5af02bc/testbuild/test.cpp.1.o']
+[2/2] Linking [33mbuild/optimized/.conf_check_ae6bf65e6496a2d6afa98ea0e5af02bc/testbuild/testprog[0m
 
-['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_309de5552bcf8604d7834684405065b8/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_ae6bf65e6496a2d6afa98ea0e5af02bc/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
 ----------------------------------------------------------------
 Checking for header net/ethernet.h
@@ -988,12 +988,12 @@ int main(int argc, char **argv) {
 }
 
 <==
-[1/2] Compiling [32mbuild/optimized/.conf_check_ccea0932235c24222c2a157ca6a9ea79/test.cpp[0m
+[1/2] Compiling [32mbuild/optimized/.conf_check_6f2b552d0c4e38d63eccba7e2609f36c/test.cpp[0m
 
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE_SYS_IOCTL_H=1', '-DHAVE_IF_NETS_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_ccea0932235c24222c2a157ca6a9ea79/testbuild/test.cpp.1.o']
-[2/2] Linking [33mbuild/optimized/.conf_check_ccea0932235c24222c2a157ca6a9ea79/testbuild/testprog[0m
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE_SYS_IOCTL_H=1', '-DHAVE_IF_NETS_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_6f2b552d0c4e38d63eccba7e2609f36c/testbuild/test.cpp.1.o']
+[2/2] Linking [33mbuild/optimized/.conf_check_6f2b552d0c4e38d63eccba7e2609f36c/testbuild/testprog[0m
 
-['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_ccea0932235c24222c2a157ca6a9ea79/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_6f2b552d0c4e38d63eccba7e2609f36c/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
 ----------------------------------------------------------------
 Checking for header linux/if_tun.h
@@ -1006,12 +1006,12 @@ int main(int argc, char **argv) {
 }
 
 <==
-[1/2] Compiling [32mbuild/optimized/.conf_check_cbd1a70d716e96fc871605e1357d0a0b/test.cpp[0m
+[1/2] Compiling [32mbuild/optimized/.conf_check_964dd1fc144c8930b8cc65df53a53dda/test.cpp[0m
 
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE_SYS_IOCTL_H=1', '-DHAVE_IF_NETS_H=1', '-DHAVE_NET_ETHERNET_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_cbd1a70d716e96fc871605e1357d0a0b/testbuild/test.cpp.1.o']
-[2/2] Linking [33mbuild/optimized/.conf_check_cbd1a70d716e96fc871605e1357d0a0b/testbuild/testprog[0m
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE_SYS_IOCTL_H=1', '-DHAVE_IF_NETS_H=1', '-DHAVE_NET_ETHERNET_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_964dd1fc144c8930b8cc65df53a53dda/testbuild/test.cpp.1.o']
+[2/2] Linking [33mbuild/optimized/.conf_check_964dd1fc144c8930b8cc65df53a53dda/testbuild/testprog[0m
 
-['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_cbd1a70d716e96fc871605e1357d0a0b/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_964dd1fc144c8930b8cc65df53a53dda/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
 ----------------------------------------------------------------
 Checking for header netpacket/packet.h
@@ -1024,12 +1024,12 @@ int main(int argc, char **argv) {
 }
 
 <==
-[1/2] Compiling [32mbuild/optimized/.conf_check_1bbb6fa158e456cbba7680d7cbc8d50c/test.cpp[0m
+[1/2] Compiling [32mbuild/optimized/.conf_check_ba2da70af605700503a42f7d00ab9ae9/test.cpp[0m
 
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE_SYS_IOCTL_H=1', '-DHAVE_IF_NETS_H=1', '-DHAVE_NET_ETHERNET_H=1', '-DHAVE_IF_TUN_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_1bbb6fa158e456cbba7680d7cbc8d50c/testbuild/test.cpp.1.o']
-[2/2] Linking [33mbuild/optimized/.conf_check_1bbb6fa158e456cbba7680d7cbc8d50c/testbuild/testprog[0m
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE_SYS_IOCTL_H=1', '-DHAVE_IF_NETS_H=1', '-DHAVE_NET_ETHERNET_H=1', '-DHAVE_IF_TUN_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_ba2da70af605700503a42f7d00ab9ae9/testbuild/test.cpp.1.o']
+[2/2] Linking [33mbuild/optimized/.conf_check_ba2da70af605700503a42f7d00ab9ae9/testbuild/testprog[0m
 
-['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_1bbb6fa158e456cbba7680d7cbc8d50c/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_ba2da70af605700503a42f7d00ab9ae9/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
 ----------------------------------------------------------------
 Checking for NSC location
@@ -1060,12 +1060,12 @@ int main(int argc, char **argv) {
 }
 
 <==
-[1/2] Compiling [32mbuild/optimized/.conf_check_cbd1a70d716e96fc871605e1357d0a0b/test.cpp[0m
+[1/2] Compiling [32mbuild/optimized/.conf_check_964dd1fc144c8930b8cc65df53a53dda/test.cpp[0m
 
-['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE_SYS_IOCTL_H=1', '-DHAVE_IF_NETS_H=1', '-DHAVE_NET_ETHERNET_H=1', '-DHAVE_PACKET_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_cbd1a70d716e96fc871605e1357d0a0b/testbuild/test.cpp.1.o']
-[2/2] Linking [33mbuild/optimized/.conf_check_cbd1a70d716e96fc871605e1357d0a0b/testbuild/testprog[0m
+['/usr/bin/g++', '-std=c++11', '-march=native', '-fstrict-overflow', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE_SYS_IOCTL_H=1', '-DHAVE_IF_NETS_H=1', '-DHAVE_NET_ETHERNET_H=1', '-DHAVE_PACKET_H=1', '../test.cpp', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_964dd1fc144c8930b8cc65df53a53dda/testbuild/test.cpp.1.o']
+[2/2] Linking [33mbuild/optimized/.conf_check_964dd1fc144c8930b8cc65df53a53dda/testbuild/testprog[0m
 
-['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_cbd1a70d716e96fc871605e1357d0a0b/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_964dd1fc144c8930b8cc65df53a53dda/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
 ----------------------------------------------------------------
 Checking for program 'sudo'
@@ -1091,27 +1091,27 @@ Checking for compilation flag -Wno-error=deprecated-d... support
 ==>
 int main() { return 0; }
 <==
-[1/1] Compiling [32mbuild/optimized/.conf_check_92a82fa42ee1aee90eaacd461a2b94bc/test.c[0m
+[1/1] Compiling [32mbuild/optimized/.conf_check_a918d577a93bd447de6aba74b559a946/test.c[0m
 
-['/usr/bin/gcc', '-Wno-error=deprecated-declarations', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE_SYS_IOCTL_H=1', '-DHAVE_IF_NETS_H=1', '-DHAVE_NET_ETHERNET_H=1', '-DHAVE_PACKET_H=1', '-DHAVE_IF_TUN_H=1', '../test.c', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_92a82fa42ee1aee90eaacd461a2b94bc/testbuild/test.c.1.o']
+['/usr/bin/gcc', '-Wno-error=deprecated-declarations', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE_SYS_IOCTL_H=1', '-DHAVE_IF_NETS_H=1', '-DHAVE_NET_ETHERNET_H=1', '-DHAVE_PACKET_H=1', '-DHAVE_IF_TUN_H=1', '../test.c', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_a918d577a93bd447de6aba74b559a946/testbuild/test.c.1.o']
 ok
 ----------------------------------------------------------------
 Checking for compilation flag -fstrict-aliasing support
 ==>
 int main() { return 0; }
 <==
-[1/1] Compiling [32mbuild/optimized/.conf_check_92a82fa42ee1aee90eaacd461a2b94bc/test.c[0m
+[1/1] Compiling [32mbuild/optimized/.conf_check_a918d577a93bd447de6aba74b559a946/test.c[0m
 
-['/usr/bin/gcc', '-fstrict-aliasing', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE_SYS_IOCTL_H=1', '-DHAVE_IF_NETS_H=1', '-DHAVE_NET_ETHERNET_H=1', '-DHAVE_PACKET_H=1', '-DHAVE_IF_TUN_H=1', '../test.c', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_92a82fa42ee1aee90eaacd461a2b94bc/testbuild/test.c.1.o']
+['/usr/bin/gcc', '-fstrict-aliasing', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE_SYS_IOCTL_H=1', '-DHAVE_IF_NETS_H=1', '-DHAVE_NET_ETHERNET_H=1', '-DHAVE_PACKET_H=1', '-DHAVE_IF_TUN_H=1', '../test.c', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_a918d577a93bd447de6aba74b559a946/testbuild/test.c.1.o']
 ok
 ----------------------------------------------------------------
 Checking for compilation flag -Wstrict-aliasing support
 ==>
 int main() { return 0; }
 <==
-[1/1] Compiling [32mbuild/optimized/.conf_check_92a82fa42ee1aee90eaacd461a2b94bc/test.c[0m
+[1/1] Compiling [32mbuild/optimized/.conf_check_a918d577a93bd447de6aba74b559a946/test.c[0m
 
-['/usr/bin/gcc', '-Wstrict-aliasing', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE_SYS_IOCTL_H=1', '-DHAVE_IF_NETS_H=1', '-DHAVE_NET_ETHERNET_H=1', '-DHAVE_PACKET_H=1', '-DHAVE_IF_TUN_H=1', '../test.c', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_92a82fa42ee1aee90eaacd461a2b94bc/testbuild/test.c.1.o']
+['/usr/bin/gcc', '-Wstrict-aliasing', '-DNS3_BUILD_PROFILE_OPTIMIZED', '-DHAVE_SYS_IOCTL_H=1', '-DHAVE_IF_NETS_H=1', '-DHAVE_NET_ETHERNET_H=1', '-DHAVE_PACKET_H=1', '-DHAVE_IF_TUN_H=1', '../test.c', '-c', '-o', '/home/sappy/Thesis/ns-allinone-3.25/ns-3.25/build/optimized/.conf_check_a918d577a93bd447de6aba74b559a946/testbuild/test.c.1.o']
 ok
 ----------------------------------------------------------------
 Checking for program 'doxygen'

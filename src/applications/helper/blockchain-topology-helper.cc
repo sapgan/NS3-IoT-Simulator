@@ -565,7 +565,7 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-  std::array<double,1000> JapanDownloadWeights {
+  std::array<double,1000> AfricaDownloadWeights {
     344, 157, 125, 92, 68, 62, 105, 52, 32, 47, 27, 30, 27, 29, 18, 24, 19, 20, 15, 20, 11, 14, 15,
 	9, 9, 5, 8, 11, 9, 9, 7, 7, 5, 8, 4, 7, 8, 4, 5, 6, 10, 6, 7, 8, 7, 9, 15, 4, 7, 10, 14, 7, 5,
 	10, 9, 14, 9, 7, 5, 3, 3, 7, 2, 2, 7, 3, 0, 2, 2, 3, 3, 3, 1, 1, 3, 6, 3, 2, 6, 2, 1, 4, 3, 2,
@@ -599,7 +599,7 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-  std::array<double,999> JapanUploadWeights {
+  std::array<double,999> AfricaUploadWeights {
     135, 89, 82, 67, 45, 40, 37, 47, 46, 40, 37, 39, 42, 33, 26, 35, 40, 36, 38, 30, 29, 39, 31, 31,
 	25, 17, 25, 18, 20, 14, 19, 20, 9, 11, 9, 9, 16, 5, 17, 15, 14, 22, 17, 24, 14, 10, 14, 14, 9,
 	13, 10, 17, 16, 18, 17, 20, 16, 17, 15, 18, 18, 15, 14, 9, 12, 7, 14, 13, 10, 7, 4, 2, 5, 6, 5,
@@ -642,14 +642,14 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
   m_regionDownloadSpeeds[EUROPE] = 21.29;
   m_regionDownloadSpeeds[SOUTH_AMERICA] = 9.89;
   m_regionDownloadSpeeds[ASIA_PACIFIC] = 14.56;
-  m_regionDownloadSpeeds[JAPAN] = 6.9;
+  m_regionDownloadSpeeds[AFRICA] = 6.9;
   m_regionDownloadSpeeds[AUSTRALIA] = 16;
 
   m_regionUploadSpeeds[NORTH_AMERICA] = 6.74;
   m_regionUploadSpeeds[EUROPE] = 6.72;
   m_regionUploadSpeeds[SOUTH_AMERICA] = 2.2;
   m_regionUploadSpeeds[ASIA_PACIFIC] = 6.53;
-  m_regionUploadSpeeds[JAPAN] = 1.7;
+  m_regionUploadSpeeds[AFRICA] = 1.7;
   m_regionUploadSpeeds[AUSTRALIA] = 6.1;
   srand (1000);
 
@@ -667,7 +667,7 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
   m_blockchainNodesRegion = new uint32_t[m_totalNoNodes];
 
 
-  std::array<double,7> nodesDistributionIntervals {NORTH_AMERICA, EUROPE, SOUTH_AMERICA, ASIA_PACIFIC, JAPAN, AUSTRALIA, OTHER};
+  std::array<double,7> nodesDistributionIntervals {NORTH_AMERICA, EUROPE, SOUTH_AMERICA, ASIA_PACIFIC, AFRICA, AUSTRALIA, OTHER};
 
       std::array<double,6> nodesDistributionWeights {39.24, 48.79, 2.12, 6.97, 1.06, 1.82};
       m_nodesDistribution = std::piecewise_constant_distribution<double> (nodesDistributionIntervals.begin(), nodesDistributionIntervals.end(), nodesDistributionWeights.begin());
@@ -686,8 +686,8 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
   m_northAmericaUploadBandwidthDistribution = std::piecewise_constant_distribution<double> (uploadBandwitdhIntervals.begin(), uploadBandwitdhIntervals.end(), NorthAmericaUploadWeights.begin());
   m_asiaPacificDownloadBandwidthDistribution = std::piecewise_constant_distribution<double> (downloadBandwitdhIntervals.begin(), downloadBandwitdhIntervals.end(), AsiaPacificDownloadWeights.begin());
   m_asiaPacificUploadBandwidthDistribution = std::piecewise_constant_distribution<double> (uploadBandwitdhIntervals.begin(), uploadBandwitdhIntervals.end(), AsiaPacificUploadWeights.begin());
-  m_japanDownloadBandwidthDistribution = std::piecewise_constant_distribution<double> (downloadBandwitdhIntervals.begin(), downloadBandwitdhIntervals.end(), JapanDownloadWeights.begin());
-  m_japanUploadBandwidthDistribution = std::piecewise_constant_distribution<double> (uploadBandwitdhIntervals.begin(), uploadBandwitdhIntervals.end(), JapanUploadWeights.begin());
+  m_africaDownloadBandwidthDistribution = std::piecewise_constant_distribution<double> (downloadBandwitdhIntervals.begin(), downloadBandwitdhIntervals.end(), AfricaDownloadWeights.begin());
+  m_africaUploadBandwidthDistribution = std::piecewise_constant_distribution<double> (uploadBandwitdhIntervals.begin(), uploadBandwitdhIntervals.end(), AfricaUploadWeights.begin());
   m_southAmericaDownloadBandwidthDistribution = std::piecewise_constant_distribution<double> (downloadBandwitdhIntervals.begin(), downloadBandwitdhIntervals.end(), SouthAmericaDownloadWeights.begin());
   m_southAmericaUploadBandwidthDistribution = std::piecewise_constant_distribution<double> (uploadBandwitdhIntervals.begin(), uploadBandwitdhIntervals.end(), SouthAmericaUploadWeights.begin());
   m_australiaDownloadBandwidthDistribution = std::piecewise_constant_distribution<double> (downloadBandwitdhIntervals.begin(), downloadBandwitdhIntervals.end(), AustraliaDownloadWeights.begin());
@@ -1354,10 +1354,10 @@ BlockchainTopologyHelper::AssignInternetSpeeds(uint32_t id)
         m_nodesInternetSpeeds[id].uploadSpeed = m_europeUploadBandwidthDistribution(m_generator);
         break;
       }
-      case JAPAN:
+      case AFRICA:
       {
-        m_nodesInternetSpeeds[id].downloadSpeed = m_japanDownloadBandwidthDistribution(m_generator);
-        m_nodesInternetSpeeds[id].uploadSpeed = m_japanUploadBandwidthDistribution(m_generator);
+        m_nodesInternetSpeeds[id].downloadSpeed = m_africaDownloadBandwidthDistribution(m_generator);
+        m_nodesInternetSpeeds[id].uploadSpeed = m_africaUploadBandwidthDistribution(m_generator);
         break;
       }
       case NORTH_AMERICA:
