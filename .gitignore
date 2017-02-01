@@ -1,4 +1,4 @@
-./build
+./build/optimzed/ns3/*
 # Compiled source #
 ###################
 *.com
