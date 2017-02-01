@@ -56,7 +56,7 @@ public:
    *                     in the grid
    */
   BlockchainTopologyHelper (uint32_t noCpus, uint32_t totalNoNodes, uint32_t noMiners, enum BlockchainRegion *minersRegions,
-                         enum Cryptocurrency cryptocurrency, int minConnectionsPerNode, int maxConnectionsPerNode,
+                         int minConnectionsPerNode, int maxConnectionsPerNode,
                          double latencyParetoShapeDivider, uint32_t systemId);
 
   ~BlockchainTopologyHelper ();
@@ -154,7 +154,6 @@ private:
   uint32_t     m_systemId;
 
   enum BlockchainRegion                             *m_minersRegions;
-  enum Cryptocurrency                             m_cryptocurrency;
   std::vector<uint32_t>                           m_miners;                  //!< The ids of the miners
   std::map<uint32_t, std::vector<uint32_t>>       m_nodesConnections;        //!< key = nodeId
   std::map<uint32_t, std::vector<Ipv4Address>>    m_nodesConnectionsIps;     //!< key = nodeId

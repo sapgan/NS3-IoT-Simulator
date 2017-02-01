@@ -37,13 +37,13 @@ namespace ns3 {
 NS_LOG_COMPONENT_DEFINE ("BlockchainTopologyHelper");
 
 BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t totalNoNodes, uint32_t noMiners, enum BlockchainRegion *minersRegions,
-                                              enum Cryptocurrency cryptocurrency, int minConnectionsPerNode, int maxConnectionsPerNode,
+                                               int minConnectionsPerNode, int maxConnectionsPerNode,
 						                      double latencyParetoShapeDivider, uint32_t systemId)
   : m_noCpus(noCpus), m_totalNoNodes (totalNoNodes), m_noMiners (noMiners),
     m_minConnectionsPerNode (minConnectionsPerNode), m_maxConnectionsPerNode (maxConnectionsPerNode),
 	m_totalNoLinks (0), m_latencyParetoShapeDivider (latencyParetoShapeDivider),
 	m_systemId (systemId), m_minConnectionsPerMiner (700), m_maxConnectionsPerMiner (800),
-	m_minerDownloadSpeed (100), m_minerUploadSpeed (100), m_cryptocurrency (cryptocurrency)
+	m_minerDownloadSpeed (100), m_minerUploadSpeed (100)
 {
 
   std::vector<uint32_t>     nodes;    //nodes contain the ids of the nodes
@@ -669,37 +669,8 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
 
   std::array<double,7> nodesDistributionIntervals {NORTH_AMERICA, EUROPE, SOUTH_AMERICA, ASIA_PACIFIC, JAPAN, AUSTRALIA, OTHER};
 
-  switch (m_cryptocurrency)
-  {
-    case BITCOIN:
-    {
-      if (m_systemId == 0)
-        std::cout << "BITCOIN Mode selected\n";
-      std::array<double,6> nodesDistributionWeights {38.69, 51.59, 1.13, 5.74, 1.19, 1.66};
-      m_nodesDistribution = std::piecewise_constant_distribution<double> (nodesDistributionIntervals.begin(), nodesDistributionIntervals.end(), nodesDistributionWeights.begin());
-
-      break;
-    }
-    case LITECOIN:
-    {
-      if (m_systemId == 0)
-        std::cout << "LITECOIN Mode selected\n";
-      std::array<double,6> nodesDistributionWeights {36.61, 47.91, 1.49, 10.22, 2.38, 1.39};
-      m_nodesDistribution = std::piecewise_constant_distribution<double> (nodesDistributionIntervals.begin(), nodesDistributionIntervals.end(), nodesDistributionWeights.begin());
-
-      break;
-    }
-    case DOGECOIN:
-    {
-      if (m_systemId == 0)
-        std::cout << "DOGECOIN Mode selected\n";
       std::array<double,6> nodesDistributionWeights {39.24, 48.79, 2.12, 6.97, 1.06, 1.82};
       m_nodesDistribution = std::piecewise_constant_distribution<double> (nodesDistributionIntervals.begin(), nodesDistributionIntervals.end(), nodesDistributionWeights.begin());
-
-      break;
-    }
-  }
-
 
   std::array<double,7> connectionsDistributionIntervals {1, 5, 10, 15, 20, 30, 125};
   for (int i = 0; i < 7; i++)

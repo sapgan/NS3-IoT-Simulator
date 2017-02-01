@@ -13,13 +13,13 @@
 
 namespace ns3 {
 
-BLockchainValidatorHelper::BLockchainValidatorHelper (std::string protocol, Address address, std::vector<Ipv4Address> peers, int noMiners,
+BlockchainValidatorHelper::BlockchainValidatorHelper (std::string protocol, Address address, std::vector<Ipv4Address> peers, int noMiners,
                                         std::map<Ipv4Address, double> &peersDownloadSpeeds, std::map<Ipv4Address, double> &peersUploadSpeeds,
                                         nodeInternetSpeeds &internetSpeeds, nodeStatistics *stats, double hashRate, double averageBlockGenIntervalSeconds) :
                                         BlockchainNodeHelper (),  m_minerType (NORMAL_MINER), m_blockBroadcastType (STANDARD),
                                         m_secureBlocks (6), m_blockGenBinSize (-1), m_blockGenParameter (-1)
 {
-  m_factory.SetTypeId ("ns3::BLockchainValidator");
+  m_factory.SetTypeId ("ns3::BlockchainValidator");
   commonConstructor(protocol, address, peers, peersDownloadSpeeds, peersUploadSpeeds, internetSpeeds, stats);
 
   m_noMiners = noMiners;
@@ -33,14 +33,14 @@ BLockchainValidatorHelper::BLockchainValidatorHelper (std::string protocol, Addr
 }
 
 Ptr<Application>
-BLockchainValidatorHelper::InstallPriv (Ptr<Node> node) //FIX ME
+BlockchainValidatorHelper::InstallPriv (Ptr<Node> node) //FIX ME
 {
 
    switch (m_minerType)
    {
       case NORMAL_MINER:
       {
-        Ptr<BLockchainValidator> app = m_factory.Create<BLockchainValidator> ();
+        Ptr<BlockchainValidator> app = m_factory.Create<BlockchainValidator> ();
         app->SetPeersAddresses(m_peersAddresses);
         app->SetPeersDownloadSpeeds(m_peersDownloadSpeeds);
         app->SetPeersUploadSpeeds(m_peersUploadSpeeds);
@@ -99,13 +99,13 @@ BLockchainValidatorHelper::InstallPriv (Ptr<Node> node) //FIX ME
 }
 
 enum MinerType
-BLockchainValidatorHelper::GetMinerType(void)
+BlockchainValidatorHelper::GetMinerType(void)
 {
   return m_minerType;
 }
 
 void
-BLockchainValidatorHelper::SetMinerType (enum MinerType m)  //FIX ME
+BlockchainValidatorHelper::SetMinerType (enum MinerType m)  //FIX ME
 {
    m_minerType = m;
 
@@ -113,7 +113,7 @@ BLockchainValidatorHelper::SetMinerType (enum MinerType m)  //FIX ME
    {
       case NORMAL_MINER:
       {
-        m_factory.SetTypeId ("ns3::BLockchainValidator");
+        m_factory.SetTypeId ("ns3::BlockchainValidator");
         SetFactoryAttributes();
         break;
       }
@@ -145,14 +145,14 @@ BLockchainValidatorHelper::SetMinerType (enum MinerType m)  //FIX ME
 
 
 void
-BLockchainValidatorHelper::SetBlockBroadcastType (enum BlockBroadcastType m)
+BlockchainValidatorHelper::SetBlockBroadcastType (enum BlockBroadcastType m)
 {
   m_blockBroadcastType = m;
 }
 
 
 void
-BLockchainValidatorHelper::SetFactoryAttributes (void)
+BlockchainValidatorHelper::SetFactoryAttributes (void)
 {
   m_factory.Set ("Protocol", StringValue (m_protocol));
   m_factory.Set ("Local", AddressValue (m_address));
