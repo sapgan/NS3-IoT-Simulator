@@ -241,9 +241,7 @@ BlockchainMaliciousNode::MineBlock (void)
   else
   {
     m_nextBlockSize = m_blockSizeDistribution(m_generator) * 1000;	// *1000 because the m_blockSizeDistribution returns KBytes
-
-        m_nextBlockSize = m_nextBlockSize*m_averageBlockGenIntervalSeconds / m_realAverageBlockGenIntervalSeconds;
-    }
+    m_nextBlockSize = m_nextBlockSize*m_averageBlockGenIntervalSeconds / m_realAverageBlockGenIntervalSeconds;
   }
 
   if (m_nextBlockSize < m_averageTransactionSize)

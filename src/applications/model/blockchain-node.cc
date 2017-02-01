@@ -287,7 +287,7 @@ BlockchainNode::StopApplication ()     // Called at time specified by Stop
     m_socket->SetRecvCallback (MakeNullCallback<void, Ptr<Socket> > ());
   }
 
-  NS_LOG_WARN ("\n\nBITCOIN NODE " << GetNode ()->GetId () << ":");
+  NS_LOG_WARN ("\n\nBLOCKCHAIN NODE " << GetNode ()->GetId () << ":");
   NS_LOG_WARN ("Current Top Block is:\n" << *(m_blockchain.GetCurrentTopBlock()));
   NS_LOG_WARN ("Current Blockchain is:\n" << m_blockchain);
   //m_blockchain.PrintOrphans();
@@ -1907,7 +1907,7 @@ BlockchainNode::ReceivedChunkMessage(std::string &chunkInfo, Address &from)
   //m_receiveBlockTimes.erase(m_receiveBlockTimes.begin());
 
   std::vector<std::string>                    getDataMessages;
-  std::map<BitcoinChunk, std::vector<int>>    chunkMessages;
+  std::map<BlockChunk, std::vector<int>>    chunkMessages;
   int totalChunkMessageSize = 0;
 
   for (int j=0; j<d["chunks"].Size(); j++)
@@ -1998,7 +1998,7 @@ BlockchainNode::ReceivedChunkMessage(std::string &chunkInfo, Address &from)
 
           for (int ii = 0; ii < d["chunks"][j]["requestChunks"].Size(); ii++)
           {
-            BitcoinChunk newChunk(d["chunks"][j]["height"].GetInt(), d["chunks"][j]["minerId"].GetInt(),
+            BlockChunk newChunk(d["chunks"][j]["height"].GetInt(), d["chunks"][j]["minerId"].GetInt(),
                                   -1, d["chunks"][j]["parentBlockMinerId"].GetInt(), //-1 if we are not going to request a chunk
                                   d["chunks"][j]["size"].GetInt(), d["chunks"][j]["timeCreated"].GetDouble(),
                                   Simulator::Now ().GetSeconds (), InetSocketAddress::ConvertFrom(from).GetIpv4 ());
@@ -2049,7 +2049,7 @@ BlockchainNode::ReceivedChunkMessage(std::string &chunkInfo, Address &from)
             {
               for (int ii = 0; ii < d["chunks"][j]["requestChunks"].Size(); ii++)
               {
-                BitcoinChunk newChunk (d["chunks"][j]["height"].GetInt(), d["chunks"][j]["minerId"].GetInt(),
+                BlockChunk newChunk (d["chunks"][j]["height"].GetInt(), d["chunks"][j]["minerId"].GetInt(),
                                        candidateChunks[randomIndex], d["chunks"][j]["parentBlockMinerId"].GetInt(),
                                        d["chunks"][j]["size"].GetInt(), d["chunks"][j]["timeCreated"].GetDouble(),
                                        Simulator::Now ().GetSeconds (), InetSocketAddress::ConvertFrom(from).GetIpv4 ());
@@ -2070,7 +2070,7 @@ BlockchainNode::ReceivedChunkMessage(std::string &chunkInfo, Address &from)
 
             for (int ii = 0; ii < d["chunks"][j]["requestChunks"].Size(); ii++)
             {
-              BitcoinChunk newChunk(d["chunks"][j]["height"].GetInt(), d["chunks"][j]["minerId"].GetInt(),
+              BlockChunk newChunk(d["chunks"][j]["height"].GetInt(), d["chunks"][j]["minerId"].GetInt(),
                                     -1, d["chunks"][j]["parentBlockMinerId"].GetInt(), //-1 if we are not going to request a chunk
                                     d["chunks"][j]["size"].GetInt(), d["chunks"][j]["timeCreated"].GetDouble(),
                                     Simulator::Now ().GetSeconds (), InetSocketAddress::ConvertFrom(from).GetIpv4 ());
@@ -2087,7 +2087,7 @@ BlockchainNode::ReceivedChunkMessage(std::string &chunkInfo, Address &from)
 
       for (int ii = 0; ii < d["chunks"][j]["requestChunks"].Size(); ii++)
       {
-        BitcoinChunk newChunk(d["chunks"][j]["height"].GetInt(), d["chunks"][j]["minerId"].GetInt(),
+        BlockChunk newChunk(d["chunks"][j]["height"].GetInt(), d["chunks"][j]["minerId"].GetInt(),
                               -1, d["chunks"][j]["parentBlockMinerId"].GetInt(), //-1 if we are not going to request a chunk
                               d["chunks"][j]["size"].GetInt(), d["chunks"][j]["timeCreated"].GetDouble(),
                               Simulator::Now ().GetSeconds (), InetSocketAddress::ConvertFrom(from).GetIpv4 ());
