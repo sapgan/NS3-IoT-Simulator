@@ -1,4 +1,6 @@
 #include <fstream>
+#include <gcrypt.h>
+#include <stdlib.h>
 #include "ns3/core-module.h"
 #include "ns3/internet-module.h"
 #include "ns3/csma-module.h"
