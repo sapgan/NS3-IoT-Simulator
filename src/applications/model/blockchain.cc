@@ -21,7 +21,7 @@ namespace ns3 {
  */
 
 Block::Block(int blockHeight, int minerId, int parentBlockMinerId, int blockSizeBytes,
-             double timeCreated, double timeReceived, Ipv4Address receivedFromIpv4)
+             double timeCreated, int nodeId, std::string nodePublicKey, std::string signature, double timeReceived, Ipv4Address receivedFromIpv4)
 {
   m_blockHeight = blockHeight;
   m_minerId = minerId;
@@ -30,12 +30,15 @@ Block::Block(int blockHeight, int minerId, int parentBlockMinerId, int blockSize
   m_timeCreated = timeCreated;
   m_timeReceived = timeReceived;
   m_receivedFromIpv4 = receivedFromIpv4;
+  m_nodeId = nodeId;
+  m_nodePublicKey = nodePublicKey;
+  m_signature = signature;
 
 }
 
 Block::Block()
 {
-  Block(0, 0, 0, 0, 0, 0, Ipv4Address("0.0.0.0"));
+  Block(0, 0, 0, 0, 0, 0, "", "", 0, Ipv4Address("0.0.0.0"));
 
 }
 
@@ -48,6 +51,9 @@ Block::Block (const Block &blockSource)
   m_timeCreated = blockSource.m_timeCreated;
   m_timeReceived = blockSource.m_timeReceived;
   m_receivedFromIpv4 = blockSource.m_receivedFromIpv4;
+  m_nodeId = blockSource.m_nodeId;
+  m_nodePublicKey = blockSource.m_nodePublicKey;
+  m_signature = blockSource.m_signature;
 
 }
 
@@ -128,6 +134,42 @@ Block::SetReceivedFromIpv4 (Ipv4Address receivedFromIpv4)
   m_receivedFromIpv4 = receivedFromIpv4;
 }
 
+int
+Block::GetNodeIdOfBlock (void) const
+{
+  return m_nodeId;
+}
+
+void
+Block::SetNodeIdOfBlock (int nodeId)
+{
+  m_nodeId = nodeId;
+}
+
+std::string
+Block::GetNodePublicKey (void) const
+{
+  return m_nodePublicKey;
+}
+
+void
+Block::SetNodePublicKey (std::string newPublicKey)
+{
+  m_nodePublicKey = newPublicKey;
+}
+
+std::string
+Block::GetNodePublicKeySignature (void) const
+{
+    return m_signature;
+}
+
+void
+Block::SetNodePublicKeySignature (std::string signature)
+{
+    m_signature = signature;
+}
+
 bool
 Block::IsParent(const Block &block) const
 {
@@ -157,6 +199,9 @@ Block::operator= (const Block &blockSource)
   m_timeCreated = blockSource.m_timeCreated;
   m_timeReceived = blockSource.m_timeReceived;
   m_receivedFromIpv4 = blockSource.m_receivedFromIpv4;
+  m_nodeId = blockSource.m_nodeId;
+  m_nodePublicKey = blockSource.m_nodePublicKey;
+  m_signature = blockSource.m_signature;
 
   return *this;
 }
@@ -168,11 +213,14 @@ Block::operator= (const Block &blockSource)
  */
 
 BlockChunk::BlockChunk(int blockHeight, int minerId, int chunkId, int parentBlockMinerId, int blockSizeBytes,
-             double timeCreated, double timeReceived, Ipv4Address receivedFromIpv4) :
+             double timeCreated, vector<int> nodeIds, vector<std::string> nodePublicKeys, vector<std::string> signatures, double timeReceived, Ipv4Address receivedFromIpv4) :
              Block (blockHeight, minerId, parentBlockMinerId, blockSizeBytes,
                     timeCreated, timeReceived, receivedFromIpv4)
 {
   m_chunkId = chunkId;
+  m_multiNodeIds = nodeIds;
+  m_multiNodePublicKeys = nodePublicKeys;
+  m_multiNodeSignatures = signatures;
 }
 
 BlockChunk::BlockChunk()
@@ -190,6 +238,9 @@ BlockChunk::BlockChunk (const BlockChunk &chunkSource)
   m_timeCreated = chunkSource.m_timeCreated;
   m_timeReceived = chunkSource.m_timeReceived;
   m_receivedFromIpv4 = chunkSource.m_receivedFromIpv4;
+  m_multiNodeIds = chunkSource.m_multiNodeIds;
+  m_multiNodePublicKeys = chunkSource.m_multiNodePublicKeys;
+  m_multiNodeSignatures = chunkSource.m_multiNodeSignatures;
 
 }
 
@@ -220,6 +271,9 @@ BlockChunk::operator= (const BlockChunk &chunkSource)
   m_timeCreated = chunkSource.m_timeCreated;
   m_timeReceived = chunkSource.m_timeReceived;
   m_receivedFromIpv4 = chunkSource.m_receivedFromIpv4;
+  m_multiNodeIds = chunkSource.m_multiNodeIds;
+  m_multiNodePublicKeys = chunkSource.m_multiNodePublicKeys;
+  m_multiNodeSignatures = chunkSource.m_multiNodeSignatures;
 
   return *this;
 }
@@ -235,7 +289,7 @@ Blockchain::Blockchain(void)
 {
   m_noStaleBlocks = 0;
   m_totalBlocks = 0;
-  Block genesisBlock(0, -1, -2, 0, 0, 0, Ipv4Address("0.0.0.0"));
+  Block genesisBlock(0, -1, -2, 0, 0, 0, "garbage", "garbage", 0, Ipv4Address("0.0.0.0"));
   AddBlock(genesisBlock);
 }
 
@@ -317,6 +371,43 @@ Blockchain::HasBlock (int height, int minerId) const
     }
   }
   return false;
+}
+
+
+std::string
+Blockchain::GetPublickey (int nodeId)
+{
+  map<int, std::string>::const_iterator it = m_public_key_map.find(nodeId);
+  if(it != m_public_key_map.end())
+    return *it;
+
+  return "";
+}
+
+
+Block
+Blockchain::GetPublickeyBlock (int nodeId)
+{
+  map<int, shared_ptr<Block *>>::const_iterator it = m_block_map.find(nodeId);
+  if(it == m_block_map.end())
+      return *it;
+  return Block(-1, -1, -1, -1, -1, -1, Ipv4Address("0.0.0.0"));
+
+}
+
+
+std::string
+Blockchain::GetNodePublicKeySignature (int nodeId)
+{
+    Block block = GetPublickeyBlock(nodeId);
+    return block->GetNodePublicKeySignature();
+}
+
+bool
+Blockchain::CheckPublicKeySignature (int nodeId)\
+{
+    Block block = GetPublickeyBlock(nodeId);
+    return true;
 }
 
 
@@ -454,11 +545,12 @@ Blockchain::GetCurrentTopBlock (void) const
 void
 Blockchain::AddBlock (const Block& newBlock)
 {
-
+  int nodeId = newBlock->GetNodeIdOfBlock();
   if (m_blocks.size() == 0)
   {
     std::vector<Block> newHeight(1, newBlock);
 	m_blocks.push_back(newHeight);
+  m_block_map[nodeId]=&newHeight;
   }
   else if (newBlock.GetBlockHeight() > GetCurrentTopBlock()->GetBlockHeight())
   {
@@ -476,6 +568,7 @@ Blockchain::AddBlock (const Block& newBlock)
 
     std::vector<Block> newHeight(1, newBlock);
     m_blocks.push_back(newHeight);
+    m_block_map[nodeId]=&newHeight;
   }
   else
   {
@@ -485,8 +578,9 @@ Blockchain::AddBlock (const Block& newBlock)
       m_noStaleBlocks++;
 
     m_blocks[newBlock.GetBlockHeight()].push_back(newBlock);
+    m_block_map[nodeId]=&newBlock;
   }
-
+  m_public_key_map[nodeId] = newBlock->GetNodePublicKey();
   m_totalBlocks++;
 }
 
@@ -657,6 +751,9 @@ std::ostream& operator<< (std::ostream &out, const Block &block)
 
     out << "(m_blockHeight: " << block.GetBlockHeight() << ", " <<
         "m_minerId: " << block.GetMinerId() << ", " <<
+        "m_nodeId: " << block.GetNodeIdOfBlock() << ", " <<
+        "m_nodePublicKey: " << block.GetNodePublicKey() << ", " <<
+        "m_signature: " << block.GetNodePublicKeySignature() << ", " <<
         "m_parentBlockMinerId: " << block.GetParentBlockMinerId() << ", " <<
         "m_blockSizeBytes: " << block.GetBlockSizeBytes() << ", " <<
         "m_timeCreated: " << block.GetTimeCreated() << ", " <<
@@ -672,6 +769,7 @@ std::ostream& operator<< (std::ostream &out, const BlockChunk &chunk)
     out << "(m_blockHeight: " << chunk.GetBlockHeight() << ", " <<
         "m_minerId: " << chunk.GetMinerId() << ", " <<
         "chunkId: " << chunk.GetChunkId() << ", " <<
+        "m_nodeId: " << chunk.GetNodeIdOfBlock() << ", " <<
         "m_parentBlockMinerId: " << chunk.GetParentBlockMinerId() << ", " <<
         "m_blockSizeBytes: " << chunk.GetBlockSizeBytes() << ", " <<
         "m_timeCreated: " << chunk.GetTimeCreated() << ", " <<
@@ -717,6 +815,9 @@ const char* getMessageName(enum Messages m)
     case EXT_GET_BLOCKS: return "EXT_GET_BLOCKS";
     case CHUNK: return "CHUNK";
     case EXT_GET_DATA: return "EXT_GET_DATA";
+    case SEND_PUBLIC_KEY: return "SEND_PUBLIC_KEY";
+    case RECEIVE_PUBLIC_KEY: return "RECEIVE_PUBLIC_KEY";
+    case RECEIVE_MESSAGE: return "RECEIVE_MESSAGE";
   }
 }
 
@@ -725,6 +826,7 @@ const char* getMinerType(enum MinerType m)
   switch (m)
   {
     case NORMAL_MINER: return "NORMAL_MINER";
+    case GATEWAY_MINER: return "GATEWAY_MINER";
     case SIMPLE_ATTACKER: return "SIMPLE_ATTACKER";
     case MALICIOUS_NODE: return "MALICIOUS_NODE";
     case MALICIOUS_NODE_TRIALS: return "MALICIOUS_NODE_TRIALS";

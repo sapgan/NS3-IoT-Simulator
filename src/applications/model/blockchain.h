@@ -44,6 +44,7 @@ enum Messages
 enum MinerType
 {
         NORMAL_MINER,          //DEFAULT
+        GATEWAY_MINER,        //Maintains 2 different blockchains
         SIMPLE_ATTACKER,
         MALICIOUS_NODE,
         MALICIOUS_NODE_TRIALS
@@ -153,7 +154,7 @@ class Block
 {
 public:
         Block (int blockHeight, int minerId, int parentBlockMinerId = 0, int blockSizeBytes = 0,
-               double timeCreated = 0, double timeReceived = 0, Ipv4Address receivedFromIpv4 = Ipv4Address("0.0.0.0"));
+               double timeCreated = 0, int nodeId = 0, std::string nodePublicKey = "", std::string signature = "", double timeReceived = 0, Ipv4Address receivedFromIpv4 = Ipv4Address("0.0.0.0"));
         Block ();
         Block (const Block &blockSource); // Copy constructor
         virtual ~Block (void);
@@ -175,6 +176,15 @@ public:
 
         Ipv4Address GetReceivedFromIpv4 (void) const;
         void SetReceivedFromIpv4 (Ipv4Address receivedFromIpv4);
+
+        int GetNodeIdOfBlock (void) const;
+        void SetNodeIdOfBlock (int nodeId);
+
+        std::string GetNodePublicKey (void) const;
+        void SetNodePublicKey (std::string nodePublicKey);
+
+        std::string GetNodePublicKeySignature (void) const;
+        void SetNodePublicKeySignature (std::string signature);
 
         /**
          * Checks if the block provided as the argument is the parent of this block object
@@ -199,13 +209,16 @@ protected:
         double m_timeCreated;                 // The time the block was created
         double m_timeReceived;                // The time the block was received from the node
         Ipv4Address m_receivedFromIpv4;       // The Ipv4 of the node which sent the block to the receiving node
+        int m_nodeId;                           // The id of the node for which the block stores the public key
+        std::string m_nodePublicKey;           // The base64 public key of the block
+        std::string m_signature;                // The signature by the validating node
 };
 
 class BlockChunk : public Block
 {
 public:
         BlockChunk (int blockHeight, int minerId, int chunkId, int parentBlockMinerId = 0, int blockSizeBytes = 0,
-                    double timeCreated = 0, double timeReceived = 0, Ipv4Address receivedFromIpv4 = Ipv4Address("0.0.0.0"));
+                    double timeCreated = 0, vector<int> nodeIds, vector<std::string> nodePublicKeys, vector<std::string> signatures, double timeReceived = 0, Ipv4Address receivedFromIpv4 = Ipv4Address("0.0.0.0"));
         BlockChunk ();
         BlockChunk (const BlockChunk &chunkSource); // Copy constructor
         virtual ~BlockChunk (void);
@@ -221,6 +234,9 @@ public:
 
 protected:
         int m_chunkId;
+        vector<int> m_multiNodeIds;
+        vector<std::string> m_multiNodePublicKeys;
+        vector<std::string> m_multiNodeSignatures;
 
 };
 
@@ -243,6 +259,14 @@ public:
          */
         bool HasBlock (const Block &newBlock) const;
         bool HasBlock (int height, int minerId) const;
+
+        /**
+         * Get the nodes' public key ,its' signature and validate its' signature
+         **/
+        std::string GetPublickey (int nodeId);
+        Block GetPublickeyBlock (int nodeId);
+        std::string GetNodePublicKeySignature (int nodeId);
+        bool CheckPublicKeySignature (int nodeId);
 
         /**
          * Return the block with the specified height and minerId.
@@ -312,6 +336,9 @@ public:
          */
         int GetLongestForkSize (void);
 
+        void changePublicKey (Block& Block, std::string newPublicKey);
+        void changePublicKey (int nodeId, std::string newPublicKey);
+
         friend std::ostream& operator<< (std::ostream &out, Blockchain &blockchain);
 
 private:
@@ -319,6 +346,8 @@ private:
         int m_totalBlocks;                                //total number of blocks including the genesis block
         std::vector<std::vector<Block> >    m_blocks;     //2d vector containing all the blocks of the blockchain. (row->blockHeight, col->sibling blocks)
         std::vector<Block>                 m_orphans;     //vector containing the orphans
+        std::map< int, shared_ptr<Block *> > m_block_map;          //map containing the nodeId to block mapping
+        std::map<int, std::string nodePublicKey> m_public_key_map;    //direct map containing mapping of node to public key
 
 
 };
