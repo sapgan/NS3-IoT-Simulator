@@ -1265,10 +1265,12 @@ BlockchainNode::HandleRead (Ptr<Socket> socket)
                 blockHash = stringStream.str();
                 Block newBlockHeaders(d["blocks"][j]["height"].GetInt(), d["blocks"][j]["minerId"].GetInt(), d["blocks"][j]["parentBlockMinerId"].GetInt(),
                                       d["blocks"][j]["size"].GetInt(), d["blocks"][j]["timeCreated"].GetDouble(),
+                                      d["blocks"][j]["nodeId"].GetInt(),
+                                      d["blocks"][j]["nodePublicKey"].GetString(),
+                                      d["blocks"][j]["signature"].GetString(),
                                       Simulator::Now ().GetSeconds (), InetSocketAddress::ConvertFrom(from).GetIpv4 ());
                 m_onlyHeadersReceived[blockHash] = Block (d["blocks"][j]["height"].GetInt(), d["blocks"][j]["minerId"].GetInt(), d["blocks"][j]["parentBlockMinerId"].GetInt(),
-                                                          d["blocks"][j]["size"].GetInt(), d["blocks"][j]["timeCreated"].GetDouble(),
-                                                          Simulator::Now ().GetSeconds (), InetSocketAddress::ConvertFrom(from).GetIpv4 ());
+                                                          d["blocks"][j]["size"].GetInt(), d["blocks"][j]["timeCreated"].GetDouble(),               d["blocks"][j]["nodeId"].GetInt(),d["blocks"][j]["nodePublicKey"].GetString(),d["blocks"][j]["signature"].GetString(),Simulator::Now ().GetSeconds (), InetSocketAddress::ConvertFrom(from).GetIpv4 ());
                 //PrintOnlyHeadersReceived();
 
                 stringStream.clear();
@@ -1428,12 +1430,11 @@ BlockchainNode::HandleRead (Ptr<Socket> socket)
                 stringStream << height << "/" << minerId;
                 blockHash = stringStream.str();
                 Block newBlockHeaders(d["blocks"][j]["height"].GetInt(), d["blocks"][j]["minerId"].GetInt(), d["blocks"][j]["parentBlockMinerId"].GetInt(),
-                                                         d["blocks"][j]["size"].GetInt(), d["blocks"][j]["timeCreated"].GetDouble(),
-                                                         Simulator::Now ().GetSeconds (), InetSocketAddress::ConvertFrom(from).GetIpv4 ());
+                                                         d["blocks"][j]["size"].GetInt(), d["blocks"][j]["timeCreated"].GetDouble(), d["blocks"][j]["nodeId"].GetInt(),d["blocks"][j]["nodePublicKey"].GetString(), d["blocks"][j]["signature"].GetString(), Simulator::Now ().GetSeconds (), InetSocketAddress::ConvertFrom(from).GetIpv4 ());
                 if (!OnlyHeadersReceived(blockHash))
                 {
                   m_onlyHeadersReceived[blockHash] = Block (d["blocks"][j]["height"].GetInt(), d["blocks"][j]["minerId"].GetInt(), d["blocks"][j]["parentBlockMinerId"].GetInt(),
-                                                            d["blocks"][j]["size"].GetInt(), d["blocks"][j]["timeCreated"].GetDouble(),
+                                                            d["blocks"][j]["size"].GetInt(), d["blocks"][j]["timeCreated"].GetDouble(), d["blocks"][j]["nodeId"].GetInt(), d["blocks"][j]["nodePublicKey"].GetString(), d["blocks"][j]["signature"].GetString(),
                                                             Simulator::Now ().GetSeconds (), InetSocketAddress::ConvertFrom(from).GetIpv4 ());
                 }
                 //PrintOnlyHeadersReceived();
@@ -1885,6 +1886,9 @@ BlockchainNode::ReceivedBlockMessage(std::string &blockInfo, Address &from)
     {
       Block newBlock (d["blocks"][j]["height"].GetInt(), d["blocks"][j]["minerId"].GetInt(), d["blocks"][j]["parentBlockMinerId"].GetInt(),
                       d["blocks"][j]["size"].GetInt(), d["blocks"][j]["timeCreated"].GetDouble(),
+                      d["blocks"][j]["nodeId"].GetInt(),
+                      d["blocks"][j]["nodePublicKey"].GetString(),
+                      d["blocks"][j]["signature"].GetString(),
                       Simulator::Now ().GetSeconds (), InetSocketAddress::ConvertFrom(from).GetIpv4 ());
 
       ReceiveBlock (newBlock);
@@ -1972,6 +1976,9 @@ BlockchainNode::ReceivedChunkMessage(std::string &chunkInfo, Address &from)
         if (m_receivedChunks[blockHash].size() == 1 && m_spv)
           AdvertiseFirstChunk (Block (d["chunks"][j]["height"].GetInt(), d["chunks"][j]["minerId"].GetInt(), d["chunks"][j]["parentBlockMinerId"].GetInt(),
                                       d["chunks"][j]["size"].GetInt(), d["chunks"][j]["timeCreated"].GetDouble(),
+                                      d["chunks"][j]["nodeId"].GetInt(),
+                                      d["chunks"][j]["nodePublicKey"].GetString(),
+                                      d["chunks"][j]["signature"].GetString(),
                                       Simulator::Now ().GetSeconds (), InetSocketAddress::ConvertFrom(from).GetIpv4 ()));
 
         if (m_receivedChunks[blockHash].size() == ceil(d["chunks"][j]["size"].GetInt()/static_cast<double>(m_chunkSize)))
@@ -1991,6 +1998,9 @@ BlockchainNode::ReceivedChunkMessage(std::string &chunkInfo, Address &from)
 
             Block newBlock (d["chunks"][j]["height"].GetInt(), d["chunks"][j]["minerId"].GetInt(), d["chunks"][j]["parentBlockMinerId"].GetInt(),
                             d["chunks"][j]["size"].GetInt(), d["chunks"][j]["timeCreated"].GetDouble(),
+                            d["chunks"][j]["nodeId"].GetInt(),
+                            d["chunks"][j]["nodePublicKey"].GetString(),
+                            d["chunks"][j]["signature"].GetString(),
                             Simulator::Now ().GetSeconds (), InetSocketAddress::ConvertFrom(from).GetIpv4 ());
 
             ReceivedLastChunk (newBlock);

@@ -368,7 +368,7 @@ BlockchainValidator::MineBlock (void)
     m_nextBlockSize = m_averageTransactionSize + m_headersSizeBytes;
 
   Block newBlock (height, minerId, parentBlockMinerId, m_nextBlockSize,
-                  currentTime, currentTime, Ipv4Address("127.0.0.1"));
+                  currentTime, 0, "", "", currentTime, Ipv4Address("127.0.0.1"));
 
   switch(m_blockBroadcastType)
   {

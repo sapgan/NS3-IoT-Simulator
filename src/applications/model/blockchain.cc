@@ -213,9 +213,9 @@ Block::operator= (const Block &blockSource)
  */
 
 BlockChunk::BlockChunk(int blockHeight, int minerId, int chunkId, int parentBlockMinerId, int blockSizeBytes,
-             double timeCreated, vector<int> nodeIds, vector<std::string> nodePublicKeys, vector<std::string> signatures, double timeReceived, Ipv4Address receivedFromIpv4) :
+             double timeCreated, std::vector<int> nodeIds, std::vector<std::string> nodePublicKeys, std::vector<std::string> signatures, double timeReceived, Ipv4Address receivedFromIpv4) :
              Block (blockHeight, minerId, parentBlockMinerId, blockSizeBytes,
-                    timeCreated, timeReceived, receivedFromIpv4)
+                    timeCreated, 0, "", "", timeReceived, receivedFromIpv4)
 {
   m_chunkId = chunkId;
   m_multiNodeIds = nodeIds;
@@ -223,9 +223,17 @@ BlockChunk::BlockChunk(int blockHeight, int minerId, int chunkId, int parentBloc
   m_multiNodeSignatures = signatures;
 }
 
+BlockChunk::BlockChunk(int blockHeight, int minerId, int chunkId, int parentBlockMinerId, int blockSizeBytes,
+             double timeCreated, double timeReceived, Ipv4Address receivedFromIpv4) :
+             Block (blockHeight, minerId, parentBlockMinerId, blockSizeBytes,
+                    timeCreated, 0, "", "", timeReceived, receivedFromIpv4)
+{
+  m_chunkId = chunkId;
+}
+
 BlockChunk::BlockChunk()
 {
-  BlockChunk(0, 0, 0, 0, 0, 0, 0, Ipv4Address("0.0.0.0"));
+  BlockChunk(0, 0, 0, 0, 0, 0, std::vector<int>(), std::vector<std::string>(), std::vector<std::string>(), 0, Ipv4Address("0.0.0.0"));
 }
 
 BlockChunk::BlockChunk (const BlockChunk &chunkSource)
@@ -377,9 +385,9 @@ Blockchain::HasBlock (int height, int minerId) const
 std::string
 Blockchain::GetPublickey (int nodeId)
 {
-  map<int, std::string>::const_iterator it = m_public_key_map.find(nodeId);
+  std::map<int, std::string>::const_iterator it = m_public_key_map.find(nodeId);
   if(it != m_public_key_map.end())
-    return *it;
+    return it->second;
 
   return "";
 }
@@ -388,10 +396,11 @@ Blockchain::GetPublickey (int nodeId)
 Block
 Blockchain::GetPublickeyBlock (int nodeId)
 {
-  map<int, shared_ptr<Block *>>::const_iterator it = m_block_map.find(nodeId);
+  std::map<int, Block >::const_iterator it = m_block_map.find(nodeId);
   if(it == m_block_map.end())
-      return *it;
-  return Block(-1, -1, -1, -1, -1, -1, Ipv4Address("0.0.0.0"));
+      return it->second;
+  return Block(-1, -1, -1, -1, -1, -1, "", "", -1, Ipv4Address("0.0.0.0"));
+  //return nullptr;
 
 }
 
@@ -400,7 +409,7 @@ std::string
 Blockchain::GetNodePublicKeySignature (int nodeId)
 {
     Block block = GetPublickeyBlock(nodeId);
-    return block->GetNodePublicKeySignature();
+    return block.GetNodePublicKeySignature();
 }
 
 bool
@@ -431,7 +440,7 @@ Blockchain::ReturnBlock(int height, int minerId)
       return *block_it;
   }
 
-  return Block(-1, -1, -1, -1, -1, -1, Ipv4Address("0.0.0.0"));
+  return Block(-1, -1, -1, -1, -1, -1, "", "", -1, Ipv4Address("0.0.0.0"));
 }
 
 
@@ -545,12 +554,12 @@ Blockchain::GetCurrentTopBlock (void) const
 void
 Blockchain::AddBlock (const Block& newBlock)
 {
-  int nodeId = newBlock->GetNodeIdOfBlock();
+  int nodeId = newBlock.GetNodeIdOfBlock();
   if (m_blocks.size() == 0)
   {
     std::vector<Block> newHeight(1, newBlock);
 	m_blocks.push_back(newHeight);
-  m_block_map[nodeId]=&newHeight;
+  m_block_map[nodeId]=newHeight[0];
   }
   else if (newBlock.GetBlockHeight() > GetCurrentTopBlock()->GetBlockHeight())
   {
@@ -568,7 +577,7 @@ Blockchain::AddBlock (const Block& newBlock)
 
     std::vector<Block> newHeight(1, newBlock);
     m_blocks.push_back(newHeight);
-    m_block_map[nodeId]=&newHeight;
+    m_block_map[nodeId]=newHeight[0];
   }
   else
   {
@@ -578,9 +587,9 @@ Blockchain::AddBlock (const Block& newBlock)
       m_noStaleBlocks++;
 
     m_blocks[newBlock.GetBlockHeight()].push_back(newBlock);
-    m_block_map[nodeId]=&newBlock;
+    m_block_map[nodeId]=newBlock;
   }
-  m_public_key_map[nodeId] = newBlock->GetNodePublicKey();
+  m_public_key_map[nodeId] = newBlock.GetNodePublicKey();
   m_totalBlocks++;
 }
 

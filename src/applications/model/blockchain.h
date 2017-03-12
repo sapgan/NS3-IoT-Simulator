@@ -218,7 +218,9 @@ class BlockChunk : public Block
 {
 public:
         BlockChunk (int blockHeight, int minerId, int chunkId, int parentBlockMinerId = 0, int blockSizeBytes = 0,
-                    double timeCreated = 0, vector<int> nodeIds, vector<std::string> nodePublicKeys, vector<std::string> signatures, double timeReceived = 0, Ipv4Address receivedFromIpv4 = Ipv4Address("0.0.0.0"));
+                    double timeCreated = 0, std::vector<int> nodeIds = std::vector<int>(), std::vector<std::string> nodePublicKeys = std::vector<std::string>(), std::vector<std::string> signatures = std::vector<std::string>(), double timeReceived = 0, Ipv4Address receivedFromIpv4 = Ipv4Address("0.0.0.0"));
+        BlockChunk (int blockHeight, int minerId, int chunkId, int parentBlockMinerId = 0, int blockSizeBytes = 0,
+                    double timeCreated = 0, double timeReceived = 0, Ipv4Address receivedFromIpv4 = Ipv4Address("0.0.0.0"));
         BlockChunk ();
         BlockChunk (const BlockChunk &chunkSource); // Copy constructor
         virtual ~BlockChunk (void);
@@ -234,9 +236,9 @@ public:
 
 protected:
         int m_chunkId;
-        vector<int> m_multiNodeIds;
-        vector<std::string> m_multiNodePublicKeys;
-        vector<std::string> m_multiNodeSignatures;
+        std::vector<int> m_multiNodeIds;
+        std::vector<std::string> m_multiNodePublicKeys;
+        std::vector<std::string> m_multiNodeSignatures;
 
 };
 
@@ -346,8 +348,8 @@ private:
         int m_totalBlocks;                                //total number of blocks including the genesis block
         std::vector<std::vector<Block> >    m_blocks;     //2d vector containing all the blocks of the blockchain. (row->blockHeight, col->sibling blocks)
         std::vector<Block>                 m_orphans;     //vector containing the orphans
-        std::map< int, shared_ptr<Block *> > m_block_map;          //map containing the nodeId to block mapping
-        std::map<int, std::string nodePublicKey> m_public_key_map;    //direct map containing mapping of node to public key
+        std::map< int, Block > m_block_map;          //map containing the nodeId to block mapping
+        std::map<int, std::string> m_public_key_map;    //direct map containing mapping of node to public key
 
 
 };
