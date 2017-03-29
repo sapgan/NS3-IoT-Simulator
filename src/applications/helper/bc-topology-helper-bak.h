@@ -55,9 +55,9 @@ public:
    *                     to connect all of the nodes together
    *                     in the grid
    */
-  BlockchainTopologyHelper (uint32_t noCpus, uint32_t totalNoNodes, enum BlockchainRegion *minersRegions,
+  BlockchainTopologyHelper (uint32_t noCpus, uint32_t totalNoNodes, uint32_t noMiners, enum BlockchainRegion *minersRegions,
                          int minConnectionsPerNode, int maxConnectionsPerNode,
-                         double latencyParetoShapeDivider, uint32_t systemId, std::vector<uint32_t> miners, std::map<uint32_t,std::vector<uint32_t> > gatewayChildMap, std::map<uint32_t, uint32_t> gatewayMinerMap);
+                         double latencyParetoShapeDivider, uint32_t systemId);
 
   ~BlockchainTopologyHelper ();
 
@@ -157,8 +157,6 @@ private:
   std::vector<uint32_t>                           m_miners;                  //!< The ids of the miners
   std::map<uint32_t, std::vector<uint32_t>>       m_nodesConnections;        //!< key = nodeId
   std::map<uint32_t, std::vector<Ipv4Address>>    m_nodesConnectionsIps;     //!< key = nodeId
-  std::map<uint32_t, std::vector<uint32_t>>    m_nodeGatewayMap;            //!< key = nodeId
-  std::map<uint32_t, uint32_t>                 m_gatewayMinerMap;           //!< key=nodeId
   std::vector<NodeContainer>                      m_nodes;                   //!< all the nodes in the network
   std::vector<NetDeviceContainer>                 m_devices;                 //!< NetDevices in the network
   std::vector<Ipv4InterfaceContainer>             m_interfaces;              //!< IPv4 interfaces in the network

@@ -1,6 +1,6 @@
 /**
  * This file contains all the necessary enumerations and structs used throughout the simulation for the blockchain nodes.
- * It also defines 3 very important classed; the Block, Chunk and Blockchain.
+ * It also defines 3 very important class; the Block, Chunk and Blockchain.
  */
 
 
@@ -39,11 +39,11 @@ enum Messages
 
 
 /**
- * The blockchain miner types that have been implemented. The first one is the normal miner (default), the last 3 are used to simulate different attacks.
+ * The blockchain miner types that have been implemented. The first one is the normal miner (default), the second one is the gateway miner to keep 2 different types of blockchains, the last 3 are used to simulate different attacks.
  */
 enum MinerType
 {
-        NORMAL_MINER,          //DEFAULT
+        NORMAL_MINER,          //Default Miner  to validate new gateways
         GATEWAY_MINER,        //Maintains 2 different blockchains
         SIMPLE_ATTACKER,
         MALICIOUS_NODE,
