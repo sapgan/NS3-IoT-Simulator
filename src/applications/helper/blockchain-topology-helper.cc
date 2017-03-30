@@ -82,21 +82,23 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
 
   std::array<double,6> connectionsDistributionWeights {10, 40, 30, 13, 6, 1};*/
 
-    std::cout << "Starting31" << std::endl;
+  std::cout << "Building the topology!" << std::endl;
   m_minersRegions = new enum BlockchainRegion[m_noMiners];
   for (int i = 0; i < m_noMiners; i++)
   {
     m_minersRegions[m_miners[i]] = minersRegions[m_miners[i]];
   }
 
+  std::cout << "Creating list of all nodes!" << std::endl;
   /**
    * Create a vector containing all the nodes ids
    */
-  for (int i = 0; i < m_totalNoNodes; i++)
+  for (int i = 1; i <= m_totalNoNodes; i++)
   {
     nodes.push_back(i);
   }
 
+  std::cout << "Forming the miners links!" << std::endl;
   sort(m_miners.begin(), m_miners.end());
 
   //Interconnect the miners
@@ -109,6 +111,7 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
 	}
   }
 
+    std::cout << "Forming the gateway links!" << std::endl;
   std::map<uint32_t, std::vector<uint32_t> >::iterator gateways_it;
 
   for(gateways_it=m_nodeGatewayMap.begin();gateways_it!=m_nodeGatewayMap.end();gateways_it++)
@@ -126,12 +129,13 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
     m_nodesConnections[miner].push_back(gatewayId);
   }
 
+  std::cout << "All links formed!" << std::endl;
   tFinish = GetWallTime();
   if (m_systemId == 0)
   {
     std::cout << "The nodes connections were created in " << tFinish - tStart << "s.\n";
-    std::cout << "The minimum number of connections for each node is " << m_minConnectionsPerNode
-              << " and whereas the maximum is " << m_maxConnectionsPerNode << ".\n";
+    /*std::cout << "The minimum number of connections for each node is " << m_minConnectionsPerNode
+              << " and whereas the maximum is " << m_maxConnectionsPerNode << ".\n";*/
   }
 
 
@@ -143,8 +147,10 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
   PointToPointHelper pointToPoint;
 
   tStart = GetWallTime();
+
+  std::cout << "Creating " << m_totalNoNodes << " nodes!" << std::endl;
   //Create the blockchain nodes
-  for (uint32_t i = 0; i < m_totalNoNodes; i++)
+  for (uint32_t i = 0; i <= m_totalNoNodes; i++)
   {
     NodeContainer currentNode;
     //  currentNode.Create (1, i % m_noCpus);
@@ -153,9 +159,8 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
       std::cout << "Creating a node with Id = " << i << " and systemId = " << i % m_noCpus << "\n"; */
     m_nodes.push_back (currentNode);
 	  //AssignRegion(i);
-    AssignInternetSpeeds(i);
+    //AssignInternetSpeeds(i);
   }
-      std::cout << "Starting32" << std::endl;
 
 
   //Print region bandwidths averages
@@ -202,6 +207,7 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
 
   tStart = GetWallTime();
 
+  std::cout << "Creating the links between the miner nodes!" << std::endl;
   //Create first the links between miners
   for(auto miner = m_miners.begin(); miner != m_miners.end(); miner++)
   {
@@ -245,7 +251,7 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
 		pointToPoint.SetDeviceAttribute ("DataRate", StringValue (bandwidthStream.str()));
 		//pointToPoint.SetChannelAttribute ("Delay", StringValue (latencyStringStream.str()));
 
-        newDevices.Add (pointToPoint.Install (m_nodes.at (*miner).Get (0), m_nodes.at (*it).Get (0)));
+    newDevices.Add (pointToPoint.Install (m_nodes.at (*miner).Get (0), m_nodes.at (*it).Get (0)));
 		m_devices.push_back (newDevices);
 /* 		if (m_systemId == 0)
           std::cout << "Creating link " << m_totalNoLinks << " between nodes "
@@ -259,6 +265,7 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
     }
   }
 
+  std::cout << "Creating the links between rest of the nodes!" << std::endl;
   for(auto &node : m_nodesConnections)
   {
 
@@ -318,6 +325,7 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
 
   tFinish = GetWallTime();
 
+  std::cout << "Created all the links!" << std::endl;
   if (m_systemId == 0)
     std::cout << "The total number of links is " << m_totalNoLinks << " (" << tFinish - tStart << "s).\n";
 }
@@ -334,6 +342,7 @@ BlockchainTopologyHelper::InstallStack (InternetStackHelper stack)
   double tStart = GetWallTime();
   double tFinish;
 
+  std::cout << "Installing the internet stack!" << std::endl;
   for (uint32_t i = 0; i < m_nodes.size (); ++i)
     {
       NodeContainer currentNode = m_nodes[i];
@@ -476,7 +485,9 @@ BlockchainTopologyHelper::AssignInternetSpeeds(uint32_t id)
     m_nodesInternetSpeeds[id].uploadSpeed = m_minerUploadSpeed;
   }
   else{
-    switch(m_blockchainNodesRegion[id])
+    m_nodesInternetSpeeds[id].downloadSpeed = m_minerDownloadSpeed;
+    m_nodesInternetSpeeds[id].uploadSpeed = m_minerUploadSpeed;
+    /*switch(m_blockchainNodesRegion[id])
     {
       case ASIA_PACIFIC:
       {
@@ -514,7 +525,7 @@ BlockchainTopologyHelper::AssignInternetSpeeds(uint32_t id)
         m_nodesInternetSpeeds[id].uploadSpeed = m_southAmericaUploadBandwidthDistribution(m_generator);
         break;
       }
-    }
+    }*/
   }
 
 /*  if (m_systemId == 0)

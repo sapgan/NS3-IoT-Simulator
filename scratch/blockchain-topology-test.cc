@@ -25,7 +25,7 @@
  #include "ns3/point-to-point-module.h"
  #include "ns3/applications-module.h"
  #include "ns3/point-to-point-layout-module.h"
- #define N_MINERS 4
+ #define N_MINERS 2
  // #include "ns3/mpi-interface.h"
  // #define MPI_TEST
  //
@@ -82,21 +82,21 @@
      std::map<uint32_t,std::vector<uint32_t> >            gatewayChildMap;
      std::map<uint32_t, uint32_t>                         gatewayMinerMap;
      int                                                  nodesInSystemId0 = 0;
-     uint32_t                                             totalNoNodes;
+     uint32_t                                             totalNoNodes=0;
 
      Time::SetResolution (Time::NS);
 
      uint32_t systemId = 0;
      uint32_t systemCount = 1;
 
-     for(int i=1;i<=4;i++){
+     for(int i=1;i<=N_MINERS;i++){
       miners.push_back(i);
       minersRegions[i] = getRandomBlockchainRegion();
       totalNoNodes++;
     }
 
-    for(int i=1;i<=4;i++){
-      uint32_t gateway = i*4+1;
+    for(int i=1;i<=N_MINERS;i++){
+      uint32_t gateway = i*N_MINERS+1;
       std::vector<uint32_t> childs;
       totalNoNodes++;
       for(int j=1;j<=3;j++){
@@ -106,7 +106,6 @@
       gatewayChildMap[gateway] = childs;
       gatewayMinerMap[gateway] = i;
     }
-
 
     NS_LOG_INFO ("Creating Topology");
      BlockchainTopologyHelper blockchainTopologyHelper (systemCount, totalNoNodes, minersRegions,
@@ -125,7 +124,7 @@
 
 enum BlockchainRegion getRandomBlockchainRegion(void)
 {
-  int idx = rand()%7;
+  int idx = rand()%6;
   return getBlockchainEnum(idx);
 }
 
