@@ -2,13 +2,13 @@
  * This file contains declares the BlockchainValidatorHelper class.
  */
 
-#ifndef BLOCKCHAIN_MINER_HELPER_H
-#define BLOCKCHAIN_MINER_HELPER_H
+#ifndef BLOCKCHAIN_VALIDATOR_HELPER_H
+#define BLOCKCHAIN_VALIDATOR_HELPER_H
 
 #include "ns3/blockchain-node-helper.h"
-#include "ns3/blockchain-simple-attacker.h"
-#include "ns3/blockchain-malicious-node.h"
-#include "ns3/blockchain-malicious-node-trials.h"
+// #include "ns3/blockchain-simple-attacker.h"
+// #include "ns3/blockchain-malicious-node.h"
+// #include "ns3/blockchain-malicious-node-trials.h"
 
 
 namespace ns3 {
@@ -39,7 +39,7 @@ class BlockchainValidatorHelper : public BlockchainNodeHelper
    */
   BlockchainValidatorHelper (std::string protocol, Address address, std::vector<Ipv4Address> peers, int noMiners,
                       std::map<Ipv4Address, double> &peersDownloadSpeeds, std::map<Ipv4Address, double> &peersUploadSpeeds,
-                      nodeInternetSpeeds &internetSpeeds, nodeStatistics *stats, double hashRate, double averageBlockGenIntervalSeconds);
+                      nodeInternetSpeeds &internetSpeeds, double hashRate);
 
   enum MinerType GetMinerType(void);
   void SetMinerType (enum MinerType m);
@@ -67,7 +67,6 @@ protected:
   double                    m_hashRate;
   double                    m_blockGenBinSize;
   double                    m_blockGenParameter;
-  double                    m_averageBlockGenIntervalSeconds;
   uint32_t                  m_secureBlocks;
 };
 

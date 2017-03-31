@@ -37,7 +37,7 @@ public:
    */
   BlockchainNodeHelper (std::string protocol, Address address, std::vector<Ipv4Address> &peers,
                      std::map<Ipv4Address, double> &peersDownloadSpeeds, std::map<Ipv4Address, double> &peersUploadSpeeds,
-                     nodeInternetSpeeds &internetSpeeds, nodeStatistics *stats);
+                     nodeInternetSpeeds &internetSpeeds);
 
   /**
    * Called by subclasses to set a different factory TypeId
@@ -59,7 +59,7 @@ public:
    */
    void commonConstructor(std::string protocol, Address address, std::vector<Ipv4Address> &peers,
                           std::map<Ipv4Address, double> &peersDownloadSpeeds, std::map<Ipv4Address, double> &peersUploadSpeeds,
-                          nodeInternetSpeeds &internetSpeeds, nodeStatistics *stats);
+                          nodeInternetSpeeds &internetSpeeds);
 
   /**
    * Helper function used to set the underlying application attributes.
@@ -104,8 +104,6 @@ public:
 
   void SetNodeInternetSpeeds (nodeInternetSpeeds &internetSpeeds);
 
-  void SetNodeStats (nodeStatistics *nodeStats);
-
   void SetProtocolType (enum ProtocolType protocolType);
 
 protected:
@@ -125,7 +123,6 @@ protected:
   std::map<Ipv4Address, double>                       m_peersDownloadSpeeds;  //!< The download speeds of the peers
   std::map<Ipv4Address, double>                       m_peersUploadSpeeds;    //!< The upload speeds of the peers
   nodeInternetSpeeds                                  m_internetSpeeds;       //!< The internet speeds of the node
-  nodeStatistics                                      *m_nodeStats;           //!< The struct holding the node statistics
   enum ProtocolType									  m_protocolType;         //!< The protocol that the nodes use to advertise new blocks (DEFAULT: STANDARD)
 
 };

@@ -12,10 +12,10 @@ namespace ns3 {
 
 BlockchainNodeHelper::BlockchainNodeHelper (std::string protocol, Address address, std::vector<Ipv4Address> &peers,
                                       std::map<Ipv4Address, double> &peersDownloadSpeeds, std::map<Ipv4Address, double> &peersUploadSpeeds,
-                                      nodeInternetSpeeds &internetSpeeds, nodeStatistics *stats)
+                                      nodeInternetSpeeds &internetSpeeds)
 {
   m_factory.SetTypeId ("ns3::BlockchainNode");
-  commonConstructor (protocol, address, peers, peersDownloadSpeeds, peersUploadSpeeds, internetSpeeds, stats);
+  commonConstructor (protocol, address, peers, peersDownloadSpeeds, peersUploadSpeeds, internetSpeeds);
 }
 
 BlockchainNodeHelper::BlockchainNodeHelper (void)
@@ -25,7 +25,7 @@ BlockchainNodeHelper::BlockchainNodeHelper (void)
 void
 BlockchainNodeHelper::commonConstructor(std::string protocol, Address address, std::vector<Ipv4Address> &peers,
                                      std::map<Ipv4Address, double> &peersDownloadSpeeds, std::map<Ipv4Address, double> &peersUploadSpeeds,
-                                     nodeInternetSpeeds &internetSpeeds, nodeStatistics *stats)
+                                     nodeInternetSpeeds &internetSpeeds)
 {
   m_protocol = protocol;
   m_address = address;
@@ -33,7 +33,6 @@ BlockchainNodeHelper::commonConstructor(std::string protocol, Address address, s
   m_peersDownloadSpeeds = peersDownloadSpeeds;
   m_peersUploadSpeeds = peersUploadSpeeds;
   m_internetSpeeds = internetSpeeds;
-  m_nodeStats = stats;
   m_protocolType = STANDARD_PROTOCOL;
 
   m_factory.Set ("Protocol", StringValue (m_protocol));
@@ -81,7 +80,6 @@ BlockchainNodeHelper::InstallPriv (Ptr<Node> node)
   app->SetPeersDownloadSpeeds(m_peersDownloadSpeeds);
   app->SetPeersUploadSpeeds(m_peersUploadSpeeds);
   app->SetNodeInternetSpeeds(m_internetSpeeds);
-  app->SetNodeStats(m_nodeStats);
   app->SetProtocolType(m_protocolType);
 
   node->AddApplication (app);
@@ -114,11 +112,6 @@ BlockchainNodeHelper::SetNodeInternetSpeeds (nodeInternetSpeeds &internetSpeeds)
   m_internetSpeeds = internetSpeeds;
 }
 
-void
-BlockchainNodeHelper::SetNodeStats (nodeStatistics *nodeStats)
-{
-  m_nodeStats = nodeStats;
-}
 
 void
 BlockchainNodeHelper::SetProtocolType (enum ProtocolType protocolType)

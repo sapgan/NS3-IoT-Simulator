@@ -23,6 +23,8 @@ def build(bld):
 	'model/blockchain-node.cc',
 	'model/blockchain-validator.cc',
   'helper/blockchain-topology-helper.cc',
+  'helper/blockchain-node-helper.cc',
+  'helper/blockchain-validator-helper.cc',
         ]
 
     applications_test = bld.create_ns3_module_test_library('applications')
@@ -53,6 +55,8 @@ def build(bld):
 	'model/blockchain-node.h',
 	'model/blockchain-validator.h',
   'helper/blockchain-topology-helper.h',
+  'helper/blockchain-node-helper.h',
+  'helper/blockchain-validator-helper.h',
         ]
 
     bld.ns3_python_bindings()

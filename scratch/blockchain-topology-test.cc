@@ -25,7 +25,7 @@
  #include "ns3/point-to-point-module.h"
  #include "ns3/applications-module.h"
  #include "ns3/point-to-point-layout-module.h"
- #define N_MINERS 2
+ #define N_MINERS 4
  // #include "ns3/mpi-interface.h"
  // #define MPI_TEST
  //
@@ -81,7 +81,7 @@
      std::vector<uint32_t>                                miners;
      std::map<uint32_t,std::vector<uint32_t> >            gatewayChildMap;
      std::map<uint32_t, uint32_t>                         gatewayMinerMap;
-     int                                                  nodesInSystemId0 = 0;
+     uint32_t                                                  nodesInSystemId0 = 0;
      uint32_t                                             totalNoNodes=0;
 
      Time::SetResolution (Time::NS);
@@ -119,6 +119,35 @@
     ipv4InterfaceContainer = blockchainTopologyHelper.GetIpv4InterfaceContainer();
     nodesConnections = blockchainTopologyHelper.GetNodesConnectionsIps();
     miners = blockchainTopologyHelper.GetMiners();
+    peersDownloadSpeeds = blockchainTopologyHelper.GetPeersDownloadSpeeds();
+    peersUploadSpeeds = blockchainTopologyHelper.GetPeersUploadSpeeds();
+    nodesInternetSpeeds = blockchainTopologyHelper.GetNodesInternetSpeeds();
+
+    BlockchainValidatorHelper blockchainValidatorHelper ("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), m_commPort),nodesConnections[miners[0]], miners.size(), peersDownloadSpeeds[0], peersUploadSpeeds[0],nodesInternetSpeeds[0], 5.0);
+
+    ApplicationContainer blockchainValidators;
+
+    for(auto &miner : miners)
+    {
+    	Ptr<Node> targetNode = blockchainTopologyHelper.GetNode (miner);
+      blockchainValidatorHelper.SetPeersAddresses (nodesConnections[miner]);
+      blockchainValidatorHelper.SetPeersDownloadSpeeds (peersDownloadSpeeds[miner]);
+      blockchainValidatorHelper.SetPeersUploadSpeeds (peersUploadSpeeds[miner]);
+      blockchainValidatorHelper.SetNodeInternetSpeeds (nodesInternetSpeeds[miner]);
+      blockchainValidators.Add(blockchainValidatorHelper.Install (targetNode));
+    }
+    blockchainValidators.Start (Seconds (start));
+    blockchainValidators.Stop (Minutes (stop));
+
+    BlockchainNodeHelper blockchainNodeHelper ("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), m_commPort),nodesConnections[0], peersDownloadSpeeds[0],  peersUploadSpeeds[0], nodesInternetSpeeds[0]);
+
+    ApplicationContainer blockchainNodes;
+
+    //Install gateway nodes
+    //tStartSimulation = get_wall_time();
+    //Simulator::Stop (Minutes (stop + 0.1));
+    //Simulator::Run ();
+    Simulator::Destroy ();
    return 0;
  }
 

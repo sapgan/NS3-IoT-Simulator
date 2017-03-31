@@ -19,6 +19,9 @@
 #include "ns3/blockchain-topology-helper.h"
 #include "ns3/internet-stack-helper.h"
 #include "ns3/point-to-point-helper.h"
+#include "ns3/csma-module.h"
+#include "ns3/sixlowpan-module.h"
+#include "ns3/ipv6-address-helper.h"
 #include "ns3/constant-position-mobility-model.h"
 #include "ns3/string.h"
 #include "ns3/vector.h"
@@ -26,6 +29,8 @@
 #include "ns3/ipv6-address-generator.h"
 #include "ns3/random-variable-stream.h"
 #include "ns3/double.h"
+#include "ns3/uinteger.h"
+#include "ns3/boolean.h"
 //#include "ns3/blockchain-constants.h"
 #include <algorithm>
 #include <fstream>
@@ -118,7 +123,7 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
   {
     uint32_t gatewayId = gateways_it->first;
     std::vector<uint32_t> gatewayChilds = gateways_it->second;
-    //Connect all childs to gateway
+    //Connect all children to gateway
     for(auto &child : gatewayChilds)
     {
       m_nodesConnections[gatewayId].push_back(child);
@@ -145,6 +150,9 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
   std::ostringstream bandwidthStream;
 
   PointToPointHelper pointToPoint;
+  CsmaHelper csma;
+  SixLowPanHelper sixlowpan;
+  Ipv6AddressHelper ipv6;
 
   tStart = GetWallTime();
 
@@ -159,7 +167,7 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
       std::cout << "Creating a node with Id = " << i << " and systemId = " << i % m_noCpus << "\n"; */
     m_nodes.push_back (currentNode);
 	  //AssignRegion(i);
-    //AssignInternetSpeeds(i);
+    AssignInternetSpeeds(i);
   }
 
 
@@ -225,12 +233,12 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
                                     std::min(m_nodesInternetSpeeds[m_nodes.at (*it).Get (0)->GetId()].uploadSpeed,
                                     m_nodesInternetSpeeds[m_nodes.at (*it).Get (0)->GetId()].downloadSpeed));*/
       double bandwidth = 10.05;
-		bandwidthStream.str("");
-        bandwidthStream.clear();
-		bandwidthStream << bandwidth << "Mbps";
+		  bandwidthStream.str("");
+      bandwidthStream.clear();
+		  bandwidthStream << bandwidth << "Mbps";
 
-        latencyStringStream.str("");
-        latencyStringStream.clear();
+      latencyStringStream.str("");
+      latencyStringStream.clear();
 
 		/*if (m_latencyParetoShapeDivider > 0)
         {
@@ -283,13 +291,13 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
                                     m_nodesInternetSpeeds[m_nodes.at (node.first).Get (0)->GetId()].downloadSpeed),
                                     std::min(m_nodesInternetSpeeds[m_nodes.at (*it).Get (0)->GetId()].uploadSpeed,
                                     m_nodesInternetSpeeds[m_nodes.at (*it).Get (0)->GetId()].downloadSpeed));*/
-    double bandwidth = 9.05;
-		bandwidthStream.str("");
-        bandwidthStream.clear();
-		bandwidthStream << bandwidth << "Mbps";
+      double bandwidth = 9.05;
+  		bandwidthStream.str("");
+      bandwidthStream.clear();
+  		bandwidthStream << bandwidth << "Mbps";
 
-        latencyStringStream.str("");
-        latencyStringStream.clear();
+      latencyStringStream.str("");
+      latencyStringStream.clear();
 
 		/*if (m_latencyParetoShapeDivider > 0)
         {
@@ -306,10 +314,16 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
                                                 [m_blockchainNodesRegion[(m_nodes.at (*it).Get (0))->GetId()]] << "ms";
         }*/
 
-		pointToPoint.SetDeviceAttribute ("DataRate", StringValue (bandwidthStream.str()));
-		//ointToPoint.SetChannelAttribute ("Delay", StringValue (latencyStringStream.str()));
-
-        newDevices.Add (pointToPoint.Install (m_nodes.at (node.first).Get (0), m_nodes.at (*it).Get (0)));
+		//pointToPoint.SetDeviceAttribute ("DataRate", StringValue (bandwidthStream.str()));
+    csma.SetChannelAttribute ("DataRate", DataRateValue (5000000));
+    csma.SetChannelAttribute ("Delay", TimeValue (MilliSeconds (2)));
+		//pointToPoint.SetChannelAttribute ("Delay", StringValue (latencyStringStream.str()));
+    NodeContainer csmaNodes (m_nodes.at (node.first).Get (0), m_nodes.at (*it).Get (0));
+    NetDeviceContainer csmaDevice = csma.Install (csmaNodes);
+    csma.SetDeviceAttribute ("Mtu", UintegerValue (150));
+    sixlowpan.SetDeviceAttribute ("ForceEtherType", BooleanValue (true) );
+    newDevices.Add (sixlowpan.Install (csmaDevice));
+    //newDevices.Add (pointToPoint.Install (m_nodes.at (node.first).Get (0), m_nodes.at (*it).Get (0)));
 		m_devices.push_back (newDevices);
 /* 		if (m_systemId == 0)
           std::cout << "Creating link " << m_totalNoLinks << " between nodes "
