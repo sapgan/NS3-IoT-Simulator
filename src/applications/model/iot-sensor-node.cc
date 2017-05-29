@@ -16,8 +16,23 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * Author: Saptarshi Gan <sapedu11@gmail.com>
- *                      <saptarshi.gan@duke.edu>
  */
+
+ #include <algorithm>
+ #include "ns3/application.h"
+ #include "ns3/event-id.h"
+ #include "ns3/ptr.h"
+ #include "ns3/traced-callback.h"
+ #include "ns3/address.h"
+ #include "ns3/iot-sensor-node.h"
+ #include "ns3/internet-module.h"
+ #include "ns3/internet-apps-module.h"
+ #include "blockchain.h"
+ #include "ns3/boolean.h"
+ #include "ns3/address-utils.h"
+ #include <crypto++/rsa.h>
+ #include <crypto++/osrng.h>
+ #include <crypto++/files.h>
 
 namespace ns3 {
 
@@ -52,12 +67,45 @@ IotSensorNode::GetTypeId (void)
 IotSensorNode::IotSensorNode (void) : m_commPort (5555), m_secondsPerMin(60)
 {
         NS_LOG_FUNCTION (this);
-        m_sent = 0;
         m_socket = 0;
         m_gatewayNodeId = 0;
         m_gatewayAddress = 0;
-        m_privateKey = 0;
         m_numberOfPeers = m_peersAddresses.size();
+        CryptoPP::AutoSeededRandomPool prng;
+        CryptoPP::InvertibleRSAFunction params;
+        params.GenerateRandomWithKeySize(prng, 2048);
+
+        CryptoPP::RSA::PrivateKey privateKey(params);
+        CryptoPP::RSA::PublicKey publicKey(params);
+        m_privateKey = privateKey;
+}
+
+IotSensorNode::IotSensorNode (CryptoPP::RSA::PublicKey gatewayKey, CryptoPP::RSA::PrivateKey privKey) : m_commPort (5555), m_secondsPerMin(60)
+{
+        NS_LOG_FUNCTION (this);
+        m_socket = 0;
+        m_gatewayNodeId = 0;
+        m_gatewayAddress = 0;
+        m_privateKey = privKey;
+        m_gatewayPublicKey = gatewayKey;
+        m_numberOfPeers = m_peersAddresses.size();
+}
+
+IotSensorNode::IotSensorNode (CryptoPP::RSA::PublicKey gatewayKey) : m_commPort (5555), m_secondsPerMin(60)
+{
+        NS_LOG_FUNCTION (this);
+        m_socket = 0;
+        m_gatewayNodeId = 0;
+        m_gatewayAddress = 0;
+        m_gatewayPublicKey = gatewayKey;
+        m_numberOfPeers = m_peersAddresses.size();
+        CryptoPP::AutoSeededRandomPool prng;
+        CryptoPP::InvertibleRSAFunction params;
+        params.GenerateRandomWithKeySize(prng, 2048);
+
+        CryptoPP::RSA::PrivateKey privateKey(params);
+        CryptoPP::RSA::PublicKey publicKey(params);
+        m_privateKey = privateKey;
 }
 
 IotSensorNode::~IotSensorNode ()
@@ -195,7 +243,7 @@ IotSensorNode::StartApplication ()    // Called at time specified by Start
         for (std::vector<Ipv4Address>::const_iterator i = m_peersAddresses.begin(); i != m_peersAddresses.end(); ++i)
         {
                 m_peersSockets[*i] = Socket::CreateSocket (GetNode (), TcpSocketFactory::GetTypeId ());
-                m_peersSockets[*i]->Connect (InetSocketAddress (*i, m_bitcoinPort));
+                m_peersSockets[*i]->Connect (InetSocketAddress (*i, m_commPort));
         }
         NS_LOG_DEBUG ("Node " << GetNode()->GetId() << ": After creating sockets");
         m_nodeStats->nodeId = GetNode ()->GetId ();
@@ -389,7 +437,7 @@ IotSensorNode::SendMessage (enum Messages receivedMessage, enum Messages respons
 
   d["message"].SetInt(responseMessage);
   d.Accept(writer);
-  NS_LOG_INFO("Node " GetNode ()->GetId () << " sent a " getMessageName(responseMessage) << " message: " << buffer.GetString());
+  NS_LOG_INFO("Node " << GetNode ()->GetId () << " sent a " << getMessageName(responseMessage) << " message: " << buffer.GetString());
 
   outgoingSocket->Send (reinterpret_cast<const uint8_t*>(buffer.GetString()), buffer.GetSize(), 0);
   outgoingSocket->Send (delimiter, 1, 0);
@@ -407,7 +455,7 @@ IotSensorNode::SendMessage (enum Messages receivedMessage, enum Messages respons
 
   d["message"].SetInt(responseMessage);
   d.Accept(writer);
-  NS_LOG_INFO("Node " GetNode ()->GetId () << " sent a " getMessageName(responseMessage) << " message: " << buffer.GetString());
+  NS_LOG_INFO("Node " << GetNode ()->GetId () << " sent a " << getMessageName(responseMessage) << " message: " << buffer.GetString());
 
   Ipv4Address outgoingIpv4Address = InetSocketAddress::ConvertFrom(outgoingAddress).GetIpv4 ();
   std::map<Ipv4Address, Ptr<Socket>>::iterator it = m_peersSockets.find(outgoingIpv4Address);
@@ -436,7 +484,7 @@ IotSensorNode::SendMessage (enum Messages receivedMessage, enum Messages respons
   d.Parse(packet.c_str());
   d["message"].SetInt(responseMessage);
   d.Accept(writer);
-  NS_LOG_INFO("Node " GetNode ()->GetId () << " sent a " getMessageName(responseMessage) << " message: " << buffer.GetString());
+  NS_LOG_INFO("Node " <<  GetNode ()->GetId () << " sent a " << getMessageName(responseMessage) << " message: " << buffer.GetString());
 
   Ipv4Address outgoingIpv4Address = InetSocketAddress::ConvertFrom(outgoingAddress).GetIpv4 ();
   std::map<Ipv4Address, Ptr<Socket>>::iterator it = m_peersSockets.find(outgoingIpv4Address);
@@ -465,7 +513,7 @@ IotSensorNode::SendMessage (enum Messages receivedMessage, enum Messages respons
   d.Parse(packet.c_str());
   d["message"].SetInt(responseMessage);
   d.Accept(writer);
-  NS_LOG_INFO("Node " GetNode ()->GetId () << " sent a " getMessageName(responseMessage) << " message: " << buffer.GetString());
+  NS_LOG_INFO("Node " << GetNode ()->GetId () << " sent a " << getMessageName(responseMessage) << " message: " << buffer.GetString());
 
   std::map<Ipv4Address, Ptr<Socket>>::iterator it = m_peersSockets.find(outgoingIpv4Address);
 
@@ -493,7 +541,7 @@ IotSensorNode::SendMessage (enum Messages receivedMessage, enum Messages respons
   d.Parse(packet.c_str());
   d["message"].SetInt(responseMessage);
   d.Accept(writer);
-  NS_LOG_INFO("Node " GetNode ()->GetId () << " sent a " getMessageName(responseMessage) << " message: " << buffer.GetString());
+  NS_LOG_INFO("Node " << GetNode ()->GetId () << " sent a " << getMessageName(responseMessage) << " message: " << buffer.GetString());
 
   outgoingSocket->Send (reinterpret_cast<const uint8_t*>(buffer.GetString()), buffer.GetSize(), 0);
   outgoingSocket->Send (delimiter, 1, 0);

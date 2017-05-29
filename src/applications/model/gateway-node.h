@@ -10,6 +10,9 @@ class Address;
 class Socket;
 class Packet;
 
+/**
+* This acts as validator for internal nodes and thin client for inter-PSN by calling required main blockchain validator.
+*/
 class GatewayNode : public BlockchainNode
 {
 public:

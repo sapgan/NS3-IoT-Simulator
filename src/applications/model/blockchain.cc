@@ -19,7 +19,9 @@ namespace ns3 {
  * Class Block functions
  *
  */
-
+ /**
+ *  TODO:Represent public key data as merkle tree structure.
+ */
 Block::Block(int blockHeight, int minerId, int parentBlockMinerId, int blockSizeBytes,
              double timeCreated, int nodeId, std::string nodePublicKey, std::string signature, double timeReceived, Ipv4Address receivedFromIpv4)
 {

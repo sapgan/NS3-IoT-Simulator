@@ -4,6 +4,7 @@
 #include "ns3/application.h"
 #include "ns3/event-id.h"
 #include "ns3/ptr.h"
+#include "ns3/address.h"
 #include "ns3/ipv4-address.h"
 #include "ns3/core-module.h"
 #include "ns3/internet-module.h"
@@ -12,7 +13,12 @@
 #include "ns3/ipv6-static-routing-helper.h"
 #include "ns3/ipv6-routing-table-entry.h"
 #include "ns3/sixlowpan-module.h"
+#include "ns3/blockchain.h"
+#include "../../rapidjson/document.h"
+#include "../../rapidjson/writer.h"
+#include "../../rapidjson/stringbuffer.h"
 #include <random>
+#include <crypto++/rsa.h>
 
 namespace ns3 {
 
@@ -30,6 +36,10 @@ public:
 								static TypeId GetTypeId (void);
 
 								IotSensorNode();
+
+								IotSensorNode(CryptoPP::RSA::PublicKey gatewayKey, CryptoPP::RSA::PrivateKey privKey);
+
+								IotSensorNode(CryptoPP::RSA::PublicKey gatewayKey);
 
 								virtual ~IotSensorNode ();
 
@@ -194,13 +204,17 @@ private:
 								Ipv4Address m_gatewayAddress;  //!< ipv4 address of the gateway
 								double m_downloadSpeed;                       //!< The download speed of the node in Bytes/s
 								double m_uploadSpeed;                         //!< The upload speed of the node in Bytes/s
+								CryptoPP::RSA::PrivateKey m_privateKey;								//!< Private key for the sensor node
+								CryptoPP::RSA::PublicKey m_gatewayPublicKey;							//!<	public key for the gateway
 
 								std::vector<Ipv4Address>                            m_peersAddresses;           //!< The addresses of peers
 								std::map<Ipv4Address, double>                       m_peersDownloadSpeeds;      //!< The peersDownloadSpeeds of channels
 								std::map<Ipv4Address, double>                       m_peersUploadSpeeds;        //!< The peersUploadSpeeds of channels
+								std::map<Ipv4Address, double>                       m_peersSessionKeys;        //!< The session keys established with different peers
 								std::map<Ipv4Address, Ptr<Socket> >                  m_peersSockets;            //!< The sockets of peers
 								std::map<Address, std::string>                      m_bufferedData;             //!< map holding the buffered data from previous handleRead events
 								std::map<Ipv4Address, std::string> m_publicKeys; //!< map holding the publicKeys for the peers
+								std::map<Ipv4Address, std::string> m_cacheSessionKeys; //!< map holding the cached session keys for peers
 								std::map<Ipv4Address, std::vector<std::string> > m_messages; //!< map holding all the messages from different peers
 								nodeStatistics                                     *m_nodeStats;                //!< struct holding the node stats
 								enum ProtocolType m_protocolType;                                               //!< protocol type
