@@ -19,6 +19,8 @@
 #include "../../rapidjson/stringbuffer.h"
 #include <random>
 #include <crypto++/rsa.h>
+#include <crypto++/aes.h>
+#include <crypto++/osrng.h>
 
 namespace ns3 {
 
@@ -39,6 +41,8 @@ public:
 
 								IotSensorNode(CryptoPP::RSA::PublicKey gatewayKey, CryptoPP::RSA::PrivateKey privKey);
 
+								IotSensorNode(CryptoPP::RSA::PublicKey gatewayKey, CryptoPP::RSA::PrivateKey privKey,CryptoPP::RSA::PublicKey pubKey);
+
 								IotSensorNode(CryptoPP::RSA::PublicKey gatewayKey);
 
 								virtual ~IotSensorNode ();
@@ -52,6 +56,33 @@ public:
 								 * \return a vector containing the addresses of peers
 								 */
 								std::vector<Ipv4Address> GetPeersAddresses (void) const;
+
+								/**
+								 * \return the node's public key
+								 */
+								CryptoPP::RSA::PublicKey GetPublickey (void) const;
+
+								/**
+								 * \return the node's public key
+								 */
+								CryptoPP::RSA::PrivateKey GetPrivatekey (void) const;
+
+								/**
+								 * \return the node's gateway public key
+								 */
+								CryptoPP::RSA::PublicKey GetGatewayPublickey (void) const;
+
+								/**
+								 * \brief Revoke and change the node's keys
+								 *	\param new private key and public key to be updated.
+								 */
+								 void SetNewKeys(CryptoPP::RSA::PrivateKey newPrivKey, CryptoPP::RSA::PublicKey newPublicKey);
+
+								 /**
+ 								 * \brief Update the node's gateway public key
+ 								 *	\param new public key of the gateway
+ 								 */
+								 void SetGatewayPublickey (CryptoPP::RSA::PublicKey newGatewayKey);
 
 								/**
 								 * \brief Set the addresses of peers
@@ -188,9 +219,31 @@ protected:
 								/**
 								 * \brief decrypt a encrypted message
 								 * \param message message to be decrypted
-								 * \param sender address of the message sender
 								 **/
-								std::string decrypt (std::string message, Ipv4Address sender);
+								std::string decrypt (std::string message);
+
+								/**
+								 * \brief encrypt a message to be sent
+								 * \param message message to be encrypted
+								 * \param PublicKey public key of the receiver
+								 **/
+								std::string encrypt (std::string message,CryptoPP::RSA::PublicKey publicKey);
+
+								/**
+								 * \brief encrypt a message to be sent
+								 * \param message message to be encrypted
+								 * \param receiver receiver's ip address
+								 * \param type of encryption - aes or rsa
+								 **/
+								std::string encrypt (std::string message, Ipv4Address receiver,int type);
+
+								/**
+								 * \brief encrypt a message to be sent
+								 * \param message message to be encrypted
+								 * \param aes_key AES session key
+								 * \param iv IV for the aes
+								 **/
+								std::string encrypt (std::string message, byte* aes_key, byte* iv);
 
 private:
 
@@ -205,6 +258,10 @@ private:
 								double m_downloadSpeed;                       //!< The download speed of the node in Bytes/s
 								double m_uploadSpeed;                         //!< The upload speed of the node in Bytes/s
 								CryptoPP::RSA::PrivateKey m_privateKey;								//!< Private key for the sensor node
+
+								CryptoPP::AutoSeededRandomPool m_prng;					//!< PRNG used to generate keys.
+
+								CryptoPP::RSA::PublicKey m_publicKey;								//!< Public key for the sensor node
 								CryptoPP::RSA::PublicKey m_gatewayPublicKey;							//!<	public key for the gateway
 
 								std::vector<Ipv4Address>                            m_peersAddresses;           //!< The addresses of peers
@@ -213,8 +270,9 @@ private:
 								std::map<Ipv4Address, double>                       m_peersSessionKeys;        //!< The session keys established with different peers
 								std::map<Ipv4Address, Ptr<Socket> >                  m_peersSockets;            //!< The sockets of peers
 								std::map<Address, std::string>                      m_bufferedData;             //!< map holding the buffered data from previous handleRead events
-								std::map<Ipv4Address, std::string> m_publicKeys; //!< map holding the publicKeys for the peers
-								std::map<Ipv4Address, std::string> m_cacheSessionKeys; //!< map holding the cached session keys for peers
+								std::map<Ipv4Address, CryptoPP::RSA::PublicKey> m_publicKeys; //!< map holding the publicKeys for the peers
+								std::map<Ipv4Address, byte[16]> m_cacheSessionKeys; //!< map holding the cached session keys for peers
+								std::map<Ipv4Address, byte[16]> m_cacheSessionIVs; //!< map holding the cached session IVs for peers
 								std::map<Ipv4Address, std::vector<std::string> > m_messages; //!< map holding all the messages from different peers
 								nodeStatistics                                     *m_nodeStats;                //!< struct holding the node stats
 								enum ProtocolType m_protocolType;                                               //!< protocol type

@@ -31,8 +31,11 @@
  #include "ns3/boolean.h"
  #include "ns3/address-utils.h"
  #include <crypto++/rsa.h>
+ #include <crypto++/aes.h>
  #include <crypto++/osrng.h>
  #include <crypto++/files.h>
+ #include <crypto++/filters.h>
+ #include <crypto++/modes.h>
 
 namespace ns3 {
 
@@ -71,13 +74,14 @@ IotSensorNode::IotSensorNode (void) : m_commPort (5555), m_secondsPerMin(60)
         m_gatewayNodeId = 0;
         m_gatewayAddress = 0;
         m_numberOfPeers = m_peersAddresses.size();
-        CryptoPP::AutoSeededRandomPool prng;
+        CryptoPP::AutoSeededRandomPool m_prng;
         CryptoPP::InvertibleRSAFunction params;
-        params.GenerateRandomWithKeySize(prng, 2048);
+        params.GenerateRandomWithKeySize(m_prng, 2048);
 
         CryptoPP::RSA::PrivateKey privateKey(params);
         CryptoPP::RSA::PublicKey publicKey(params);
         m_privateKey = privateKey;
+        m_publicKey = publicKey;
 }
 
 IotSensorNode::IotSensorNode (CryptoPP::RSA::PublicKey gatewayKey, CryptoPP::RSA::PrivateKey privKey) : m_commPort (5555), m_secondsPerMin(60)
@@ -91,6 +95,18 @@ IotSensorNode::IotSensorNode (CryptoPP::RSA::PublicKey gatewayKey, CryptoPP::RSA
         m_numberOfPeers = m_peersAddresses.size();
 }
 
+IotSensorNode::IotSensorNode (CryptoPP::RSA::PublicKey gatewayKey, CryptoPP::RSA::PrivateKey privKey,CryptoPP::RSA::PublicKey pubKey) : m_commPort (5555), m_secondsPerMin(60)
+{
+        NS_LOG_FUNCTION (this);
+        m_socket = 0;
+        m_gatewayNodeId = 0;
+        m_gatewayAddress = 0;
+        m_privateKey = privKey;
+        m_publicKey = pubKey;
+        m_gatewayPublicKey = gatewayKey;
+        m_numberOfPeers = m_peersAddresses.size();
+}
+
 IotSensorNode::IotSensorNode (CryptoPP::RSA::PublicKey gatewayKey) : m_commPort (5555), m_secondsPerMin(60)
 {
         NS_LOG_FUNCTION (this);
@@ -99,13 +115,14 @@ IotSensorNode::IotSensorNode (CryptoPP::RSA::PublicKey gatewayKey) : m_commPort 
         m_gatewayAddress = 0;
         m_gatewayPublicKey = gatewayKey;
         m_numberOfPeers = m_peersAddresses.size();
-        CryptoPP::AutoSeededRandomPool prng;
+        CryptoPP::AutoSeededRandomPool m_prng;
         CryptoPP::InvertibleRSAFunction params;
-        params.GenerateRandomWithKeySize(prng, 2048);
+        params.GenerateRandomWithKeySize(m_prng, 2048);
 
         CryptoPP::RSA::PrivateKey privateKey(params);
         CryptoPP::RSA::PublicKey publicKey(params);
         m_privateKey = privateKey;
+        m_publicKey = publicKey;
 }
 
 IotSensorNode::~IotSensorNode ()
@@ -125,6 +142,41 @@ IotSensorNode::GetPeersAddresses (void) const
 {
         NS_LOG_FUNCTION (this);
         return m_peersAddresses;
+}
+
+CryptoPP::RSA::PublicKey
+IotSensorNode::GetPublickey (void) const
+{
+    NS_LOG_FUNCTION (this);
+    return m_publicKey;
+}
+
+CryptoPP::RSA::PrivateKey
+IotSensorNode::GetPrivatekey (void) const
+{
+    NS_LOG_FUNCTION (this);
+    return m_privateKey;
+}
+
+void IotSensorNode::SetNewKeys(CryptoPP::RSA::PrivateKey newPrivKey, CryptoPP::RSA::PublicKey newPublicKey)
+{
+  NS_LOG_FUNCTION (this);
+  m_privateKey = newPrivKey;
+  m_publicKey = newPublicKey;
+}
+
+CryptoPP::RSA::PublicKey
+IotSensorNode::GetGatewayPublickey (void) const
+{
+    NS_LOG_FUNCTION (this);
+    return m_gatewayPublicKey;
+}
+
+void
+IotSensorNode::SetGatewayPublickey (CryptoPP::RSA::PublicKey newGatewayKey)
+{
+    NS_LOG_FUNCTION (this);
+    m_gatewayPublicKey = newGatewayKey;
 }
 
 void
@@ -273,24 +325,101 @@ IotSensorNode::StopApplication ()     // Called at time specified by Stop
 
 //Verify sign for message
 bool
-IotSensorNode::checkSign (std::string message, std::string sign)
+IotSensorNode::checkSign (std::string message, std::string signature)
 {
+    CryptoPP::RSASSA_PKCS1v15_SHA_Verifier verifier(m_publicKey);
+    try{
+      CryptoPP::StringSource ss2(message+signature, true, new CryptoPP::SignatureVerificationFilter(verifier, NULL, CryptoPP::SignatureVerificationFilter::THROW_EXCEPTION) // SignatureVerificationFilter
+      ); // StringSource
+    }
+    catch(...){
+      return false;
+    }
     return true;
 }
 
 bool
-IotSensorNode::checkSign (std::string message, std::string sign, Ipv4Address sender)
+IotSensorNode::checkSign (std::string message, std::string signature, Ipv4Address sender)
 {
-    std::string publicKey = m_publicKeys[sender];
+    CryptoPP::RSA::PublicKey publicKey = m_publicKeys[sender];
+    CryptoPP::RSASSA_PKCS1v15_SHA_Verifier verifier(publicKey);
+    try{
+      CryptoPP::StringSource ss2(message+signature, true, new CryptoPP::SignatureVerificationFilter(verifier, NULL, CryptoPP::SignatureVerificationFilter::THROW_EXCEPTION) // SignatureVerificationFilter
+      ); // StringSource
+    }
+    catch(...){
+      return false;
+    }
     return true;
 }
 
 //Decrypt a message
 std::string
-IotSensorNode::decrypt (std::string message, Ipv4Address sender)
+IotSensorNode::decrypt (std::string message)
 {
-    std::string publicKey = m_publicKeys[sender];
-    return message;
+    CryptoPP::RSA::PrivateKey privKey = m_privateKey;
+    CryptoPP::RSAES_OAEP_SHA_Decryptor d(privKey);
+    std::string recovered;
+    CryptoPP::StringSource ss2(message, true,
+    new CryptoPP::PK_DecryptorFilter(m_prng, d,
+        new CryptoPP::StringSink(recovered)
+   ) // PK_DecryptorFilter
+    ); // StringSource
+    return recovered;
+}
+
+//Encrypt a message
+std::string
+IotSensorNode::encrypt(std::string message, CryptoPP::RSA::PublicKey publicKey){
+    std::string cipher;
+    CryptoPP::RSAES_OAEP_SHA_Encryptor e(publicKey);
+    CryptoPP::StringSource ss1(message, true,
+    new CryptoPP::PK_EncryptorFilter(m_prng, e,
+        new CryptoPP::StringSink(cipher)
+       ) // PK_EncryptorFilter
+    ); // StringSource
+    return cipher;
+}
+
+std::string
+IotSensorNode::encrypt(std::string message, Ipv4Address receiver,int type){
+  if(type==1){
+      CryptoPP::RSA::PublicKey publicKey = m_publicKeys[receiver];
+      std::string cipher;
+      CryptoPP::RSAES_OAEP_SHA_Encryptor e(publicKey);
+      CryptoPP::StringSource ss1(message, true,
+      new CryptoPP::PK_EncryptorFilter(m_prng, e,
+          new CryptoPP::StringSink(cipher)
+       ) // PK_EncryptorFilter
+    ); // StringSource
+      return cipher;
+    }
+    else if(type==2){
+      std::string cipher;
+      byte* aes_key = m_cacheSessionKeys[receiver];
+      byte* iv = m_cacheSessionIVs[receiver];
+      CryptoPP::AES::Encryption aesEncryption(aes_key, sizeof(aes_key));
+      CryptoPP::CBC_Mode_ExternalCipher::Encryption cbcEncryption( aesEncryption, iv );
+      // CryptoPP::CFB_Mode<AES>::Encryption cfbEncryption(aes_key, sizeof(aes_key), iv, 1);
+      CryptoPP::StreamTransformationFilter stfEncryptor(cbcEncryption, new CryptoPP::StringSink( cipher ) );
+      stfEncryptor.Put( reinterpret_cast<const unsigned char*>( message.c_str() ), message.length() + 1 );
+      stfEncryptor.MessageEnd();
+      return cipher;
+    }
+    else
+    return "";
+}
+
+std::string
+IotSensorNode::encrypt(std::string message, byte* aes_key, byte* iv){
+  std::string cipher;
+  CryptoPP::AES::Encryption aesEncryption(aes_key, sizeof(aes_key));
+  CryptoPP::CBC_Mode_ExternalCipher::Encryption cbcEncryption( aesEncryption, iv );
+  // CryptoPP::CFB_Mode<AES>::Encryption cfbEncryption(aes_key, sizeof(aes_key), iv, 1);
+  CryptoPP::StreamTransformationFilter stfEncryptor(cbcEncryption, new CryptoPP::StringSink( cipher ) );
+  stfEncryptor.Put( reinterpret_cast<const unsigned char*>( message.c_str() ), message.length() + 1 );
+  stfEncryptor.MessageEnd();
+  return cipher;
 }
 
 void
@@ -365,12 +494,15 @@ IotSensorNode::HandleRead (Ptr<Socket> socket)
              size_t keyPos = parsedBody.find(msgDelimiter);
              Ipv4Address nodeIp4Address = InetSocketAddress::ConvertFrom(from).GetIpv4 ();
 
-             std::string publicKey = parsedBody.substr(0,keyPos).c_str();
+             std::string publicKeyStr = parsedBody.substr(0,keyPos).c_str();
              std::string signature = parsedBody.substr(keyPos+1, parsedBody.size()).c_str();
-             if(!checkSign(publicKey,signature,m_gatewayAddress)){
+             if(!checkSign(publicKeyStr,signature,m_gatewayAddress)){
                NS_LOG_WARN("Key not received from nodes' Gateway " << m_gatewayNodeId << " Message sent by " << nodeIp4Address);
                break;
              }
+             CryptoPP::RSA::PublicKey publicKey;
+             CryptoPP::StringSource publicKeySource(publicKeyStr,true);
+             publicKey.BERDecode(publicKeySource);
              m_publicKeys[nodeIp4Address]=publicKey;
            }
            case RECEIVE_MESSAGE:
@@ -394,7 +526,7 @@ IotSensorNode::HandleRead (Ptr<Socket> socket)
                break;
              }
 
-             std::string decryptedMessage = decrypt(msgBody,nodeIp4Address);
+             std::string decryptedMessage = decrypt(msgBody);
              NS_LOG_INFO("Received message " << decryptedMessage << " from node " << nodeIp4Address);
              m_messages[nodeIp4Address].push_back(decryptedMessage);
            }

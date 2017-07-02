@@ -35,6 +35,9 @@ enum Messages
         SEND_PUBLIC_KEY, //13
         RECEIVE_PUBLIC_KEY, //14
         RECEIVE_MESSAGE,  //15
+        CREATE_ENTRY,  //16
+        UPDATE_ENTRY,  //17
+        DELETE_ENTRY,  //18
 };
 
 
