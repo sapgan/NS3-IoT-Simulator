@@ -171,7 +171,7 @@ BlockchainNode::StartApplication ()    // Called at time specified by Start
 {
   NS_LOG_FUNCTION (this);
   // Create the socket if not already
-
+  
   srand(time(NULL) + GetNode()->GetId());
   NS_LOG_INFO ("Node " << GetNode()->GetId() << ": download speed = " << m_downloadSpeed << " B/s");
   NS_LOG_INFO ("Node " << GetNode()->GetId() << ": upload speed = " << m_uploadSpeed << " B/s");
@@ -182,6 +182,7 @@ BlockchainNode::StartApplication ()    // Called at time specified by Start
   NS_LOG_WARN ("Node " << GetNode()->GetId() << ": m_chunkSize = " << m_chunkSize << " Bytes");
 
   NS_LOG_INFO ("Node " << GetNode()->GetId() << ": My peers are");
+
 
   for (auto it = m_peersAddresses.begin(); it != m_peersAddresses.end(); it++)
     NS_LOG_INFO("\t" << *it);
@@ -214,6 +215,7 @@ BlockchainNode::StartApplication ()    // Called at time specified by Start
     }
   }
 
+
   m_socket->SetRecvCallback (MakeCallback (&BlockchainNode::HandleRead, this));
   m_socket->SetAcceptCallback (
     MakeNullCallback<bool, Ptr<Socket>, const Address &> (),
@@ -221,6 +223,7 @@ BlockchainNode::StartApplication ()    // Called at time specified by Start
   m_socket->SetCloseCallbacks (
     MakeCallback (&BlockchainNode::HandlePeerClose, this),
     MakeCallback (&BlockchainNode::HandlePeerError, this));
+
 
   NS_LOG_DEBUG ("Node " << GetNode()->GetId() << ": Before creating sockets");
   for (std::vector<Ipv4Address>::const_iterator i = m_peersAddresses.begin(); i != m_peersAddresses.end(); ++i)
@@ -230,44 +233,44 @@ BlockchainNode::StartApplication ()    // Called at time specified by Start
   }
   NS_LOG_DEBUG ("Node " << GetNode()->GetId() << ": After creating sockets");
 
-  m_nodeStats->nodeId = GetNode ()->GetId ();
-  m_nodeStats->meanBlockReceiveTime = 0;
-  m_nodeStats->meanBlockPropagationTime = 0;
-  m_nodeStats->meanBlockSize = 0;
-  m_nodeStats->totalBlocks = 0;
-  m_nodeStats->staleBlocks = 0;
-  m_nodeStats->miner = 0;
-  m_nodeStats->minerGeneratedBlocks = 0;
-  m_nodeStats->minerAverageBlockGenInterval = 0;
-  m_nodeStats->minerAverageBlockSize = 0;
-  m_nodeStats->hashRate = 0;
-  m_nodeStats->attackSuccess = 0;
-  m_nodeStats->invReceivedBytes = 0;
-  m_nodeStats->invSentBytes = 0;
-  m_nodeStats->getHeadersReceivedBytes = 0;
-  m_nodeStats->getHeadersSentBytes = 0;
-  m_nodeStats->headersReceivedBytes = 0;
-  m_nodeStats->headersSentBytes = 0;
-  m_nodeStats->getDataReceivedBytes = 0;
-  m_nodeStats->getDataSentBytes = 0;
-  m_nodeStats->blockReceivedBytes = 0;
-  m_nodeStats->blockSentBytes = 0;
-  m_nodeStats->extInvReceivedBytes = 0;
-  m_nodeStats->extInvSentBytes = 0;
-  m_nodeStats->extGetHeadersReceivedBytes = 0;
-  m_nodeStats->extGetHeadersSentBytes = 0;
-  m_nodeStats->extHeadersReceivedBytes = 0;
-  m_nodeStats->extHeadersSentBytes = 0;
-  m_nodeStats->extGetDataReceivedBytes = 0;
-  m_nodeStats->extGetDataSentBytes = 0;
-  m_nodeStats->chunkReceivedBytes = 0;
-  m_nodeStats->chunkSentBytes = 0;
-  m_nodeStats->longestFork = 0;
-  m_nodeStats->blocksInForks = 0;
-  m_nodeStats->connections = m_peersAddresses.size();
-  m_nodeStats->blockTimeouts = 0;
-  m_nodeStats->chunkTimeouts = 0;
-  m_nodeStats->minedBlocksInMainChain = 0;
+  // m_nodeStats->nodeId = GetNode ()->GetId ();
+  // m_nodeStats->meanBlockReceiveTime = 0;
+  // m_nodeStats->meanBlockPropagationTime = 0;
+  // m_nodeStats->meanBlockSize = 0;
+  // m_nodeStats->totalBlocks = 0;
+  // m_nodeStats->staleBlocks = 0;
+  // m_nodeStats->miner = 0;
+  // m_nodeStats->minerGeneratedBlocks = 0;
+  // m_nodeStats->minerAverageBlockGenInterval = 0;
+  // m_nodeStats->minerAverageBlockSize = 0;
+  // m_nodeStats->hashRate = 0;
+  // m_nodeStats->attackSuccess = 0;
+  // m_nodeStats->invReceivedBytes = 0;
+  // m_nodeStats->invSentBytes = 0;
+  // m_nodeStats->getHeadersReceivedBytes = 0;
+  // m_nodeStats->getHeadersSentBytes = 0;
+  // m_nodeStats->headersReceivedBytes = 0;
+  // m_nodeStats->headersSentBytes = 0;
+  // m_nodeStats->getDataReceivedBytes = 0;
+  // m_nodeStats->getDataSentBytes = 0;
+  // m_nodeStats->blockReceivedBytes = 0;
+  // m_nodeStats->blockSentBytes = 0;
+  // m_nodeStats->extInvReceivedBytes = 0;
+  // m_nodeStats->extInvSentBytes = 0;
+  // m_nodeStats->extGetHeadersReceivedBytes = 0;
+  // m_nodeStats->extGetHeadersSentBytes = 0;
+  // m_nodeStats->extHeadersReceivedBytes = 0;
+  // m_nodeStats->extHeadersSentBytes = 0;
+  // m_nodeStats->extGetDataReceivedBytes = 0;
+  // m_nodeStats->extGetDataSentBytes = 0;
+  // m_nodeStats->chunkReceivedBytes = 0;
+  // m_nodeStats->chunkSentBytes = 0;
+  // m_nodeStats->longestFork = 0;
+  // m_nodeStats->blocksInForks = 0;
+  // m_nodeStats->connections = m_peersAddresses.size();
+  // m_nodeStats->blockTimeouts = 0;
+  // m_nodeStats->chunkTimeouts = 0;
+  // m_nodeStats->minedBlocksInMainChain = 0;
 }
 
 void

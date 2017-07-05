@@ -42,7 +42,7 @@ namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE ("BlockchainTopologyHelper");
 
-BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t totalNoNodes, enum BlockchainRegion *minersRegions,
+BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t totalNoNodes, enum ManufacturerID *manufacturers,
                                                int minConnectionsPerNode, int maxConnectionsPerNode,
 						                      double latencyParetoShapeDivider, uint32_t systemId, std::vector<uint32_t> miners, std::map<uint32_t,std::vector<uint32_t> > gatewayChildMap, std::map<uint32_t, uint32_t> gatewayMinerMap)
   : m_noCpus(noCpus), m_totalNoNodes(totalNoNodes), m_minConnectionsPerNode (minConnectionsPerNode), m_maxConnectionsPerNode (maxConnectionsPerNode),
@@ -88,10 +88,10 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
   std::array<double,6> connectionsDistributionWeights {10, 40, 30, 13, 6, 1};*/
 
   std::cout << "Building the topology!" << std::endl;
-  m_minersRegions = new enum BlockchainRegion[m_noMiners];
+  m_manufacturers = new enum ManufacturerID[m_noMiners];
   for (int i = 0; i < m_noMiners; i++)
   {
-    m_minersRegions[m_miners[i]] = minersRegions[m_miners[i]];
+    m_manufacturers[m_miners[i]] = manufacturers[m_miners[i]];
   }
 
   std::cout << "Creating list of all nodes!" << std::endl;
@@ -103,7 +103,7 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
     nodes.push_back(i);
   }
 
-  std::cout << "Forming the miners links!" << std::endl;
+  std::cout << "Forming the validators links!" << std::endl;
   sort(m_miners.begin(), m_miners.end());
 
   //Interconnect the miners
@@ -194,7 +194,7 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
          average += speed;
 	   }
 
-      std::cout << "The download speed for region " << getBlockchainRegion(getBlockchainEnum(region.first)) << " = " << average / region.second.size() << " Mbps\n";
+      std::cout << "The download speed for region " << getManufacturerID(getBlockchainEnum(region.first)) << " = " << average / region.second.size() << " Mbps\n";
     }
 
     for (auto region : uploadRegionBandwidths)
@@ -205,7 +205,7 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
          average += speed;
 	   }
 
-      std::cout << "The upload speed for region " << getBlockchainRegion(getBlockchainEnum(region.first)) << " = " << average / region.second.size() << " Mbps\n";
+      std::cout << "The upload speed for region " << getManufacturerID(getBlockchainEnum(region.first)) << " = " << average / region.second.size() << " Mbps\n";
     }
   }*/
 
@@ -215,7 +215,7 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
 
   tStart = GetWallTime();
 
-  std::cout << "Creating the links between the miner nodes!" << std::endl;
+  std::cout << "Creating the links between the validator nodes!" << std::endl;
   //Create first the links between miners
   for(auto miner = m_miners.begin(); miner != m_miners.end(); miner++)
   {
@@ -264,9 +264,9 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
 /* 		if (m_systemId == 0)
           std::cout << "Creating link " << m_totalNoLinks << " between nodes "
                     << (m_nodes.at (*miner).Get (0))->GetId() << " ("
-                    <<  getBlockchainRegion(getBlockchainEnum(m_blockchainNodesRegion[(m_nodes.at (*miner).Get (0))->GetId()]))
+                    <<  getManufacturerID(getBlockchainEnum(m_blockchainNodesRegion[(m_nodes.at (*miner).Get (0))->GetId()]))
                     << ") and node " << (m_nodes.at (*it).Get (0))->GetId() << " ("
-                    <<  getBlockchainRegion(getBlockchainEnum(m_blockchainNodesRegion[(m_nodes.at (*it).Get (0))->GetId()]))
+                    <<  getManufacturerID(getBlockchainEnum(m_blockchainNodesRegion[(m_nodes.at (*it).Get (0))->GetId()]))
                     << ") with latency = " << latencyStringStream.str()
                     << " and bandwidth = " << bandwidthStream.str() << ".\n"; */
       }
@@ -328,9 +328,9 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
 /* 		if (m_systemId == 0)
           std::cout << "Creating link " << m_totalNoLinks << " between nodes "
                     << (m_nodes.at (node.first).Get (0))->GetId() << " ("
-                    <<  getBlockchainRegion(getBlockchainEnum(m_blockchainNodesRegion[(m_nodes.at (node.first).Get (0))->GetId()]))
+                    <<  getManufacturerID(getBlockchainEnum(m_blockchainNodesRegion[(m_nodes.at (node.first).Get (0))->GetId()]))
                     << ") and node " << (m_nodes.at (*it).Get (0))->GetId() << " ("
-                    <<  getBlockchainRegion(getBlockchainEnum(m_blockchainNodesRegion[(m_nodes.at (*it).Get (0))->GetId()]))
+                    <<  getManufacturerID(getBlockchainEnum(m_blockchainNodesRegion[(m_nodes.at (*it).Get (0))->GetId()]))
                     << ") with latency = " << latencyStringStream.str()
                     << " and bandwidth = " << bandwidthStream.str() << ".\n"; */
       }
@@ -347,7 +347,7 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
 BlockchainTopologyHelper::~BlockchainTopologyHelper ()
 {
   delete[] m_blockchainNodesRegion;
-  delete[] m_minersRegions;
+  delete[] m_manufacturers;
 }
 
 void
@@ -429,7 +429,7 @@ BlockchainTopologyHelper::AssignIpv4Addresses (Ipv4AddressHelperCustom ip)
 
   tFinish = GetWallTime();
   if (m_systemId == 0)
-    std::cout << "The Ip addresses have been assigned in " << tFinish - tStart << "s.\n";
+    std::cout << "The IP addresses have been assigned in " << tFinish - tStart << "s.\n";
 }
 
 
@@ -477,7 +477,7 @@ BlockchainTopologyHelper::AssignRegion (uint32_t id)
   auto index = std::find(m_miners.begin(), m_miners.end(), id);
   if ( index != m_miners.end() )
   {
-    m_blockchainNodesRegion[id] = m_minersRegions[index - m_miners.begin()];
+    m_blockchainNodesRegion[id] = m_manufacturers[index - m_miners.begin()];
   }
   else{
     int number = m_nodesDistribution(m_generator);
@@ -485,7 +485,7 @@ BlockchainTopologyHelper::AssignRegion (uint32_t id)
   }
 
 /*   if (m_systemId == 0)
-    std::cout << "SystemId = " << m_systemId << " assigned node " << id << " in " << getBlockchainRegion(getBlockchainEnum(m_blockchainNodesRegion[id])) << "\n"; */
+    std::cout << "SystemId = " << m_systemId << " assigned node " << id << " in " << getManufacturerID(getBlockchainEnum(m_blockchainNodesRegion[id])) << "\n"; */
 }
 
 
@@ -543,7 +543,7 @@ BlockchainTopologyHelper::AssignInternetSpeeds(uint32_t id)
   }
 
 /*  if (m_systemId == 0)
-    std::cout << "SystemId = " << m_systemId << " assigned node " << id << " in " << getBlockchainRegion(getBlockchainEnum(m_blockchainNodesRegion[id]))
+    std::cout << "SystemId = " << m_systemId << " assigned node " << id << " in " << getManufacturerID(getBlockchainEnum(m_blockchainNodesRegion[id]))
               << " with download speed = " << m_nodesInternetSpeeds[id].downloadSpeed << " Mbps and upload speed " << m_nodesInternetSpeeds[id].uploadSpeed << " Mbps\n"; */
 }
 

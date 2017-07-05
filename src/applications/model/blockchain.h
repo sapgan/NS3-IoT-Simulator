@@ -78,16 +78,16 @@ enum ProtocolType
 
 
 /**
- * The geographical regions used in the simulation. OTHER was only used for debugging reasons.
+ * The different IoT Manufacturers used for the simulation.
  */
-enum BlockchainRegion
+enum ManufacturerID
 {
-        NORTH_AMERICA, //0
-        EUROPE,     //1
-        SOUTH_AMERICA, //2
-        ASIA_PACIFIC, //3
-        AUSTRALIA,  //4
-        AFRICA,     //5
+        SAMSUNG, //0
+        QUALCOMM,     //1
+        CISCO, //2
+        ERICSSON, //3
+        IBM,  //4
+        SILICON,     //5
         OTHER       //6
 };
 
@@ -150,8 +150,8 @@ const char* getMessageName(enum Messages m);
 const char* getMinerType(enum MinerType m);
 const char* getBlockBroadcastType(enum BlockBroadcastType m);
 const char* getProtocolType(enum ProtocolType m);
-const char* getBlockchainRegion(enum BlockchainRegion m);
-enum BlockchainRegion getBitcoinEnum(uint32_t n);
+const char* getManufacturerID(enum ManufacturerID m);
+enum ManufacturerID getManufacturerEnum(uint32_t n);
 
 class Block
 {

@@ -172,8 +172,8 @@ BlockchainValidator::StartApplication ()    // Called at time specified by Start
     m_blockchain.AddBlock(newBlock);
   } */
 
-  m_nodeStats->hashRate = m_hashRate;
-  m_nodeStats->miner = 1;
+  // m_nodeStats->hashRate = m_hashRate;
+  // m_nodeStats->miner = 1;
 
   ScheduleNextMiningEvent ();
 }

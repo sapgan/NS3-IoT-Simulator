@@ -864,31 +864,31 @@ const char* getProtocolType(enum ProtocolType m)
   }
 }
 
-const char* getBlockchainRegion(enum BlockchainRegion m)
+const char* getManufacturerID(enum ManufacturerID m)
 {
   switch (m)
   {
-    case ASIA_PACIFIC: return "ASIA_PACIFIC";
-    case AUSTRALIA: return "AUSTRALIA";
-    case EUROPE: return "EUROPE";
-    case AFRICA: return "AFRICA";
-    case NORTH_AMERICA: return "NORTH_AMERICA";
-    case SOUTH_AMERICA: return "SOUTH_AMERICA";
+    case SAMSUNG: return "SAMSUNG";
+    case QUALCOMM: return "QUALCOMM";
+    case CISCO: return "CISCO";
+    case ERICSSON: return "ERICSSON";
+    case IBM: return "IBM";
+    case SILICON: return "SILICON";
     case OTHER: return "OTHER";
   }
 }
 
 
-enum BlockchainRegion getBlockchainEnum(uint32_t n)
+enum ManufacturerID getManufacturerEnum(uint32_t n)
 {
   switch (n)
   {
-    case 0: return NORTH_AMERICA;
-    case 1: return EUROPE;
-    case 2: return SOUTH_AMERICA;
-    case 3: return ASIA_PACIFIC;
-    case 4: return AUSTRALIA;
-    case 5: return AFRICA;
+    case 0: return SAMSUNG;
+    case 1: return QUALCOMM;
+    case 2: return CISCO;
+    case 3: return ERICSSON;
+    case 4: return IBM;
+    case 5: return SILICON;
     case 6: return OTHER;
   }
 }

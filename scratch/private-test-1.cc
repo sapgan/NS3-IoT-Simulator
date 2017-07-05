@@ -25,7 +25,7 @@
  #include "ns3/point-to-point-module.h"
  #include "ns3/applications-module.h"
  #include "ns3/point-to-point-layout-module.h"
- #define N_MINERS 5
+ #define N_VALIDATORS 4
  // #include "ns3/mpi-interface.h"
  // #define MPI_TEST
  //
@@ -40,7 +40,7 @@
  enum ManufacturerID getRandomManufacturerEnum(uint32_t n);
  //int GetNodeIdByIpv4 (Ipv4InterfaceContainer container, Ipv4Address addr);
 
- NS_LOG_COMPONENT_DEFINE ("BasicBlockchainTest");
+ NS_LOG_COMPONENT_DEFINE ("PrivateSimpleExperiment");
 
  int
  main (int argc, char *argv[])
@@ -68,7 +68,7 @@
      int minConnectionsPerNode = -1;
      int maxConnectionsPerNode = -1;
      double *minersHash;
-     enum ManufacturerID minersRegions[N_MINERS+1];
+     enum ManufacturerID manufacturers[N_VALIDATORS+1];
 
      double averageBlockGenIntervalMinutes = averageBlockGenIntervalSeconds/secsPerMin;
      double stop;
@@ -78,7 +78,7 @@
      std::map<uint32_t, std::map<Ipv4Address, double>>    peersDownloadSpeeds;
      std::map<uint32_t, std::map<Ipv4Address, double>>    peersUploadSpeeds;
      std::map<uint32_t, nodeInternetSpeeds>               nodesInternetSpeeds;
-     std::vector<uint32_t>                                miners;
+     std::vector<uint32_t>                                validators;
      std::map<uint32_t,std::vector<uint32_t> >            gatewayChildMap;
      std::map<uint32_t, uint32_t>                         gatewayMinerMap;
      uint32_t                                                  nodesInSystemId0 = 0;
@@ -89,28 +89,68 @@
      uint32_t systemId = 0;
      uint32_t systemCount = 1;
 
-     for(int i=1;i<=N_MINERS;i++){
-      miners.push_back(i);
-      minersRegions[i] = getRandomManufacturerID();
+     for(int i=1;i<=N_VALIDATORS;i++){
+      validators.push_back(i);
+      manufacturers[i] = getRandomManufacturerID();
       totalNoNodes++;
     }
 
-    for(int i=1;i<=N_MINERS;i++){
-      uint32_t gateway = i*N_MINERS+1;
-      std::vector<uint32_t> childs;
+    // for(int i=1;i<=N_VALIDATORS;i++){
+    //   uint32_t gateway = i*N_VALIDATORS+1;
+    //   std::vector<uint32_t> childs;
+    //   totalNoNodes++;
+    //   for(int j=1;j<=4;j++){
+    //     childs.push_back(gateway+j);
+    //     totalNoNodes++;
+    //   }
+    //   gatewayChildMap[gateway] = childs;
+    //   gatewayMinerMap[gateway] = i;
+    // }
+
+    uint32_t gateway1 = 5;
+    std::vector<uint32_t> childs;
+    totalNoNodes++;
+    for(int j=1;j<=3;j++){
+      childs.push_back(gateway1+j);
       totalNoNodes++;
-      for(int j=1;j<=2;j++){
-        childs.push_back(gateway+j);
-        totalNoNodes++;
-      }
-      gatewayChildMap[gateway] = childs;
-      gatewayMinerMap[gateway] = i;
     }
+    gatewayChildMap[gateway1] = childs;
+    gatewayMinerMap[gateway1] = 1;
+
+    uint32_t gateway2 = 9;
+    std::vector<uint32_t> childs1;
+    totalNoNodes++;
+    for(int j=1;j<=3;j++){
+      childs1.push_back(gateway2+j);
+      totalNoNodes++;
+    }
+    gatewayChildMap[gateway2] = childs1;
+    gatewayMinerMap[gateway2] = 2;
+
+    uint32_t gateway3 = 13;
+    std::vector<uint32_t> childs2;
+    totalNoNodes++;
+    for(int j=1;j<=4;j++){
+      childs2.push_back(gateway3+j);
+      totalNoNodes++;
+    }
+    gatewayChildMap[gateway3] = childs2;
+    gatewayMinerMap[gateway3] = 2;
+
+    uint32_t gateway4 = 18;
+    std::vector<uint32_t> childs3;
+    totalNoNodes++;
+    for(int j=1;j<=5;j++){
+      childs3.push_back(gateway4+j);
+      totalNoNodes++;
+    }
+    gatewayChildMap[gateway4] = childs3;
+    gatewayMinerMap[gateway4] = 4;
 
     NS_LOG_INFO ("Creating Topology");
-     BlockchainTopologyHelper blockchainTopologyHelper (systemCount, totalNoNodes, minersRegions,
+     BlockchainTopologyHelper blockchainTopologyHelper (systemCount, totalNoNodes, manufacturers,
                                                   minConnectionsPerNode,
-                                                  maxConnectionsPerNode, 0, systemId, miners, gatewayChildMap, gatewayMinerMap);
+                                                  maxConnectionsPerNode, 0, systemId, validators, gatewayChildMap, gatewayMinerMap);
 
     InternetStackHelper stack;
     blockchainTopologyHelper.InstallStack (stack);
@@ -118,16 +158,16 @@
     blockchainTopologyHelper.AssignIpv4Addresses (Ipv4AddressHelperCustom ("1.0.0.0", "255.255.255.0", false));
     ipv4InterfaceContainer = blockchainTopologyHelper.GetIpv4InterfaceContainer();
     nodesConnections = blockchainTopologyHelper.GetNodesConnectionsIps();
-    miners = blockchainTopologyHelper.GetMiners();
+    validators = blockchainTopologyHelper.GetMiners();
     peersDownloadSpeeds = blockchainTopologyHelper.GetPeersDownloadSpeeds();
     peersUploadSpeeds = blockchainTopologyHelper.GetPeersUploadSpeeds();
     nodesInternetSpeeds = blockchainTopologyHelper.GetNodesInternetSpeeds();
 
-    BlockchainValidatorHelper blockchainValidatorHelper ("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), m_commPort),nodesConnections[miners[0]], miners.size(), peersDownloadSpeeds[0], peersUploadSpeeds[0],nodesInternetSpeeds[0], 5.0);
+    BlockchainValidatorHelper blockchainValidatorHelper ("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), m_commPort),nodesConnections[validators[0]], validators.size(), peersDownloadSpeeds[0], peersUploadSpeeds[0],nodesInternetSpeeds[0], 5.0);
 
     ApplicationContainer blockchainValidators;
 
-    for(auto &miner : miners)
+    for(auto &miner : validators)
     {
     	Ptr<Node> targetNode = blockchainTopologyHelper.GetNode (miner);
       blockchainValidatorHelper.SetPeersAddresses (nodesConnections[miner]);
