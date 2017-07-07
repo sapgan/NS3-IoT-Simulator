@@ -13,11 +13,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * Author: Josh Pelkey <jpelkey@gatech.edu>
+ * Author: Saptarshi Gan <sapedu11@gmail.com>
  */
 
-#ifndef BLOCKCHAIN_TOPOLOGY_HELPER_H
-#define BLOCKCHAIN_TOPOLOGY_HELPER_H
+#ifndef IOT_LAYER_TOPOLOGY_HELPER_H
+#define IOT_LAYER_TOPOLOGY_HELPER_H
 
 #include <vector>
 
@@ -37,38 +37,23 @@ namespace ns3 {
 /**
  * \ingroup point-to-point-layout
  *
- * \brief A helper to make it easier to create a grid topology
+ * \brief A helper to make it easier to create the discussed layer topology
  * with p2p links
  */
-class BlockchainTopologyHelper
+class IoTLayerTopologyHelper
 {
 public:
   /**
-   * Create a BlockchainTopologyHelper in order to easily create
-   * grid topologies using p2p links
+   * Create a IoTLayerTopologyHelper in order to easily create
+   * discussed layer topology with p2p links
    *
-   * \param nRows total number of rows in the grid
-   *
-   * \param nCols total number of colums in the grid
-   *
-   * \param pointToPoint the PointToPointHelper which is used
-   *                     to connect all of the nodes together
-   *                     in the grid
    */
-  BlockchainTopologyHelper (uint32_t noCpus, uint32_t totalNoNodes, enum ManufacturerID *manufacturers,
+  IoTLayerTopologyHelper (uint32_t noCpus, uint32_t totalNoNodes, enum ManufacturerID *manufacturers,
                          int minConnectionsPerNode, int maxConnectionsPerNode,
                          double latencyParetoShapeDivider, uint32_t systemId, std::vector<uint32_t> miners, std::map<uint32_t,std::vector<uint32_t> > gatewayChildMap, std::map<uint32_t, uint32_t> gatewayMinerMap);
 
-  ~BlockchainTopologyHelper ();
+  ~IoTLayerTopologyHelper ();
 
-  /**
-   * \param row the row address of the node desired
-   *
-   * \param col the column address of the node desired
-   *
-   * \returns a pointer to the node specified by the
-   *          (row, col) address
-   */
   Ptr<Node> GetNode (uint32_t id);
 
   /**

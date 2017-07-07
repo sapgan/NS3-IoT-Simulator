@@ -13,7 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * Author: Josh Pelkey <jpelkey@gatech.edu>
+ * Author: Saptarshi Gan<sapedu11@gmail.com>
  */
 
 #include "ns3/blockchain-topology-helper.h"
@@ -40,9 +40,9 @@
 static double GetWallTime();
 namespace ns3 {
 
-NS_LOG_COMPONENT_DEFINE ("BlockchainTopologyHelper");
+NS_LOG_COMPONENT_DEFINE ("IoTLayerTopologyHelper");
 
-BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t totalNoNodes, enum ManufacturerID *manufacturers,
+IoTLayerTopologyHelper::IoTLayerTopologyHelper (uint32_t noCpus, uint32_t totalNoNodes, enum ManufacturerID *manufacturers,
                                                int minConnectionsPerNode, int maxConnectionsPerNode,
 						                      double latencyParetoShapeDivider, uint32_t systemId, std::vector<uint32_t> miners, std::map<uint32_t,std::vector<uint32_t> > gatewayChildMap, std::map<uint32_t, uint32_t> gatewayMinerMap)
   : m_noCpus(noCpus), m_totalNoNodes(totalNoNodes), m_minConnectionsPerNode (minConnectionsPerNode), m_maxConnectionsPerNode (maxConnectionsPerNode),
@@ -344,14 +344,14 @@ BlockchainTopologyHelper::BlockchainTopologyHelper (uint32_t noCpus, uint32_t to
     std::cout << "The total number of links is " << m_totalNoLinks << " (" << tFinish - tStart << "s).\n";
 }
 
-BlockchainTopologyHelper::~BlockchainTopologyHelper ()
+IoTLayerTopologyHelper::~IoTLayerTopologyHelper ()
 {
   delete[] m_blockchainNodesRegion;
   delete[] m_manufacturers;
 }
 
 void
-BlockchainTopologyHelper::InstallStack (InternetStackHelper stack)
+IoTLayerTopologyHelper::InstallStack (InternetStackHelper stack)
 {
   double tStart = GetWallTime();
   double tFinish;
@@ -372,7 +372,7 @@ BlockchainTopologyHelper::InstallStack (InternetStackHelper stack)
 }
 
 void
-BlockchainTopologyHelper::AssignIpv4Addresses (Ipv4AddressHelperCustom ip)
+IoTLayerTopologyHelper::AssignIpv4Addresses (Ipv4AddressHelperCustom ip)
 {
   double tStart = GetWallTime();
   double tFinish;
@@ -434,11 +434,11 @@ BlockchainTopologyHelper::AssignIpv4Addresses (Ipv4AddressHelperCustom ip)
 
 
 Ptr<Node>
-BlockchainTopologyHelper::GetNode (uint32_t id)
+IoTLayerTopologyHelper::GetNode (uint32_t id)
 {
   if (id > m_nodes.size () - 1 )
     {
-      NS_FATAL_ERROR ("Index out of bounds in BlockchainTopologyHelper::GetNode.");
+      NS_FATAL_ERROR ("Index out of bounds in IoTLayerTopologyHelper::GetNode.");
     }
 
   return (m_nodes.at (id)).Get (0);
@@ -447,7 +447,7 @@ BlockchainTopologyHelper::GetNode (uint32_t id)
 
 
 Ipv4InterfaceContainer
-BlockchainTopologyHelper::GetIpv4InterfaceContainer (void) const
+IoTLayerTopologyHelper::GetIpv4InterfaceContainer (void) const
 {
   Ipv4InterfaceContainer ipv4InterfaceContainer;
 
@@ -459,20 +459,20 @@ BlockchainTopologyHelper::GetIpv4InterfaceContainer (void) const
 
 
 std::map<uint32_t, std::vector<Ipv4Address>>
-BlockchainTopologyHelper::GetNodesConnectionsIps (void) const
+IoTLayerTopologyHelper::GetNodesConnectionsIps (void) const
 {
   return m_nodesConnectionsIps;
 }
 
 
 std::vector<uint32_t>
-BlockchainTopologyHelper::GetMiners (void) const
+IoTLayerTopologyHelper::GetMiners (void) const
 {
   return m_miners;
 }
 
 void
-BlockchainTopologyHelper::AssignRegion (uint32_t id)
+IoTLayerTopologyHelper::AssignRegion (uint32_t id)
 {
   auto index = std::find(m_miners.begin(), m_miners.end(), id);
   if ( index != m_miners.end() )
@@ -490,7 +490,7 @@ BlockchainTopologyHelper::AssignRegion (uint32_t id)
 
 
 void
-BlockchainTopologyHelper::AssignInternetSpeeds(uint32_t id)
+IoTLayerTopologyHelper::AssignInternetSpeeds(uint32_t id)
 {
   auto index = std::find(m_miners.begin(), m_miners.end(), id);
   if ( index != m_miners.end() )
@@ -549,28 +549,28 @@ BlockchainTopologyHelper::AssignInternetSpeeds(uint32_t id)
 
 
 uint32_t*
-BlockchainTopologyHelper::GetBlockchainNodesRegions (void)
+IoTLayerTopologyHelper::GetBlockchainNodesRegions (void)
 {
   return m_blockchainNodesRegion;
 }
 
 
 std::map<uint32_t, std::map<Ipv4Address, double>>
-BlockchainTopologyHelper::GetPeersDownloadSpeeds (void) const
+IoTLayerTopologyHelper::GetPeersDownloadSpeeds (void) const
 {
   return m_peersDownloadSpeeds;
 }
 
 
 std::map<uint32_t, std::map<Ipv4Address, double>>
-BlockchainTopologyHelper::GetPeersUploadSpeeds (void) const
+IoTLayerTopologyHelper::GetPeersUploadSpeeds (void) const
 {
   return m_peersUploadSpeeds;
 }
 
 
 std::map<uint32_t, nodeInternetSpeeds>
-BlockchainTopologyHelper::GetNodesInternetSpeeds (void) const
+IoTLayerTopologyHelper::GetNodesInternetSpeeds (void) const
 {
   return m_nodesInternetSpeeds;
 }

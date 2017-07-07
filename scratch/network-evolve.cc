@@ -139,20 +139,20 @@
 
 
     NS_LOG_INFO ("Creating Topology");
-     BlockchainTopologyHelper blockchainTopologyHelper (systemCount, totalNoNodes, manufacturers,
+     IoTLayerTopologyHelper IoTLayerTopologyHelper (systemCount, totalNoNodes, manufacturers,
                                                   minConnectionsPerNode,
                                                   maxConnectionsPerNode, 0, systemId, validators, gatewayChildMap, gatewayMinerMap);
 
     InternetStackHelper stack;
-    blockchainTopologyHelper.InstallStack (stack);
+    IoTLayerTopologyHelper.InstallStack (stack);
     // Assign Addresses to Grid
-    blockchainTopologyHelper.AssignIpv4Addresses (Ipv4AddressHelperCustom ("1.0.0.0", "255.255.255.0", false));
-    ipv4InterfaceContainer = blockchainTopologyHelper.GetIpv4InterfaceContainer();
-    nodesConnections = blockchainTopologyHelper.GetNodesConnectionsIps();
-    validators = blockchainTopologyHelper.GetMiners();
-    peersDownloadSpeeds = blockchainTopologyHelper.GetPeersDownloadSpeeds();
-    peersUploadSpeeds = blockchainTopologyHelper.GetPeersUploadSpeeds();
-    nodesInternetSpeeds = blockchainTopologyHelper.GetNodesInternetSpeeds();
+    IoTLayerTopologyHelper.AssignIpv4Addresses (Ipv4AddressHelperCustom ("1.0.0.0", "255.255.255.0", false));
+    ipv4InterfaceContainer = IoTLayerTopologyHelper.GetIpv4InterfaceContainer();
+    nodesConnections = IoTLayerTopologyHelper.GetNodesConnectionsIps();
+    validators = IoTLayerTopologyHelper.GetMiners();
+    peersDownloadSpeeds = IoTLayerTopologyHelper.GetPeersDownloadSpeeds();
+    peersUploadSpeeds = IoTLayerTopologyHelper.GetPeersUploadSpeeds();
+    nodesInternetSpeeds = IoTLayerTopologyHelper.GetNodesInternetSpeeds();
 
     BlockchainValidatorHelper blockchainValidatorHelper ("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), m_commPort),nodesConnections[validators[0]], validators.size(), peersDownloadSpeeds[0], peersUploadSpeeds[0],nodesInternetSpeeds[0], 5.0);
 
@@ -160,7 +160,7 @@
 
     for(auto &miner : validators)
     {
-    	Ptr<Node> targetNode = blockchainTopologyHelper.GetNode (miner);
+    	Ptr<Node> targetNode = IoTLayerTopologyHelper.GetNode (miner);
       blockchainValidatorHelper.SetPeersAddresses (nodesConnections[miner]);
       blockchainValidatorHelper.SetPeersDownloadSpeeds (peersDownloadSpeeds[miner]);
       blockchainValidatorHelper.SetPeersUploadSpeeds (peersUploadSpeeds[miner]);
