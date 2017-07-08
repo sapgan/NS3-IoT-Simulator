@@ -28,7 +28,7 @@
 #include "ipv4-interface-container.h"
 #include "ipv6-interface-container.h"
 #include "net-device-container.h"
-#include "ipv4-address-helper-custom.h"
+#include "ipv6-address-helper-custom.h"
 #include "ns3/blockchain.h"
 #include <random>
 
@@ -57,10 +57,10 @@ public:
   Ptr<Node> GetNode (uint32_t id);
 
   /**
-   * This returns an Ipv4 address at the node specified by
+   * This returns an Ipv6 address at the node specified by
    * the (row, col) address.  Technically, a node will have
    * multiple interfaces in the grid; therefore, it also has
-   * multiple Ipv4 addresses.  This method only returns one of
+   * multiple Ipv6 addresses.  This method only returns one of
    * the addresses. If you picture the grid, the address returned
    * is the left row device of all the nodes, except the left-most
    * grid nodes, which returns the right row device.
@@ -69,10 +69,10 @@ public:
    *
    * \param col the column address of the node desired
    *
-   * \returns Ipv4Address of one of the interfaces of the node
+   * \returns Ipv6Address of one of the interfaces of the node
    *          specified by the (row, col) address
    */
-  Ipv4Address GetIpv4Address (uint32_t row, uint32_t col);
+  Ipv6Address GetIpv6Address (uint32_t row, uint32_t col);
 
 
   /**
@@ -82,15 +82,15 @@ public:
   void InstallStack (InternetStackHelper stack);
 
   /**
-   * Assigns Ipv4 addresses to all the row and column interfaces
+   * Assigns Ipv6 addresses to all the row and column interfaces
    *
-   * \param ip the Ipv4AddressHelper used to assign Ipv4 addresses
+   * \param ip the Ipv6AddressHelper used to assign Ipv6 addresses
    *              to all of the row interfaces in the grid
    *
-   * \param ip the Ipv4AddressHelper used to assign Ipv4 addresses
+   * \param ip the Ipv6AddressHelper used to assign Ipv6 addresses
    *              to all of the row interfaces in the grid
    */
-  void AssignIpv4Addresses (Ipv4AddressHelperCustom ip);
+  void AssignIpv6Addresses (Ipv6AddressHelperCustom ip);
 
 
   /**
@@ -107,16 +107,16 @@ public:
   /**
    * Get the interface container
    */
-   Ipv4InterfaceContainer GetIpv4InterfaceContainer (void) const;
+   Ipv6InterfaceContainer GetIpv6InterfaceContainer (void) const;
 
-   std::map<uint32_t, std::vector<Ipv4Address>> GetNodesConnectionsIps (void) const;
+   std::map<uint32_t, std::vector<Ipv6Address>> GetNodesConnectionsIps (void) const;
 
    std::vector<uint32_t> GetMiners (void) const;
 
    uint32_t* GetBlockchainNodesRegions (void);
 
-   std::map<uint32_t, std::map<Ipv4Address, double>> GetPeersDownloadSpeeds(void) const;
-   std::map<uint32_t, std::map<Ipv4Address, double>> GetPeersUploadSpeeds(void) const;
+   std::map<uint32_t, std::map<Ipv6Address, double>> GetPeersDownloadSpeeds(void) const;
+   std::map<uint32_t, std::map<Ipv6Address, double>> GetPeersUploadSpeeds(void) const;
 
    std::map<uint32_t, nodeInternetSpeeds> GetNodesInternetSpeeds (void) const;
 
@@ -141,20 +141,20 @@ private:
   enum ManufacturerID                             *m_manufacturers;
   std::vector<uint32_t>                           m_miners;                  //!< The ids of the miners
   std::map<uint32_t, std::vector<uint32_t>>       m_nodesConnections;        //!< key = nodeId
-  std::map<uint32_t, std::vector<Ipv4Address>>    m_nodesConnectionsIps;     //!< key = nodeId
+  std::map<uint32_t, std::vector<Ipv6Address>>    m_nodesConnectionsIps;     //!< key = nodeId
   std::map<uint32_t, std::vector<uint32_t>>    m_nodeGatewayMap;            //!< key = nodeId
   std::map<uint32_t, uint32_t>                 m_gatewayMinerMap;           //!< key=nodeId
   std::vector<NodeContainer>                      m_nodes;                   //!< all the nodes in the network
   std::vector<NetDeviceContainer>                 m_devices;                 //!< NetDevices in the network
-  std::vector<Ipv4InterfaceContainer>             m_interfaces;              //!< IPv4 interfaces in the network
+  std::vector<Ipv6InterfaceContainer>             m_interfaces;              //!< Ipv6 interfaces in the network
   uint32_t                                       *m_blockchainNodesRegion;      //!< The region in which the blockchain nodes are located
   double                                          m_regionLatencies[6][6];   //!< The inter- and intra-region latencies
   double                                          m_regionDownloadSpeeds[6];
   double                                          m_regionUploadSpeeds[6];
 
 
-  std::map<uint32_t, std::map<Ipv4Address, double>>    m_peersDownloadSpeeds;     //!< key1 = nodeId, key2 = Ipv4Address of peer
-  std::map<uint32_t, std::map<Ipv4Address, double>>    m_peersUploadSpeeds;       //!< key1 = nodeId, key2 = Ipv4Address of peer
+  std::map<uint32_t, std::map<Ipv6Address, double>>    m_peersDownloadSpeeds;     //!< key1 = nodeId, key2 = Ipv6Address of peer
+  std::map<uint32_t, std::map<Ipv6Address, double>>    m_peersUploadSpeeds;       //!< key1 = nodeId, key2 = Ipv6Address of peer
   std::map<uint32_t, nodeInternetSpeeds>               m_nodesInternetSpeeds;     //!< key = nodeId
   std::map<uint32_t, int>                              m_minConnections;          //!< key = nodeId
   std::map<uint32_t, int>                              m_maxConnections;          //!< key = nodeId

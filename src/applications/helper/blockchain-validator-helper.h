@@ -29,7 +29,7 @@ class BlockchainValidatorHelper : public BlockchainNodeHelper
    *        ns3::TcpSocketFactory.
    * \param address the address of the blockchain node
    * \param noMiners total number of miners in the simulation
-   * \param peers a reference to a vector containing the Ipv4 addresses of peers of the blockchain node
+   * \param peers a reference to a vector containing the Ipv6 addresses of peers of the blockchain node
    * \param peersDownloadSpeeds a map containing the download speeds of the peers of the node
    * \param peersUploadSpeeds a map containing the upload speeds of the peers of the node
    * \param internetSpeeds a reference to a struct containing the internet speeds of the node
@@ -37,8 +37,8 @@ class BlockchainValidatorHelper : public BlockchainNodeHelper
    * \param hashRate the hash rate of the miner
    * \param averageBlockGenIntervalSeconds the average block generation interval in seconds
    */
-  BlockchainValidatorHelper (std::string protocol, Address address, std::vector<Ipv4Address> peers, int noMiners,
-                      std::map<Ipv4Address, double> &peersDownloadSpeeds, std::map<Ipv4Address, double> &peersUploadSpeeds,
+  BlockchainValidatorHelper (std::string protocol, Address address, std::vector<Ipv6Address> peers, int noMiners,
+                      std::map<Ipv6Address, double> &peersDownloadSpeeds, std::map<Ipv6Address, double> &peersUploadSpeeds,
                       nodeInternetSpeeds &internetSpeeds, double hashRate);
 
   enum MinerType GetMinerType(void);

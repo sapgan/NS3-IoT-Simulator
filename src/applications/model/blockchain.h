@@ -164,7 +164,7 @@ class Block
 {
 public:
         Block (int blockHeight, int minerId, int parentBlockMinerId = 0, int blockSizeBytes = 0,
-               double timeCreated = 0, int nodeId = 0, std::string nodePublicKey = "", std::string signature = "", double timeReceived = 0, Ipv4Address receivedFromIpv4 = Ipv4Address("0.0.0.0"));
+               double timeCreated = 0, int nodeId = 0, std::string nodePublicKey = "", std::string signature = "", double timeReceived = 0, Ipv6Address receivedFromIpv6Address = Ipv6Address("0::0::0::0"));
         Block ();
         Block (const Block &blockSource); // Copy constructor
         virtual ~Block (void);
@@ -184,8 +184,8 @@ public:
         double GetTimeCreated (void) const;
         double GetTimeReceived (void) const;
 
-        Ipv4Address GetReceivedFromIpv4 (void) const;
-        void SetReceivedFromIpv4 (Ipv4Address receivedFromIpv4);
+        Ipv6Address GetReceivedFromIpv6Address (void) const;
+        void SetReceivedFromIpv6Address (Ipv6Address receivedFromIpv6Address);
 
         int GetNodeIdOfBlock (void) const;
         void SetNodeIdOfBlock (int nodeId);
@@ -218,7 +218,7 @@ protected:
         int m_blockSizeBytes;                 // The size of the block in bytes
         double m_timeCreated;                 // The time the block was created
         double m_timeReceived;                // The time the block was received from the node
-        Ipv4Address m_receivedFromIpv4;       // The Ipv4 of the node which sent the block to the receiving node
+        Ipv6Address m_receivedFromIpv6Address;       // The Ipv6Address of the node which sent the block to the receiving node
         int m_nodeId;                           // The id of the node for which the block stores the public key
         std::string m_nodePublicKey;           // The base64 public key of the block
         std::string m_signature;                // The signature by the validating node
@@ -228,9 +228,9 @@ class BlockChunk : public Block
 {
 public:
         BlockChunk (int blockHeight, int minerId, int chunkId, int parentBlockMinerId = 0, int blockSizeBytes = 0,
-                    double timeCreated = 0, std::vector<int> nodeIds = std::vector<int>(), std::vector<std::string> nodePublicKeys = std::vector<std::string>(), std::vector<std::string> signatures = std::vector<std::string>(), double timeReceived = 0, Ipv4Address receivedFromIpv4 = Ipv4Address("0.0.0.0"));
+                    double timeCreated = 0, std::vector<int> nodeIds = std::vector<int>(), std::vector<std::string> nodePublicKeys = std::vector<std::string>(), std::vector<std::string> signatures = std::vector<std::string>(), double timeReceived = 0, Ipv6Address receivedFromIpv6Address = Ipv6Address("0::0::0::0"));
         BlockChunk (int blockHeight, int minerId, int chunkId, int parentBlockMinerId = 0, int blockSizeBytes = 0,
-                    double timeCreated = 0, double timeReceived = 0, Ipv4Address receivedFromIpv4 = Ipv4Address("0.0.0.0"));
+                    double timeCreated = 0, double timeReceived = 0, Ipv6Address receivedFromIpv6Address = Ipv6Address("0::0::0::0"));
         BlockChunk ();
         BlockChunk (const BlockChunk &chunkSource); // Copy constructor
         virtual ~BlockChunk (void);

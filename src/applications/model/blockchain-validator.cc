@@ -168,7 +168,7 @@ BlockchainValidator::StartApplication ()    // Called at time specified by Start
 
 /*   if (GetNode()->GetId() == 0)
   {
-    Block newBlock(1, 0, -1, 500000, 0, 0, Ipv4Address("0.0.0.0"));
+    Block newBlock(1, 0, -1, 500000, 0, 0, Ipv6Address("0.0.0.0"));
     m_blockchain.AddBlock(newBlock);
   } */
 
@@ -368,7 +368,7 @@ BlockchainValidator::MineBlock (void)
     m_nextBlockSize = m_averageTransactionSize + m_headersSizeBytes;
 
   Block newBlock (height, minerId, parentBlockMinerId, m_nextBlockSize,
-                  currentTime, 0, "", "", currentTime, Ipv4Address("127.0.0.1"));
+                  currentTime, 0, "", "", currentTime, Ipv6Address("0::0::0::1"));
 
   switch(m_blockBroadcastType)
   {
@@ -693,7 +693,7 @@ BlockchainValidator::MineBlock (void)
 
   int count = 0;
 
-  for (std::vector<Ipv4Address>::const_iterator i = m_peersAddresses.begin(); i != m_peersAddresses.end(); ++i, ++count)
+  for (std::vector<Ipv6Address>::const_iterator i = m_peersAddresses.begin(); i != m_peersAddresses.end(); ++i, ++count)
   {
 
     const uint8_t delimiter[] = "#";
@@ -743,8 +743,8 @@ BlockchainValidator::MineBlock (void)
         double sendTime = m_nextBlockSize / m_uploadSpeed;
         double eventTime;
 
-/*                 std::cout << "Node " << GetNode()->GetId() << "-" << InetSocketAddress::ConvertFrom(from).GetIpv4 ()
-                          << " " << m_peersDownloadSpeeds[InetSocketAddress::ConvertFrom(from).GetIpv4 ()] << " Mbps , time = "
+/*                 std::cout << "Node " << GetNode()->GetId() << "-" << Inet6SocketAddress::ConvertFrom(from).GetIpv6 ()
+                          << " " << m_peersDownloadSpeeds[Inet6SocketAddress::ConvertFrom(from).GetIpv6 ()] << " Mbps , time = "
                           << Simulator::Now ().GetSeconds() << "s \n"; */
 
         if (m_sendBlockTimes.size() == 0 || Simulator::Now ().GetSeconds() >  m_sendBlockTimes.back())

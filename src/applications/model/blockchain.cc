@@ -23,7 +23,7 @@ namespace ns3 {
  *  TODO:Represent public key data as merkle tree structure.
  */
 Block::Block(int blockHeight, int minerId, int parentBlockMinerId, int blockSizeBytes,
-             double timeCreated, int nodeId, std::string nodePublicKey, std::string signature, double timeReceived, Ipv4Address receivedFromIpv4)
+             double timeCreated, int nodeId, std::string nodePublicKey, std::string signature, double timeReceived, Ipv6Address receivedFromIpv6Address)
 {
   m_blockHeight = blockHeight;
   m_minerId = minerId;
@@ -31,7 +31,7 @@ Block::Block(int blockHeight, int minerId, int parentBlockMinerId, int blockSize
   m_blockSizeBytes = blockSizeBytes;
   m_timeCreated = timeCreated;
   m_timeReceived = timeReceived;
-  m_receivedFromIpv4 = receivedFromIpv4;
+  m_receivedFromIpv6Address = receivedFromIpv6Address;
   m_nodeId = nodeId;
   m_nodePublicKey = nodePublicKey;
   m_signature = signature;
@@ -40,7 +40,7 @@ Block::Block(int blockHeight, int minerId, int parentBlockMinerId, int blockSize
 
 Block::Block()
 {
-  Block(0, 0, 0, 0, 0, 0, "", "", 0, Ipv4Address("0.0.0.0"));
+  Block(0, 0, 0, 0, 0, 0, "", "", 0, Ipv6Address("0::0::0::0"));
 
 }
 
@@ -52,7 +52,7 @@ Block::Block (const Block &blockSource)
   m_blockSizeBytes = blockSource.m_blockSizeBytes;
   m_timeCreated = blockSource.m_timeCreated;
   m_timeReceived = blockSource.m_timeReceived;
-  m_receivedFromIpv4 = blockSource.m_receivedFromIpv4;
+  m_receivedFromIpv6Address = blockSource.m_receivedFromIpv6Address;
   m_nodeId = blockSource.m_nodeId;
   m_nodePublicKey = blockSource.m_nodePublicKey;
   m_signature = blockSource.m_signature;
@@ -124,16 +124,16 @@ Block::GetTimeReceived (void) const
 }
 
 
-Ipv4Address
-Block::GetReceivedFromIpv4 (void) const
+Ipv6Address
+Block::GetReceivedFromIpv6Address (void) const
 {
-  return m_receivedFromIpv4;
+  return m_receivedFromIpv6Address;
 }
 
 void
-Block::SetReceivedFromIpv4 (Ipv4Address receivedFromIpv4)
+Block::SetReceivedFromIpv6Address (Ipv6Address receivedFromIpv6Address)
 {
-  m_receivedFromIpv4 = receivedFromIpv4;
+  m_receivedFromIpv6Address = receivedFromIpv6Address;
 }
 
 int
@@ -200,7 +200,7 @@ Block::operator= (const Block &blockSource)
   m_blockSizeBytes = blockSource.m_blockSizeBytes;
   m_timeCreated = blockSource.m_timeCreated;
   m_timeReceived = blockSource.m_timeReceived;
-  m_receivedFromIpv4 = blockSource.m_receivedFromIpv4;
+  m_receivedFromIpv6Address = blockSource.m_receivedFromIpv6Address;
   m_nodeId = blockSource.m_nodeId;
   m_nodePublicKey = blockSource.m_nodePublicKey;
   m_signature = blockSource.m_signature;
@@ -215,9 +215,9 @@ Block::operator= (const Block &blockSource)
  */
 
 BlockChunk::BlockChunk(int blockHeight, int minerId, int chunkId, int parentBlockMinerId, int blockSizeBytes,
-             double timeCreated, std::vector<int> nodeIds, std::vector<std::string> nodePublicKeys, std::vector<std::string> signatures, double timeReceived, Ipv4Address receivedFromIpv4) :
+             double timeCreated, std::vector<int> nodeIds, std::vector<std::string> nodePublicKeys, std::vector<std::string> signatures, double timeReceived, Ipv6Address receivedFromIpv6Address) :
              Block (blockHeight, minerId, parentBlockMinerId, blockSizeBytes,
-                    timeCreated, 0, "", "", timeReceived, receivedFromIpv4)
+                    timeCreated, 0, "", "", timeReceived, receivedFromIpv6Address)
 {
   m_chunkId = chunkId;
   m_multiNodeIds = nodeIds;
@@ -226,16 +226,16 @@ BlockChunk::BlockChunk(int blockHeight, int minerId, int chunkId, int parentBloc
 }
 
 BlockChunk::BlockChunk(int blockHeight, int minerId, int chunkId, int parentBlockMinerId, int blockSizeBytes,
-             double timeCreated, double timeReceived, Ipv4Address receivedFromIpv4) :
+             double timeCreated, double timeReceived, Ipv6Address receivedFromIpv6Address) :
              Block (blockHeight, minerId, parentBlockMinerId, blockSizeBytes,
-                    timeCreated, 0, "", "", timeReceived, receivedFromIpv4)
+                    timeCreated, 0, "", "", timeReceived, receivedFromIpv6Address)
 {
   m_chunkId = chunkId;
 }
 
 BlockChunk::BlockChunk()
 {
-  BlockChunk(0, 0, 0, 0, 0, 0, std::vector<int>(), std::vector<std::string>(), std::vector<std::string>(), 0, Ipv4Address("0.0.0.0"));
+  BlockChunk(0, 0, 0, 0, 0, 0, std::vector<int>(), std::vector<std::string>(), std::vector<std::string>(), 0, Ipv6Address("0::0::0::0"));
 }
 
 BlockChunk::BlockChunk (const BlockChunk &chunkSource)
@@ -247,7 +247,7 @@ BlockChunk::BlockChunk (const BlockChunk &chunkSource)
   m_blockSizeBytes = chunkSource.m_blockSizeBytes;
   m_timeCreated = chunkSource.m_timeCreated;
   m_timeReceived = chunkSource.m_timeReceived;
-  m_receivedFromIpv4 = chunkSource.m_receivedFromIpv4;
+  m_receivedFromIpv6Address = chunkSource.m_receivedFromIpv6Address;
   m_multiNodeIds = chunkSource.m_multiNodeIds;
   m_multiNodePublicKeys = chunkSource.m_multiNodePublicKeys;
   m_multiNodeSignatures = chunkSource.m_multiNodeSignatures;
@@ -280,7 +280,7 @@ BlockChunk::operator= (const BlockChunk &chunkSource)
   m_blockSizeBytes = chunkSource.m_blockSizeBytes;
   m_timeCreated = chunkSource.m_timeCreated;
   m_timeReceived = chunkSource.m_timeReceived;
-  m_receivedFromIpv4 = chunkSource.m_receivedFromIpv4;
+  m_receivedFromIpv6Address = chunkSource.m_receivedFromIpv6Address;
   m_multiNodeIds = chunkSource.m_multiNodeIds;
   m_multiNodePublicKeys = chunkSource.m_multiNodePublicKeys;
   m_multiNodeSignatures = chunkSource.m_multiNodeSignatures;
@@ -299,7 +299,7 @@ Blockchain::Blockchain(void)
 {
   m_noStaleBlocks = 0;
   m_totalBlocks = 0;
-  Block genesisBlock(0, -1, -2, 0, 0, 0, "garbage", "garbage", 0, Ipv4Address("0.0.0.0"));
+  Block genesisBlock(0, -1, -2, 0, 0, 0, "garbage", "garbage", 0, Ipv6Address("0::0::0::0"));
   AddBlock(genesisBlock);
 }
 
@@ -401,7 +401,7 @@ Blockchain::GetPublickeyBlock (int nodeId)
   std::map<int, Block >::const_iterator it = m_block_map.find(nodeId);
   if(it == m_block_map.end())
       return it->second;
-  return Block(-1, -1, -1, -1, -1, -1, "", "", -1, Ipv4Address("0.0.0.0"));
+  return Block(-1, -1, -1, -1, -1, -1, "", "", -1, Ipv6Address("0::0::0::0"));
   //return nullptr;
 
 }
@@ -442,7 +442,7 @@ Blockchain::ReturnBlock(int height, int minerId)
       return *block_it;
   }
 
-  return Block(-1, -1, -1, -1, -1, -1, "", "", -1, Ipv4Address("0.0.0.0"));
+  return Block(-1, -1, -1, -1, -1, -1, "", "", -1, Ipv6Address("0::0::0::0"));
 }
 
 
@@ -769,7 +769,7 @@ std::ostream& operator<< (std::ostream &out, const Block &block)
         "m_blockSizeBytes: " << block.GetBlockSizeBytes() << ", " <<
         "m_timeCreated: " << block.GetTimeCreated() << ", " <<
         "m_timeReceived: " << block.GetTimeReceived() << ", " <<
-        "m_receivedFromIpv4: " << block.GetReceivedFromIpv4() <<
+        "m_receivedFromIpv6Address: " << block.GetReceivedFromIpv6Address() <<
         ")";
     return out;
 }
@@ -785,7 +785,7 @@ std::ostream& operator<< (std::ostream &out, const BlockChunk &chunk)
         "m_blockSizeBytes: " << chunk.GetBlockSizeBytes() << ", " <<
         "m_timeCreated: " << chunk.GetTimeCreated() << ", " <<
         "m_timeReceived: " << chunk.GetTimeReceived() << ", " <<
-        "m_receivedFromIpv4: " << chunk.GetReceivedFromIpv4() <<
+        "m_receivedFromIpv6Address: " << chunk.GetReceivedFromIpv6Address() <<
         ")";
     return out;
 }

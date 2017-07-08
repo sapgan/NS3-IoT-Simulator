@@ -72,7 +72,7 @@ IotSensorNode::IotSensorNode (void) : m_commPort (5555), m_secondsPerMin(60)
         NS_LOG_FUNCTION (this);
         m_socket = 0;
         m_gatewayNodeId = 0;
-        m_gatewayAddress = 0;
+        m_gatewayAddress = Ipv6Address ("::1");
         m_numberOfPeers = m_peersAddresses.size();
         CryptoPP::AutoSeededRandomPool m_prng;
         CryptoPP::InvertibleRSAFunction params;
@@ -89,7 +89,7 @@ IotSensorNode::IotSensorNode (CryptoPP::RSA::PublicKey gatewayKey, CryptoPP::RSA
         NS_LOG_FUNCTION (this);
         m_socket = 0;
         m_gatewayNodeId = 0;
-        m_gatewayAddress = 0;
+        m_gatewayAddress = Ipv6Address ("::1");
         m_privateKey = privKey;
         m_gatewayPublicKey = gatewayKey;
         m_numberOfPeers = m_peersAddresses.size();
@@ -100,7 +100,7 @@ IotSensorNode::IotSensorNode (CryptoPP::RSA::PublicKey gatewayKey, CryptoPP::RSA
         NS_LOG_FUNCTION (this);
         m_socket = 0;
         m_gatewayNodeId = 0;
-        m_gatewayAddress = 0;
+        m_gatewayAddress = Ipv6Address ("::1");
         m_privateKey = privKey;
         m_publicKey = pubKey;
         m_gatewayPublicKey = gatewayKey;
@@ -112,7 +112,7 @@ IotSensorNode::IotSensorNode (CryptoPP::RSA::PublicKey gatewayKey) : m_commPort 
         NS_LOG_FUNCTION (this);
         m_socket = 0;
         m_gatewayNodeId = 0;
-        m_gatewayAddress = 0;
+        m_gatewayAddress = Ipv6Address ("::1");
         m_gatewayPublicKey = gatewayKey;
         m_numberOfPeers = m_peersAddresses.size();
         CryptoPP::AutoSeededRandomPool m_prng;
@@ -137,7 +137,7 @@ IotSensorNode::GetListeningSocket (void) const
         return m_socket;
 }
 
-std::vector<Ipv4Address>
+std::vector<Ipv6Address>
 IotSensorNode::GetPeersAddresses (void) const
 {
         NS_LOG_FUNCTION (this);
@@ -180,7 +180,7 @@ IotSensorNode::SetGatewayPublickey (CryptoPP::RSA::PublicKey newGatewayKey)
 }
 
 void
-IotSensorNode::SetPeersAddresses (const std::vector<Ipv4Address> &peers)
+IotSensorNode::SetPeersAddresses (const std::vector<Ipv6Address> &peers)
 {
   NS_LOG_FUNCTION (this);
   m_peersAddresses = peers;
@@ -188,7 +188,7 @@ IotSensorNode::SetPeersAddresses (const std::vector<Ipv4Address> &peers)
 }
 
 void
-IotSensorNode::AddPeer (Ipv4Address newPeer)
+IotSensorNode::AddPeer (Ipv6Address newPeer)
 {
   NS_LOG_FUNCTION (this);
   m_peersAddresses.push_back(newPeer);
@@ -196,14 +196,14 @@ IotSensorNode::AddPeer (Ipv4Address newPeer)
 }
 
 void
-IotSensorNode::SetPeersDownloadSpeeds (const std::map<Ipv4Address, double> &peersDownloadSpeeds)
+IotSensorNode::SetPeersDownloadSpeeds (const std::map<Ipv6Address, double> &peersDownloadSpeeds)
 {
         NS_LOG_FUNCTION (this);
         m_peersDownloadSpeeds = peersDownloadSpeeds;
 }
 
 void
-IotSensorNode::SetPeersUploadSpeeds (const std::map<Ipv4Address, double> &peersUploadSpeeds)
+IotSensorNode::SetPeersUploadSpeeds (const std::map<Ipv6Address, double> &peersUploadSpeeds)
 {
         NS_LOG_FUNCTION (this);
         m_peersUploadSpeeds = peersUploadSpeeds;
@@ -292,10 +292,10 @@ IotSensorNode::StartApplication ()    // Called at time specified by Start
                 MakeCallback (&IotSensorNode::HandlePeerError, this));
 
         NS_LOG_DEBUG ("Node " << GetNode()->GetId() << ": Before creating sockets");
-        for (std::vector<Ipv4Address>::const_iterator i = m_peersAddresses.begin(); i != m_peersAddresses.end(); ++i)
+        for (std::vector<Ipv6Address>::const_iterator i = m_peersAddresses.begin(); i != m_peersAddresses.end(); ++i)
         {
                 m_peersSockets[*i] = Socket::CreateSocket (GetNode (), TcpSocketFactory::GetTypeId ());
-                m_peersSockets[*i]->Connect (InetSocketAddress (*i, m_commPort));
+                m_peersSockets[*i]->Connect (Inet6SocketAddress (*i, m_commPort));
         }
         NS_LOG_DEBUG ("Node " << GetNode()->GetId() << ": After creating sockets");
         m_nodeStats->nodeId = GetNode ()->GetId ();
@@ -307,7 +307,7 @@ IotSensorNode::StopApplication ()     // Called at time specified by Stop
 {
   NS_LOG_FUNCTION (this);
 
-  for (std::vector<Ipv4Address>::iterator i = m_peersAddresses.begin(); i != m_peersAddresses.end(); ++i) //close the outgoing sockets
+  for (std::vector<Ipv6Address>::iterator i = m_peersAddresses.begin(); i != m_peersAddresses.end(); ++i) //close the outgoing sockets
   {
     m_peersSockets[*i]->Close ();
   }
@@ -339,7 +339,7 @@ IotSensorNode::checkSign (std::string message, std::string signature)
 }
 
 bool
-IotSensorNode::checkSign (std::string message, std::string signature, Ipv4Address sender)
+IotSensorNode::checkSign (std::string message, std::string signature, Ipv6Address sender)
 {
     CryptoPP::RSA::PublicKey publicKey = m_publicKeys[sender];
     CryptoPP::RSASSA_PKCS1v15_SHA_Verifier verifier(publicKey);
@@ -382,7 +382,7 @@ IotSensorNode::encrypt(std::string message, CryptoPP::RSA::PublicKey publicKey){
 }
 
 std::string
-IotSensorNode::encrypt(std::string message, Ipv4Address receiver,int type){
+IotSensorNode::encrypt(std::string message, Ipv6Address receiver,int type){
   if(type==1){
       CryptoPP::RSA::PublicKey publicKey = m_publicKeys[receiver];
       std::string cipher;
@@ -436,7 +436,7 @@ IotSensorNode::HandleRead (Ptr<Socket> socket)
        break;
     }
 
-    if (InetSocketAddress::IsMatchingType (from))
+    if (Inet6SocketAddress::IsMatchingType (from))
     {
       /**
        * We may receive more than one packets simultaneously on the socket,
@@ -480,8 +480,8 @@ IotSensorNode::HandleRead (Ptr<Socket> socket)
          NS_LOG_INFO ("At time "  << Simulator::Now ().GetSeconds ()
                        << "s iot node " << GetNode ()->GetId () << " received "
                        <<  packet->GetSize () << " bytes from "
-                       << InetSocketAddress::ConvertFrom(from).GetIpv4 ()
-                       << " port " << InetSocketAddress::ConvertFrom (from).GetPort ()
+                       << Inet6SocketAddress::ConvertFrom(from).GetIpv6 ()
+                       << " port " << Inet6SocketAddress::ConvertFrom (from).GetPort ()
                        << " with info = " << buffer.GetString());
 
          switch (d["message"].GetInt())
@@ -492,7 +492,7 @@ IotSensorNode::HandleRead (Ptr<Socket> socket)
              std::string msgDelimiter = "/";
              std::string parsedBody = d["key"].GetString();
              size_t keyPos = parsedBody.find(msgDelimiter);
-             Ipv4Address nodeIp4Address = InetSocketAddress::ConvertFrom(from).GetIpv4 ();
+             Ipv6Address nodeIp4Address = Inet6SocketAddress::ConvertFrom(from).GetIpv6 ();
 
              std::string publicKeyStr = parsedBody.substr(0,keyPos).c_str();
              std::string signature = parsedBody.substr(keyPos+1, parsedBody.size()).c_str();
@@ -511,7 +511,7 @@ IotSensorNode::HandleRead (Ptr<Socket> socket)
              std::string msgDelimiter = "/";
              std::string parsedBody = d["body"].GetString();
              size_t msgPos = parsedBody.find(msgDelimiter);
-             Ipv4Address nodeIp4Address = InetSocketAddress::ConvertFrom(from).GetIpv4 ();
+             Ipv6Address nodeIp4Address = Inet6SocketAddress::ConvertFrom(from).GetIpv6 ();
 
              std::string msgBody = parsedBody.substr(0,msgPos).c_str();
              std::string signature = parsedBody.substr(msgPos+1, parsedBody.size()).c_str();
@@ -589,15 +589,15 @@ IotSensorNode::SendMessage (enum Messages receivedMessage, enum Messages respons
   d.Accept(writer);
   NS_LOG_INFO("Node " << GetNode ()->GetId () << " sent a " << getMessageName(responseMessage) << " message: " << buffer.GetString());
 
-  Ipv4Address outgoingIpv4Address = InetSocketAddress::ConvertFrom(outgoingAddress).GetIpv4 ();
-  std::map<Ipv4Address, Ptr<Socket>>::iterator it = m_peersSockets.find(outgoingIpv4Address);
+  Ipv6Address outgoingIpv6Address = Inet6SocketAddress::ConvertFrom(outgoingAddress).GetIpv6 ();
+  std::map<Ipv6Address, Ptr<Socket>>::iterator it = m_peersSockets.find(outgoingIpv6Address);
 
   if (it == m_peersSockets.end())
   {
-    m_peersSockets[outgoingIpv4Address] = Socket::CreateSocket (GetNode (), TcpSocketFactory::GetTypeId ());
-    m_peersSockets[outgoingIpv4Address]->Connect (InetSocketAddress (outgoingIpv4Address, m_commPort));
+    m_peersSockets[outgoingIpv6Address] = Socket::CreateSocket (GetNode (), TcpSocketFactory::GetTypeId ());
+    m_peersSockets[outgoingIpv6Address]->Connect (Inet6SocketAddress (outgoingIpv6Address, m_commPort));
   }
-  Ptr<Socket> outgoingSocket = m_peersSockets[outgoingIpv4Address];
+  Ptr<Socket> outgoingSocket = m_peersSockets[outgoingIpv6Address];
   outgoingSocket->Send (reinterpret_cast<const uint8_t*>(buffer.GetString()), buffer.GetSize(), 0);
   outgoingSocket->Send (delimiter, 1, 0);
 }
@@ -618,21 +618,21 @@ IotSensorNode::SendMessage (enum Messages receivedMessage, enum Messages respons
   d.Accept(writer);
   NS_LOG_INFO("Node " <<  GetNode ()->GetId () << " sent a " << getMessageName(responseMessage) << " message: " << buffer.GetString());
 
-  Ipv4Address outgoingIpv4Address = InetSocketAddress::ConvertFrom(outgoingAddress).GetIpv4 ();
-  std::map<Ipv4Address, Ptr<Socket>>::iterator it = m_peersSockets.find(outgoingIpv4Address);
+  Ipv6Address outgoingIpv6Address = Inet6SocketAddress::ConvertFrom(outgoingAddress).GetIpv6 ();
+  std::map<Ipv6Address, Ptr<Socket>>::iterator it = m_peersSockets.find(outgoingIpv6Address);
 
   if (it == m_peersSockets.end())
   {
-    m_peersSockets[outgoingIpv4Address] = Socket::CreateSocket (GetNode (), TcpSocketFactory::GetTypeId ());
-    m_peersSockets[outgoingIpv4Address]->Connect (InetSocketAddress (outgoingIpv4Address, m_commPort));
+    m_peersSockets[outgoingIpv6Address] = Socket::CreateSocket (GetNode (), TcpSocketFactory::GetTypeId ());
+    m_peersSockets[outgoingIpv6Address]->Connect (Inet6SocketAddress (outgoingIpv6Address, m_commPort));
   }
-  Ptr<Socket> outgoingSocket = m_peersSockets[outgoingIpv4Address];
+  Ptr<Socket> outgoingSocket = m_peersSockets[outgoingIpv6Address];
   outgoingSocket->Send (reinterpret_cast<const uint8_t*>(buffer.GetString()), buffer.GetSize(), 0);
   outgoingSocket->Send (delimiter, 1, 0);
 }
 
 void
-IotSensorNode::SendMessage (enum Messages receivedMessage, enum Messages responseMessage, std::string packet, Ipv4Address &outgoingIpv4Address)
+IotSensorNode::SendMessage (enum Messages receivedMessage, enum Messages responseMessage, std::string packet, Ipv6Address &outgoingIpv6Address)
 {
   NS_LOG_FUNCTION (this);
 
@@ -647,14 +647,14 @@ IotSensorNode::SendMessage (enum Messages receivedMessage, enum Messages respons
   d.Accept(writer);
   NS_LOG_INFO("Node " << GetNode ()->GetId () << " sent a " << getMessageName(responseMessage) << " message: " << buffer.GetString());
 
-  std::map<Ipv4Address, Ptr<Socket>>::iterator it = m_peersSockets.find(outgoingIpv4Address);
+  std::map<Ipv6Address, Ptr<Socket>>::iterator it = m_peersSockets.find(outgoingIpv6Address);
 
   if (it == m_peersSockets.end())
   {
-    m_peersSockets[outgoingIpv4Address] = Socket::CreateSocket (GetNode (), TcpSocketFactory::GetTypeId ());
-    m_peersSockets[outgoingIpv4Address]->Connect (InetSocketAddress (outgoingIpv4Address, m_commPort));
+    m_peersSockets[outgoingIpv6Address] = Socket::CreateSocket (GetNode (), TcpSocketFactory::GetTypeId ());
+    m_peersSockets[outgoingIpv6Address]->Connect (Inet6SocketAddress (outgoingIpv6Address, m_commPort));
   }
-  Ptr<Socket> outgoingSocket = m_peersSockets[outgoingIpv4Address];
+  Ptr<Socket> outgoingSocket = m_peersSockets[outgoingIpv6Address];
   outgoingSocket->Send (reinterpret_cast<const uint8_t*>(buffer.GetString()), buffer.GetSize(), 0);
   outgoingSocket->Send (delimiter, 1, 0);
 }

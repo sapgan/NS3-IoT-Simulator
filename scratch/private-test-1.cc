@@ -39,7 +39,7 @@
  double get_wall_time();
  enum ManufacturerID getRandomManufacturerID (void);
  enum ManufacturerID getRandomManufacturerEnum(uint32_t n);
- //int GetNodeIdByIpv4 (Ipv4InterfaceContainer container, Ipv4Address addr);
+ //int GetNodeIdByIpv6 (Ipv6InterfaceContainer container, Ipv6Address addr);
 
  NS_LOG_COMPONENT_DEFINE ("PrivateSimpleExperiment");
 
@@ -61,10 +61,10 @@
      double averageBlockGenIntervalMinutes = averageBlockGenIntervalSeconds/secsPerMin;
      double stop;
 
-     Ipv4InterfaceContainer                               ipv4InterfaceContainer;
-     std::map<uint32_t, std::vector<Ipv4Address>>         nodesConnections;
-     std::map<uint32_t, std::map<Ipv4Address, double>>    peersDownloadSpeeds;
-     std::map<uint32_t, std::map<Ipv4Address, double>>    peersUploadSpeeds;
+     Ipv6InterfaceContainer                               ipv6InterfaceContainer;
+     std::map<uint32_t, std::vector<Ipv6Address>>         nodesConnections;
+     std::map<uint32_t, std::map<Ipv6Address, double>>    peersDownloadSpeeds;
+     std::map<uint32_t, std::map<Ipv6Address, double>>    peersUploadSpeeds;
      std::map<uint32_t, nodeInternetSpeeds>               nodesInternetSpeeds;
      std::vector<uint32_t>                                validators;
      std::map<uint32_t, uint32_t>                         iotValidatorMap;
@@ -110,15 +110,15 @@
     InternetStackHelper stack;
     IoTFlatTopologyHelper.InstallStack (stack);
     // Assign Addresses to Grid
-    IoTFlatTopologyHelper.AssignIpv4Addresses (Ipv4AddressHelperCustom ("1.0.0.0", "255.255.255.0", false));
-    ipv4InterfaceContainer = IoTFlatTopologyHelper.GetIpv4InterfaceContainer();
+    IoTFlatTopologyHelper.AssignIpv6Addresses (Ipv6AddressHelperCustom ("1::0::0::0", "ffff::ffff::ffff::ffff", false));
+    ipv6InterfaceContainer = IoTFlatTopologyHelper.GetIpv6InterfaceContainer();
     nodesConnections = IoTFlatTopologyHelper.GetNodesConnectionsIps();
     validators = IoTFlatTopologyHelper.GetValidators();
     peersDownloadSpeeds = IoTFlatTopologyHelper.GetPeersDownloadSpeeds();
     peersUploadSpeeds = IoTFlatTopologyHelper.GetPeersUploadSpeeds();
     nodesInternetSpeeds = IoTFlatTopologyHelper.GetNodesInternetSpeeds();
 
-    BlockchainValidatorHelper blockchainValidatorHelper ("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), m_commPort),nodesConnections[validators[0]], validators.size(), peersDownloadSpeeds[0], peersUploadSpeeds[0],nodesInternetSpeeds[0], 5.0);
+    BlockchainValidatorHelper blockchainValidatorHelper ("ns3::TcpSocketFactory", Inet6SocketAddress (Ipv6Address::GetAny (), m_commPort),nodesConnections[validators[0]], validators.size(), peersDownloadSpeeds[0], peersUploadSpeeds[0],nodesInternetSpeeds[0], 5.0);
 
     ApplicationContainer blockchainValidators;
 
@@ -134,7 +134,7 @@
     blockchainValidators.Start (Seconds (start));
     blockchainValidators.Stop (Minutes (stop));
 
-    BlockchainNodeHelper blockchainNodeHelper ("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), m_commPort),nodesConnections[0], peersDownloadSpeeds[0],  peersUploadSpeeds[0], nodesInternetSpeeds[0]);
+    BlockchainNodeHelper blockchainNodeHelper ("ns3::TcpSocketFactory", Inet6SocketAddress (Ipv6Address::GetAny (), m_commPort),nodesConnections[0], peersDownloadSpeeds[0],  peersUploadSpeeds[0], nodesInternetSpeeds[0]);
 
     ApplicationContainer blockchainNodes;
 

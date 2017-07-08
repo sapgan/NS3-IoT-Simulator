@@ -46,26 +46,26 @@ public:
   /**
    * \return a vector containing the addresses of peers
    */
-  std::vector<Ipv4Address> GetPeersAddresses (void) const;
+  std::vector<Ipv6Address> GetPeersAddresses (void) const;
 
 
   /**
    * \brief Set the addresses of peers
-   * \param peers the reference of a vector containing the Ipv4 addresses of peers
+   * \param peers the reference of a vector containing the Ipv6 addresses of peers
    */
-  void SetPeersAddresses (const std::vector<Ipv4Address> &peers);
+  void SetPeersAddresses (const std::vector<Ipv6Address> &peers);
 
   /**
    * \brief set the download speeds of peers
-   * \param peersDownloadSpeeds the reference of a map containing the Ipv4 addresses of peers and their corresponding download speed
+   * \param peersDownloadSpeeds the reference of a map containing the Ipv6 addresses of peers and their corresponding download speed
    */
-  void SetPeersDownloadSpeeds (const std::map<Ipv4Address, double> &peersDownloadSpeeds);
+  void SetPeersDownloadSpeeds (const std::map<Ipv6Address, double> &peersDownloadSpeeds);
 
   /**
    * \brief Set the upload speeds of peers
-   * \param peersUploadSpeeds the reference of a map containing the Ipv4 addresses of peers and their corresponding upload speed
+   * \param peersUploadSpeeds the reference of a map containing the Ipv6 addresses of peers and their corresponding upload speed
   */
-  void SetPeersUploadSpeeds (const std::map<Ipv4Address, double> &peersUploadSpeeds);
+  void SetPeersUploadSpeeds (const std::map<Ipv6Address, double> &peersUploadSpeeds);
 
   /**
    * \brief Set the internet speeds of the node
@@ -340,10 +340,10 @@ protected:
   uint32_t        m_chunkSize;                        //!< The size of the chunk in Bytes, when blockTorrent is used
   bool            m_spv;                              //!< Simplified Payment Verification. Used only in conjuction with blockTorrent
 
-  std::vector<Ipv4Address>                            m_peersAddresses;                 //!< The addresses of peers
-  std::map<Ipv4Address, double>                       m_peersDownloadSpeeds;            //!< The peersDownloadSpeeds of channels
-  std::map<Ipv4Address, double>                       m_peersUploadSpeeds;              //!< The peersUploadSpeeds of channels
-  std::map<Ipv4Address, Ptr<Socket>>                  m_peersSockets;                   //!< The sockets of peers
+  std::vector<Ipv6Address>                            m_peersAddresses;                 //!< The addresses of peers
+  std::map<Ipv6Address, double>                       m_peersDownloadSpeeds;            //!< The peersDownloadSpeeds of channels
+  std::map<Ipv6Address, double>                       m_peersUploadSpeeds;              //!< The peersUploadSpeeds of channels
+  std::map<Ipv6Address, Ptr<Socket>>                  m_peersSockets;                   //!< The sockets of peers
   std::map<std::string, std::vector<Address>>         m_queueInv;                       //!< map holding the addresses of nodes which sent an INV for a particular block
   std::map<std::string, std::vector<Address>>         m_queueChunkPeers;                //!< map holding the addresses of nodes from which we are waiting for a CHUNK, key = block_hash
   std::map<std::string, std::vector<int>>             m_queueChunks;                    //!< map holding the chunks of the blocks which we have not requested yet, key = block_hash

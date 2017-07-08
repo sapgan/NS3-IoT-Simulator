@@ -366,7 +366,7 @@ IoTFlatTopologyHelper::InstallStack (InternetStackHelper stack)
 }
 
 void
-IoTFlatTopologyHelper::AssignIpv4Addresses (Ipv4AddressHelperCustom ip)
+IoTFlatTopologyHelper::AssignIpv6Addresses (Ipv6AddressHelperCustom ip)
 {
   double tStart = GetWallTime();
   double tFinish;
@@ -375,14 +375,14 @@ IoTFlatTopologyHelper::AssignIpv4Addresses (Ipv4AddressHelperCustom ip)
   // These devices are stored in a vector.
   for (uint32_t i = 0; i < m_devices.size (); ++i)
   {
-    Ipv4InterfaceContainer newInterfaces;
+    Ipv6InterfaceContainer newInterfaces;
     NetDeviceContainer currentContainer = m_devices[i];
 
     newInterfaces.Add (ip.Assign (currentContainer.Get (0)));
     newInterfaces.Add (ip.Assign (currentContainer.Get (1)));
 
-    auto interfaceAddress1 = newInterfaces.GetAddress (0);
-    auto interfaceAddress2 = newInterfaces.GetAddress (1);
+    auto interfaceAddress1 = newInterfaces.GetAddress (0, 0);
+    auto interfaceAddress2 = newInterfaces.GetAddress (1, 1);
     uint32_t node1 = (currentContainer.Get (0))->GetNode()->GetId();
     uint32_t node2 = (currentContainer.Get (1))->GetNode()->GetId();
 
@@ -413,7 +413,7 @@ IoTFlatTopologyHelper::AssignIpv4Addresses (Ipv4AddressHelperCustom ip)
     for(auto &node : m_nodesConnectionsIps)
     {
   	  std::cout << "\nNode " << node.first << ":    " ;
-	  for(std::vector<Ipv4Address>::const_iterator it = node.second.begin(); it != node.second.end(); it++)
+	  for(std::vector<Ipv6Address>::const_iterator it = node.second.begin(); it != node.second.end(); it++)
 	  {
         std::cout  << "\t" << *it ;
 	  }
@@ -440,19 +440,19 @@ IoTFlatTopologyHelper::GetNode (uint32_t id)
 
 
 
-Ipv4InterfaceContainer
-IoTFlatTopologyHelper::GetIpv4InterfaceContainer (void) const
+Ipv6InterfaceContainer
+IoTFlatTopologyHelper::GetIpv6InterfaceContainer (void) const
 {
-  Ipv4InterfaceContainer ipv4InterfaceContainer;
+  Ipv6InterfaceContainer ipv6InterfaceContainer;
 
   for (auto container = m_interfaces.begin(); container != m_interfaces.end(); container++)
-    ipv4InterfaceContainer.Add(*container);
+    ipv6InterfaceContainer.Add(*container);
 
-  return ipv4InterfaceContainer;
+  return ipv6InterfaceContainer;
 }
 
 
-std::map<uint32_t, std::vector<Ipv4Address>>
+std::map<uint32_t, std::vector<Ipv6Address>>
 IoTFlatTopologyHelper::GetNodesConnectionsIps (void) const
 {
   return m_nodesConnectionsIps;
@@ -549,14 +549,14 @@ IoTFlatTopologyHelper::GetBlockchainNodesRegions (void)
 }
 
 
-std::map<uint32_t, std::map<Ipv4Address, double>>
+std::map<uint32_t, std::map<Ipv6Address, double>>
 IoTFlatTopologyHelper::GetPeersDownloadSpeeds (void) const
 {
   return m_peersDownloadSpeeds;
 }
 
 
-std::map<uint32_t, std::map<Ipv4Address, double>>
+std::map<uint32_t, std::map<Ipv6Address, double>>
 IoTFlatTopologyHelper::GetPeersUploadSpeeds (void) const
 {
   return m_peersUploadSpeeds;

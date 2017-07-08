@@ -6,7 +6,7 @@
 #define BLOCKCHAIN_NODE_HELPER_H
 
 #include "ns3/object-factory.h"
-#include "ns3/ipv4-address.h"
+#include "ns3/ipv6-address.h"
 #include "ns3/node-container.h"
 #include "ns3/application-container.h"
 #include "ns3/uinteger.h"
@@ -29,14 +29,14 @@ public:
    *        sockets for the applications.  A typical value would be
    *        ns3::TcpSocketFactory.
    * \param address the address of the blockchain node
-   * \param peers a reference to a vector containing the Ipv4 addresses of peers of the blockchain node
+   * \param peers a reference to a vector containing the Ipv6 addresses of peers of the blockchain node
    * \param peersDownloadSpeeds a map containing the download speeds of the peers of the node
    * \param peersUploadSpeeds a map containing the upload speeds of the peers of the node
    * \param internetSpeeds a reference to a struct containing the internet speeds of the node
    * \param stats a pointer to struct holding the node statistics
    */
-  BlockchainNodeHelper (std::string protocol, Address address, std::vector<Ipv4Address> &peers,
-                     std::map<Ipv4Address, double> &peersDownloadSpeeds, std::map<Ipv4Address, double> &peersUploadSpeeds,
+  BlockchainNodeHelper (std::string protocol, Address address, std::vector<Ipv6Address> &peers,
+                     std::map<Ipv6Address, double> &peersDownloadSpeeds, std::map<Ipv6Address, double> &peersUploadSpeeds,
                      nodeInternetSpeeds &internetSpeeds);
 
   /**
@@ -51,14 +51,14 @@ public:
    *        sockets for the applications.  A typical value would be
    *        ns3::TcpSocketFactory.
    * \param address the address of the blockchain node
-   * \param peers a reference to a vector containing the Ipv4 addresses of peers of the blockchain node
+   * \param peers a reference to a vector containing the Ipv6 addresses of peers of the blockchain node
    * \param peersDownloadSpeeds a map containing the download speeds of the peers of the node
    * \param peersUploadSpeeds a map containing the upload speeds of the peers of the node
    * \param internetSpeeds a reference to a struct containing the internet speeds of the node
    * \param stats a pointer to struct holding the node statistics
    */
-   void commonConstructor(std::string protocol, Address address, std::vector<Ipv4Address> &peers,
-                          std::map<Ipv4Address, double> &peersDownloadSpeeds, std::map<Ipv4Address, double> &peersUploadSpeeds,
+   void commonConstructor(std::string protocol, Address address, std::vector<Ipv6Address> &peers,
+                          std::map<Ipv6Address, double> &peersDownloadSpeeds, std::map<Ipv6Address, double> &peersUploadSpeeds,
                           nodeInternetSpeeds &internetSpeeds);
 
   /**
@@ -97,10 +97,10 @@ public:
    */
   ApplicationContainer Install (std::string nodeName);
 
-  void SetPeersAddresses (std::vector<Ipv4Address> &peersAddresses);
+  void SetPeersAddresses (std::vector<Ipv6Address> &peersAddresses);
 
-  void SetPeersDownloadSpeeds (std::map<Ipv4Address, double> &peersDownloadSpeeds);
-  void SetPeersUploadSpeeds (std::map<Ipv4Address, double> &peersUploadSpeeds);
+  void SetPeersDownloadSpeeds (std::map<Ipv6Address, double> &peersDownloadSpeeds);
+  void SetPeersUploadSpeeds (std::map<Ipv6Address, double> &peersUploadSpeeds);
 
   void SetNodeInternetSpeeds (nodeInternetSpeeds &internetSpeeds);
 
@@ -119,9 +119,9 @@ protected:
   ObjectFactory                                       m_factory;              //!< Object factory.
   std::string                                         m_protocol;             //!< The name of the protocol to use to receive traffic
   Address                                             m_address;              //!< The address of the blockchain node
-  std::vector<Ipv4Address>		                      m_peersAddresses;       //!< The addresses of peers
-  std::map<Ipv4Address, double>                       m_peersDownloadSpeeds;  //!< The download speeds of the peers
-  std::map<Ipv4Address, double>                       m_peersUploadSpeeds;    //!< The upload speeds of the peers
+  std::vector<Ipv6Address>		                      m_peersAddresses;       //!< The addresses of peers
+  std::map<Ipv6Address, double>                       m_peersDownloadSpeeds;  //!< The download speeds of the peers
+  std::map<Ipv6Address, double>                       m_peersUploadSpeeds;    //!< The upload speeds of the peers
   nodeInternetSpeeds                                  m_internetSpeeds;       //!< The internet speeds of the node
   enum ProtocolType									  m_protocolType;         //!< The protocol that the nodes use to advertise new blocks (DEFAULT: STANDARD)
 

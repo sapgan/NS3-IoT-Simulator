@@ -98,7 +98,7 @@ BlockchainNode::GetListeningSocket (void) const
 }
 
 
-std::vector<Ipv4Address>
+std::vector<Ipv6Address>
 BlockchainNode::GetPeersAddresses (void) const
 {
   NS_LOG_FUNCTION (this);
@@ -107,7 +107,7 @@ BlockchainNode::GetPeersAddresses (void) const
 
 
 void
-BlockchainNode::SetPeersAddresses (const std::vector<Ipv4Address> &peers)
+BlockchainNode::SetPeersAddresses (const std::vector<Ipv6Address> &peers)
 {
   NS_LOG_FUNCTION (this);
   m_peersAddresses = peers;
@@ -116,7 +116,7 @@ BlockchainNode::SetPeersAddresses (const std::vector<Ipv4Address> &peers)
 
 
 void
-BlockchainNode::SetPeersDownloadSpeeds (const std::map<Ipv4Address, double> &peersDownloadSpeeds)
+BlockchainNode::SetPeersDownloadSpeeds (const std::map<Ipv6Address, double> &peersDownloadSpeeds)
 {
   NS_LOG_FUNCTION (this);
   m_peersDownloadSpeeds = peersDownloadSpeeds;
@@ -124,7 +124,7 @@ BlockchainNode::SetPeersDownloadSpeeds (const std::map<Ipv4Address, double> &pee
 
 
 void
-BlockchainNode::SetPeersUploadSpeeds (const std::map<Ipv4Address, double> &peersUploadSpeeds)
+BlockchainNode::SetPeersUploadSpeeds (const std::map<Ipv6Address, double> &peersUploadSpeeds)
 {
   NS_LOG_FUNCTION (this);
   m_peersUploadSpeeds = peersUploadSpeeds;
@@ -171,7 +171,7 @@ BlockchainNode::StartApplication ()    // Called at time specified by Start
 {
   NS_LOG_FUNCTION (this);
   // Create the socket if not already
-  
+
   srand(time(NULL) + GetNode()->GetId());
   NS_LOG_INFO ("Node " << GetNode()->GetId() << ": download speed = " << m_downloadSpeed << " B/s");
   NS_LOG_INFO ("Node " << GetNode()->GetId() << ": upload speed = " << m_uploadSpeed << " B/s");
@@ -226,10 +226,10 @@ BlockchainNode::StartApplication ()    // Called at time specified by Start
 
 
   NS_LOG_DEBUG ("Node " << GetNode()->GetId() << ": Before creating sockets");
-  for (std::vector<Ipv4Address>::const_iterator i = m_peersAddresses.begin(); i != m_peersAddresses.end(); ++i)
+  for (std::vector<Ipv6Address>::const_iterator i = m_peersAddresses.begin(); i != m_peersAddresses.end(); ++i)
   {
     m_peersSockets[*i] = Socket::CreateSocket (GetNode (), TcpSocketFactory::GetTypeId ());
-    m_peersSockets[*i]->Connect (InetSocketAddress (*i, m_bitcoinPort));
+    m_peersSockets[*i]->Connect (Inet6SocketAddress (*i, m_bitcoinPort));
   }
   NS_LOG_DEBUG ("Node " << GetNode()->GetId() << ": After creating sockets");
 
@@ -278,7 +278,7 @@ BlockchainNode::StopApplication ()     // Called at time specified by Stop
 {
   NS_LOG_FUNCTION (this);
 
-  for (std::vector<Ipv4Address>::iterator i = m_peersAddresses.begin(); i != m_peersAddresses.end(); ++i) //close the outgoing sockets
+  for (std::vector<Ipv6Address>::iterator i = m_peersAddresses.begin(); i != m_peersAddresses.end(); ++i) //close the outgoing sockets
   {
     m_peersSockets[*i]->Close ();
   }
@@ -336,7 +336,7 @@ BlockchainNode::HandleRead (Ptr<Socket> socket)
          break;
       }
 
-      if (InetSocketAddress::IsMatchingType (from))
+      if (Inet6SocketAddress::IsMatchingType (from))
       {
         /**
          * We may receive more than one packets simultaneously on the socket,
@@ -380,8 +380,8 @@ BlockchainNode::HandleRead (Ptr<Socket> socket)
           NS_LOG_INFO ("At time "  << Simulator::Now ().GetSeconds ()
                         << "s bitcoin node " << GetNode ()->GetId () << " received "
                         <<  packet->GetSize () << " bytes from "
-                        << InetSocketAddress::ConvertFrom(from).GetIpv4 ()
-                        << " port " << InetSocketAddress::ConvertFrom (from).GetPort ()
+                        << Inet6SocketAddress::ConvertFrom(from).GetIpv6 ()
+                        << " port " << Inet6SocketAddress::ConvertFrom (from).GetPort ()
                         << " with info = " << buffer.GetString());
 
           switch (d["message"].GetInt())
@@ -939,8 +939,8 @@ BlockchainNode::HandleRead (Ptr<Socket> socket)
                 double sendTime = totalBlockMessageSize / m_uploadSpeed;
 	            double eventTime;
 
-/*                 std::cout << "Node " << GetNode()->GetId() << "-" << InetSocketAddress::ConvertFrom(from).GetIpv4 ()
-		  		          << " " << m_peersDownloadSpeeds[InetSocketAddress::ConvertFrom(from).GetIpv4 ()] << " Mbps , time = "
+/*                 std::cout << "Node " << GetNode()->GetId() << "-" << Inet6SocketAddress::ConvertFrom(from).GetIpv6 ()
+		  		          << " " << m_peersDownloadSpeeds[Inet6SocketAddress::ConvertFrom(from).GetIpv6 ()] << " Mbps , time = "
 		  		          << Simulator::Now ().GetSeconds() << "s \n"; */
 
                 if (m_sendBlockTimes.size() == 0 || Simulator::Now ().GetSeconds() >  m_sendBlockTimes.back())
@@ -955,7 +955,7 @@ BlockchainNode::HandleRead (Ptr<Socket> socket)
                 m_sendBlockTimes.push_back(Simulator::Now ().GetSeconds() + eventTime + sendTime);
 
                 //std::cout << sendTime << " " << eventTime << " " << m_sendBlockTimes.size() << std::endl;
-                NS_LOG_INFO("Node " << GetNode()->GetId() << " will start sending the block to " << InetSocketAddress::ConvertFrom(from).GetIpv4 ()
+                NS_LOG_INFO("Node " << GetNode()->GetId() << " will start sending the block to " << Inet6SocketAddress::ConvertFrom(from).GetIpv6 ()
                             << " at " << Simulator::Now ().GetSeconds() + eventTime << "\n");
 
 
@@ -1207,8 +1207,8 @@ BlockchainNode::HandleRead (Ptr<Socket> socket)
                 double sendTime = totalChunkMessageSize / m_uploadSpeed;
                 double eventTime;
 
-/*                 std::cout << "Node " << GetNode()->GetId() << "-" << InetSocketAddress::ConvertFrom(from).GetIpv4 ()
-		  		          << " " << m_peersDownloadSpeeds[InetSocketAddress::ConvertFrom(from).GetIpv4 ()] << " Mbps , time = "
+/*                 std::cout << "Node " << GetNode()->GetId() << "-" << Inet6SocketAddress::ConvertFrom(from).GetIpv6 ()
+		  		          << " " << m_peersDownloadSpeeds[Inet6SocketAddress::ConvertFrom(from).GetIpv6 ()] << " Mbps , time = "
 		  		          << Simulator::Now ().GetSeconds() << "s \n"; */
 
                 if (m_sendBlockTimes.size() == 0 || Simulator::Now ().GetSeconds() >  m_sendBlockTimes.back())
@@ -1223,7 +1223,7 @@ BlockchainNode::HandleRead (Ptr<Socket> socket)
                 m_sendBlockTimes.push_back(Simulator::Now ().GetSeconds() + eventTime + sendTime);
 
                 //std::cout << sendTime << " " << eventTime << " " << m_sendBlockTimes.size() << std::endl;
-                NS_LOG_INFO("Node " << GetNode()->GetId() << " will start sending the chunk to " << InetSocketAddress::ConvertFrom(from).GetIpv4 ()
+                NS_LOG_INFO("Node " << GetNode()->GetId() << " will start sending the chunk to " << Inet6SocketAddress::ConvertFrom(from).GetIpv6 ()
                             << " at " << Simulator::Now ().GetSeconds() + eventTime << "\n");
 
 
@@ -1271,9 +1271,9 @@ BlockchainNode::HandleRead (Ptr<Socket> socket)
                                       d["blocks"][j]["nodeId"].GetInt(),
                                       d["blocks"][j]["nodePublicKey"].GetString(),
                                       d["blocks"][j]["signature"].GetString(),
-                                      Simulator::Now ().GetSeconds (), InetSocketAddress::ConvertFrom(from).GetIpv4 ());
+                                      Simulator::Now ().GetSeconds (), Inet6SocketAddress::ConvertFrom(from).GetIpv6 ());
                 m_onlyHeadersReceived[blockHash] = Block (d["blocks"][j]["height"].GetInt(), d["blocks"][j]["minerId"].GetInt(), d["blocks"][j]["parentBlockMinerId"].GetInt(),
-                                                          d["blocks"][j]["size"].GetInt(), d["blocks"][j]["timeCreated"].GetDouble(),               d["blocks"][j]["nodeId"].GetInt(),d["blocks"][j]["nodePublicKey"].GetString(),d["blocks"][j]["signature"].GetString(),Simulator::Now ().GetSeconds (), InetSocketAddress::ConvertFrom(from).GetIpv4 ());
+                                                          d["blocks"][j]["size"].GetInt(), d["blocks"][j]["timeCreated"].GetDouble(),               d["blocks"][j]["nodeId"].GetInt(),d["blocks"][j]["nodePublicKey"].GetString(),d["blocks"][j]["signature"].GetString(),Simulator::Now ().GetSeconds (), Inet6SocketAddress::ConvertFrom(from).GetIpv6 ());
                 //PrintOnlyHeadersReceived();
 
                 stringStream.clear();
@@ -1433,12 +1433,12 @@ BlockchainNode::HandleRead (Ptr<Socket> socket)
                 stringStream << height << "/" << minerId;
                 blockHash = stringStream.str();
                 Block newBlockHeaders(d["blocks"][j]["height"].GetInt(), d["blocks"][j]["minerId"].GetInt(), d["blocks"][j]["parentBlockMinerId"].GetInt(),
-                                                         d["blocks"][j]["size"].GetInt(), d["blocks"][j]["timeCreated"].GetDouble(), d["blocks"][j]["nodeId"].GetInt(),d["blocks"][j]["nodePublicKey"].GetString(), d["blocks"][j]["signature"].GetString(), Simulator::Now ().GetSeconds (), InetSocketAddress::ConvertFrom(from).GetIpv4 ());
+                                                         d["blocks"][j]["size"].GetInt(), d["blocks"][j]["timeCreated"].GetDouble(), d["blocks"][j]["nodeId"].GetInt(),d["blocks"][j]["nodePublicKey"].GetString(), d["blocks"][j]["signature"].GetString(), Simulator::Now ().GetSeconds (), Inet6SocketAddress::ConvertFrom(from).GetIpv6 ());
                 if (!OnlyHeadersReceived(blockHash))
                 {
                   m_onlyHeadersReceived[blockHash] = Block (d["blocks"][j]["height"].GetInt(), d["blocks"][j]["minerId"].GetInt(), d["blocks"][j]["parentBlockMinerId"].GetInt(),
                                                             d["blocks"][j]["size"].GetInt(), d["blocks"][j]["timeCreated"].GetDouble(), d["blocks"][j]["nodeId"].GetInt(), d["blocks"][j]["nodePublicKey"].GetString(), d["blocks"][j]["signature"].GetString(),
-                                                            Simulator::Now ().GetSeconds (), InetSocketAddress::ConvertFrom(from).GetIpv4 ());
+                                                            Simulator::Now ().GetSeconds (), Inet6SocketAddress::ConvertFrom(from).GetIpv6 ());
                 }
                 //PrintOnlyHeadersReceived();
 
@@ -1677,7 +1677,7 @@ BlockchainNode::HandleRead (Ptr<Socket> socket)
               int blockMessageSize = 0;
               double receiveTime = 0;
               double eventTime = 0;
-              double minSpeed = std::min(m_downloadSpeed, m_peersUploadSpeeds[InetSocketAddress::ConvertFrom(from).GetIpv4 ()] * 1000000 / 8);
+              double minSpeed = std::min(m_downloadSpeed, m_peersUploadSpeeds[Inet6SocketAddress::ConvertFrom(from).GetIpv6 ()] * 1000000 / 8);
 
               std::string blockType = d["type"].GetString();
 
@@ -1705,7 +1705,7 @@ BlockchainNode::HandleRead (Ptr<Socket> socket)
 
               NS_LOG_INFO("BLOCK: At time " << Simulator::Now ().GetSeconds ()
                           << " Node " << GetNode()->GetId() << " received a block message " << blockInfo.GetString());
-              NS_LOG_INFO(m_downloadSpeed << " " << m_peersUploadSpeeds[InetSocketAddress::ConvertFrom(from).GetIpv4 ()] * 1000000 / 8 << " " << minSpeed);
+              NS_LOG_INFO(m_downloadSpeed << " " << m_peersUploadSpeeds[Inet6SocketAddress::ConvertFrom(from).GetIpv6 ()] * 1000000 / 8 << " " << minSpeed);
 
               std::string help = blockInfo.GetString();
 
@@ -1756,7 +1756,7 @@ BlockchainNode::HandleRead (Ptr<Socket> socket)
               int chunkMessageSize = 0;
               double receiveTime = 0;
               double eventTime = 0;
-              double minSpeed = std::min(m_downloadSpeed, m_peersUploadSpeeds[InetSocketAddress::ConvertFrom(from).GetIpv4 ()] * 1000000 / 8);
+              double minSpeed = std::min(m_downloadSpeed, m_peersUploadSpeeds[Inet6SocketAddress::ConvertFrom(from).GetIpv6 ()] * 1000000 / 8);
 
               chunkMessageSize += m_bitcoinMessageHeader;
               for (int j=0; j<d["chunks"].Size(); j++)
@@ -1892,7 +1892,7 @@ BlockchainNode::ReceivedBlockMessage(std::string &blockInfo, Address &from)
                       d["blocks"][j]["nodeId"].GetInt(),
                       d["blocks"][j]["nodePublicKey"].GetString(),
                       d["blocks"][j]["signature"].GetString(),
-                      Simulator::Now ().GetSeconds (), InetSocketAddress::ConvertFrom(from).GetIpv4 ());
+                      Simulator::Now ().GetSeconds (), Inet6SocketAddress::ConvertFrom(from).GetIpv6 ());
 
       ReceiveBlock (newBlock);
     }
@@ -1982,7 +1982,7 @@ BlockchainNode::ReceivedChunkMessage(std::string &chunkInfo, Address &from)
                                       d["chunks"][j]["nodeId"].GetInt(),
                                       d["chunks"][j]["nodePublicKey"].GetString(),
                                       d["chunks"][j]["signature"].GetString(),
-                                      Simulator::Now ().GetSeconds (), InetSocketAddress::ConvertFrom(from).GetIpv4 ()));
+                                      Simulator::Now ().GetSeconds (), Inet6SocketAddress::ConvertFrom(from).GetIpv6 ()));
 
         if (m_receivedChunks[blockHash].size() == ceil(d["chunks"][j]["size"].GetInt()/static_cast<double>(m_chunkSize)))
         {
@@ -2004,7 +2004,7 @@ BlockchainNode::ReceivedChunkMessage(std::string &chunkInfo, Address &from)
                             d["chunks"][j]["nodeId"].GetInt(),
                             d["chunks"][j]["nodePublicKey"].GetString(),
                             d["chunks"][j]["signature"].GetString(),
-                            Simulator::Now ().GetSeconds (), InetSocketAddress::ConvertFrom(from).GetIpv4 ());
+                            Simulator::Now ().GetSeconds (), Inet6SocketAddress::ConvertFrom(from).GetIpv6 ());
 
             ReceivedLastChunk (newBlock);
           }
@@ -2014,7 +2014,7 @@ BlockchainNode::ReceivedChunkMessage(std::string &chunkInfo, Address &from)
             BlockChunk newChunk(d["chunks"][j]["height"].GetInt(), d["chunks"][j]["minerId"].GetInt(),
                                   -1, d["chunks"][j]["parentBlockMinerId"].GetInt(), //-1 if we are not going to request a chunk
                                   d["chunks"][j]["size"].GetInt(), d["chunks"][j]["timeCreated"].GetDouble(),
-                                  Simulator::Now ().GetSeconds (), InetSocketAddress::ConvertFrom(from).GetIpv4 ());
+                                  Simulator::Now ().GetSeconds (), Inet6SocketAddress::ConvertFrom(from).GetIpv6 ());
             chunkMessages[newChunk].push_back(d["chunks"][j]["requestChunks"][ii].GetInt());
           }
 
@@ -2065,7 +2065,7 @@ BlockchainNode::ReceivedChunkMessage(std::string &chunkInfo, Address &from)
                 BlockChunk newChunk (d["chunks"][j]["height"].GetInt(), d["chunks"][j]["minerId"].GetInt(),
                                        candidateChunks[randomIndex], d["chunks"][j]["parentBlockMinerId"].GetInt(),
                                        d["chunks"][j]["size"].GetInt(), d["chunks"][j]["timeCreated"].GetDouble(),
-                                       Simulator::Now ().GetSeconds (), InetSocketAddress::ConvertFrom(from).GetIpv4 ());
+                                       Simulator::Now ().GetSeconds (), Inet6SocketAddress::ConvertFrom(from).GetIpv6 ());
                 chunkMessages[newChunk].push_back(d["chunks"][j]["requestChunks"][ii].GetInt());
               }
             }
@@ -2086,7 +2086,7 @@ BlockchainNode::ReceivedChunkMessage(std::string &chunkInfo, Address &from)
               BlockChunk newChunk(d["chunks"][j]["height"].GetInt(), d["chunks"][j]["minerId"].GetInt(),
                                     -1, d["chunks"][j]["parentBlockMinerId"].GetInt(), //-1 if we are not going to request a chunk
                                     d["chunks"][j]["size"].GetInt(), d["chunks"][j]["timeCreated"].GetDouble(),
-                                    Simulator::Now ().GetSeconds (), InetSocketAddress::ConvertFrom(from).GetIpv4 ());
+                                    Simulator::Now ().GetSeconds (), Inet6SocketAddress::ConvertFrom(from).GetIpv6 ());
               chunkMessages[newChunk].push_back(d["chunks"][j]["requestChunks"][ii].GetInt());
             }
           }
@@ -2103,7 +2103,7 @@ BlockchainNode::ReceivedChunkMessage(std::string &chunkInfo, Address &from)
         BlockChunk newChunk(d["chunks"][j]["height"].GetInt(), d["chunks"][j]["minerId"].GetInt(),
                               -1, d["chunks"][j]["parentBlockMinerId"].GetInt(), //-1 if we are not going to request a chunk
                               d["chunks"][j]["size"].GetInt(), d["chunks"][j]["timeCreated"].GetDouble(),
-                              Simulator::Now ().GetSeconds (), InetSocketAddress::ConvertFrom(from).GetIpv4 ());
+                              Simulator::Now ().GetSeconds (), Inet6SocketAddress::ConvertFrom(from).GetIpv6 ());
         chunkMessages[newChunk].push_back(d["chunks"][j]["requestChunks"][ii].GetInt());
       }
     }
@@ -2273,8 +2273,8 @@ BlockchainNode::ReceivedChunkMessage(std::string &chunkInfo, Address &from)
     double sendTime = totalChunkMessageSize / m_uploadSpeed;
     double eventTime;
 
-/*                 std::cout << "Node " << GetNode()->GetId() << "-" << InetSocketAddress::ConvertFrom(from).GetIpv4 ()
-		  		          << " " << m_peersDownloadSpeeds[InetSocketAddress::ConvertFrom(from).GetIpv4 ()] << " Mbps , time = "
+/*                 std::cout << "Node " << GetNode()->GetId() << "-" << Inet6SocketAddress::ConvertFrom(from).GetIpv6 ()
+		  		          << " " << m_peersDownloadSpeeds[Inet6SocketAddress::ConvertFrom(from).GetIpv6 ()] << " Mbps , time = "
 		  		          << Simulator::Now ().GetSeconds() << "s \n"; */
 
     if (m_sendBlockTimes.size() == 0 || Simulator::Now ().GetSeconds() >  m_sendBlockTimes.back())
@@ -2289,7 +2289,7 @@ BlockchainNode::ReceivedChunkMessage(std::string &chunkInfo, Address &from)
     m_sendBlockTimes.push_back(Simulator::Now ().GetSeconds() + eventTime + sendTime);
 
     //std::cout << sendTime << " " << eventTime << " " << m_sendBlockTimes.size() << std::endl;
-    NS_LOG_INFO("Node " << GetNode()->GetId() << " will start sending the chunk to " << InetSocketAddress::ConvertFrom(from).GetIpv4 ()
+    NS_LOG_INFO("Node " << GetNode()->GetId() << " will start sending the chunk to " << Inet6SocketAddress::ConvertFrom(from).GetIpv6 ()
                 << " at " << Simulator::Now ().GetSeconds() + eventTime << "\n");
 
 
@@ -2392,7 +2392,7 @@ BlockchainNode::SendBlock(std::string packetInfo, Address& from)
 
   NS_LOG_INFO ("SendBlock: At time " << Simulator::Now ().GetSeconds ()
                 << "s bitcoin node " << GetNode ()->GetId () << " sent "
-                << packetInfo << " to " << InetSocketAddress::ConvertFrom(from).GetIpv4 ());
+                << packetInfo << " to " << Inet6SocketAddress::ConvertFrom(from).GetIpv6 ());
 
   //m_sendBlockTimes.erase(m_sendBlockTimes.begin());
   SendMessage(GET_DATA, BLOCK, packetInfo, from);
@@ -2406,7 +2406,7 @@ BlockchainNode::SendChunk(std::string packetInfo, Address& from)
 
   NS_LOG_INFO ("SendChunk: At time " << Simulator::Now ().GetSeconds ()
                 << "s bitcoin node " << GetNode ()->GetId () << " sent "
-                << packetInfo << " to " << InetSocketAddress::ConvertFrom(from).GetIpv4 ());
+                << packetInfo << " to " << Inet6SocketAddress::ConvertFrom(from).GetIpv6 ());
 
   //m_sendBlockTimes.erase(m_sendBlockTimes.begin());
   SendMessage(EXT_GET_DATA, CHUNK, packetInfo, from);
@@ -2594,9 +2594,9 @@ BlockchainNode::AdvertiseNewBlock (const Block &newBlock)
   rapidjson::Writer<rapidjson::StringBuffer> writer(packetInfo);
   d.Accept(writer);
 
-  for (std::vector<Ipv4Address>::const_iterator i = m_peersAddresses.begin(); i != m_peersAddresses.end(); ++i)
+  for (std::vector<Ipv6Address>::const_iterator i = m_peersAddresses.begin(); i != m_peersAddresses.end(); ++i)
   {
-    if ( *i != newBlock.GetReceivedFromIpv4 () )
+    if ( *i != newBlock.GetReceivedFromIpv6Address () )
     {
       const uint8_t delimiter[] = "#";
 
@@ -2696,7 +2696,7 @@ BlockchainNode::AdvertiseFullBlock (const Block &newBlock)
   rapidjson::Writer<rapidjson::StringBuffer> writer(packetInfo);
   d.Accept(writer);
 
-  for (std::vector<Ipv4Address>::const_iterator i = m_peersAddresses.begin(); i != m_peersAddresses.end(); ++i)
+  for (std::vector<Ipv6Address>::const_iterator i = m_peersAddresses.begin(); i != m_peersAddresses.end(); ++i)
   {
     const uint8_t delimiter[] = "#";
 
@@ -2848,9 +2848,9 @@ BlockchainNode::AdvertiseFirstChunk (const Block &newBlock)
   rapidjson::Writer<rapidjson::StringBuffer> writer(packetInfo);
   d.Accept(writer);
 
-  for (std::vector<Ipv4Address>::const_iterator i = m_peersAddresses.begin(); i != m_peersAddresses.end(); ++i)
+  for (std::vector<Ipv6Address>::const_iterator i = m_peersAddresses.begin(); i != m_peersAddresses.end(); ++i)
   {
-    if ( *i != newBlock.GetReceivedFromIpv4 () )
+    if ( *i != newBlock.GetReceivedFromIpv6Address () )
     {
       const uint8_t delimiter[] = "#";
 
@@ -3012,17 +3012,17 @@ BlockchainNode::SendMessage(enum Messages receivedMessage,  enum Messages respon
                << " and sent a " << getMessageName(responseMessage)
                << " message: " << buffer.GetString());
 
-  Ipv4Address outgoingIpv4Address = InetSocketAddress::ConvertFrom(outgoingAddress).GetIpv4 ();
-  std::map<Ipv4Address, Ptr<Socket>>::iterator it = m_peersSockets.find(outgoingIpv4Address);
+  Ipv6Address outgoingIpv6Address = Inet6SocketAddress::ConvertFrom(outgoingAddress).GetIpv6 ();
+  std::map<Ipv6Address, Ptr<Socket>>::iterator it = m_peersSockets.find(outgoingIpv6Address);
 
   if (it == m_peersSockets.end()) //Create the socket if it doesn't exist
   {
-    m_peersSockets[outgoingIpv4Address] = Socket::CreateSocket (GetNode (), TcpSocketFactory::GetTypeId ());
-    m_peersSockets[outgoingIpv4Address]->Connect (InetSocketAddress (outgoingIpv4Address, m_bitcoinPort));
+    m_peersSockets[outgoingIpv6Address] = Socket::CreateSocket (GetNode (), TcpSocketFactory::GetTypeId ());
+    m_peersSockets[outgoingIpv6Address]->Connect (Inet6SocketAddress (outgoingIpv6Address, m_bitcoinPort));
   }
 
-  m_peersSockets[outgoingIpv4Address]->Send (reinterpret_cast<const uint8_t*>(buffer.GetString()), buffer.GetSize(), 0);
-  m_peersSockets[outgoingIpv4Address]->Send (delimiter, 1, 0);
+  m_peersSockets[outgoingIpv6Address]->Send (reinterpret_cast<const uint8_t*>(buffer.GetString()), buffer.GetSize(), 0);
+  m_peersSockets[outgoingIpv6Address]->Send (delimiter, 1, 0);
 
   switch (d["message"].GetInt())
   {
@@ -3133,17 +3133,17 @@ BlockchainNode::SendMessage(enum Messages receivedMessage,  enum Messages respon
                << " and sent a " << getMessageName(responseMessage)
                << " message: " << buffer.GetString());
 
-  Ipv4Address outgoingIpv4Address = InetSocketAddress::ConvertFrom(outgoingAddress).GetIpv4 ();
-  std::map<Ipv4Address, Ptr<Socket>>::iterator it = m_peersSockets.find(outgoingIpv4Address);
+  Ipv6Address outgoingIpv6Address = Inet6SocketAddress::ConvertFrom(outgoingAddress).GetIpv6 ();
+  std::map<Ipv6Address, Ptr<Socket>>::iterator it = m_peersSockets.find(outgoingIpv6Address);
 
   if (it == m_peersSockets.end()) //Create the socket if it doesn't exist
   {
-    m_peersSockets[outgoingIpv4Address] = Socket::CreateSocket (GetNode (), TcpSocketFactory::GetTypeId ());
-    m_peersSockets[outgoingIpv4Address]->Connect (InetSocketAddress (outgoingIpv4Address, m_bitcoinPort));
+    m_peersSockets[outgoingIpv6Address] = Socket::CreateSocket (GetNode (), TcpSocketFactory::GetTypeId ());
+    m_peersSockets[outgoingIpv6Address]->Connect (Inet6SocketAddress (outgoingIpv6Address, m_bitcoinPort));
   }
 
-  m_peersSockets[outgoingIpv4Address]->Send (reinterpret_cast<const uint8_t*>(buffer.GetString()), buffer.GetSize(), 0);
-  m_peersSockets[outgoingIpv4Address]->Send (delimiter, 1, 0);
+  m_peersSockets[outgoingIpv6Address]->Send (reinterpret_cast<const uint8_t*>(buffer.GetString()), buffer.GetSize(), 0);
+  m_peersSockets[outgoingIpv6Address]->Send (delimiter, 1, 0);
 
 
   switch (d["message"].GetInt())
@@ -3250,7 +3250,7 @@ BlockchainNode::PrintQueueInv()
 
     for (block_it = elem.second.begin();  block_it < elem.second.end(); block_it++)
     {
-      std::cout << " " << InetSocketAddress::ConvertFrom(*block_it).GetIpv4 ();
+      std::cout << " " << Inet6SocketAddress::ConvertFrom(*block_it).GetIpv6 ();
     }
     std::cout << "\n";
   }
@@ -3348,7 +3348,7 @@ BlockchainNode::PrintQueueChunkPeers()
 
     for (block_it = elem.second.begin();  block_it < elem.second.end(); block_it++)
     {
-      std::cout << " " << InetSocketAddress::ConvertFrom(*block_it).GetIpv4 ();
+      std::cout << " " << Inet6SocketAddress::ConvertFrom(*block_it).GetIpv6 ();
     }
     std::cout << "\n";
   }

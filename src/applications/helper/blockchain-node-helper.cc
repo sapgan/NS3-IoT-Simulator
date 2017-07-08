@@ -10,8 +10,8 @@
 
 namespace ns3 {
 
-BlockchainNodeHelper::BlockchainNodeHelper (std::string protocol, Address address, std::vector<Ipv4Address> &peers,
-                                      std::map<Ipv4Address, double> &peersDownloadSpeeds, std::map<Ipv4Address, double> &peersUploadSpeeds,
+BlockchainNodeHelper::BlockchainNodeHelper (std::string protocol, Address address, std::vector<Ipv6Address> &peers,
+                                      std::map<Ipv6Address, double> &peersDownloadSpeeds, std::map<Ipv6Address, double> &peersUploadSpeeds,
                                       nodeInternetSpeeds &internetSpeeds)
 {
   m_factory.SetTypeId ("ns3::BlockchainNode");
@@ -23,8 +23,8 @@ BlockchainNodeHelper::BlockchainNodeHelper (void)
 }
 
 void
-BlockchainNodeHelper::commonConstructor(std::string protocol, Address address, std::vector<Ipv4Address> &peers,
-                                     std::map<Ipv4Address, double> &peersDownloadSpeeds, std::map<Ipv4Address, double> &peersUploadSpeeds,
+BlockchainNodeHelper::commonConstructor(std::string protocol, Address address, std::vector<Ipv6Address> &peers,
+                                     std::map<Ipv6Address, double> &peersDownloadSpeeds, std::map<Ipv6Address, double> &peersUploadSpeeds,
                                      nodeInternetSpeeds &internetSpeeds)
 {
   m_protocol = protocol;
@@ -88,19 +88,19 @@ BlockchainNodeHelper::InstallPriv (Ptr<Node> node)
 }
 
 void
-BlockchainNodeHelper::SetPeersAddresses (std::vector<Ipv4Address> &peersAddresses)
+BlockchainNodeHelper::SetPeersAddresses (std::vector<Ipv6Address> &peersAddresses)
 {
   m_peersAddresses = peersAddresses;
 }
 
 void
-BlockchainNodeHelper::SetPeersDownloadSpeeds (std::map<Ipv4Address, double> &peersDownloadSpeeds)
+BlockchainNodeHelper::SetPeersDownloadSpeeds (std::map<Ipv6Address, double> &peersDownloadSpeeds)
 {
   m_peersDownloadSpeeds = peersDownloadSpeeds;
 }
 
 void
-BlockchainNodeHelper::SetPeersUploadSpeeds (std::map<Ipv4Address, double> &peersUploadSpeeds)
+BlockchainNodeHelper::SetPeersUploadSpeeds (std::map<Ipv6Address, double> &peersUploadSpeeds)
 {
   m_peersUploadSpeeds = peersUploadSpeeds;
 }

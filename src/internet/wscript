@@ -213,6 +213,7 @@ def build(bld):
         'model/rip-header.cc',
         'helper/rip-helper.cc',
         'helper/ipv4-address-helper-custom.cc',
+        'helper/ipv6-address-helper-custom.cc',
         ]
 
     internet_test = bld.create_ns3_module_test_library('internet')
@@ -367,6 +368,7 @@ def build(bld):
         'model/rip-header.h',
         'helper/rip-helper.h',
         'helper/ipv4-address-helper-custom.h',
+        'helper/ipv6-address-helper-custom.h',
        ]
 
     if bld.env['NSC_ENABLED']:

@@ -13,8 +13,8 @@
 
 namespace ns3 {
 
-BlockchainValidatorHelper::BlockchainValidatorHelper (std::string protocol, Address address, std::vector<Ipv4Address> peers, int noMiners,
-                                        std::map<Ipv4Address, double> &peersDownloadSpeeds, std::map<Ipv4Address, double> &peersUploadSpeeds,
+BlockchainValidatorHelper::BlockchainValidatorHelper (std::string protocol, Address address, std::vector<Ipv6Address> peers, int noMiners,
+                                        std::map<Ipv6Address, double> &peersDownloadSpeeds, std::map<Ipv6Address, double> &peersUploadSpeeds,
                                         nodeInternetSpeeds &internetSpeeds, double hashRate) :
                                         BlockchainNodeHelper (),  m_minerType (NORMAL_MINER), m_blockBroadcastType (STANDARD),
                                         m_secureBlocks (6), m_blockGenBinSize (-1), m_blockGenParameter (-1)
