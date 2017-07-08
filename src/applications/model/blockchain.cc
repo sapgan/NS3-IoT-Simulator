@@ -23,7 +23,7 @@ namespace ns3 {
  *  TODO:Represent public key data as merkle tree structure.
  */
 Block::Block(int blockHeight, int minerId, int parentBlockMinerId, int blockSizeBytes,
-             double timeCreated, int nodeId, std::string nodePublicKey, std::string signature, double timeReceived, Ipv6Address receivedFromIpv6Address)
+             double timeCreated, std::map<int, blockDataTuple> blockDataMap, double timeReceived, Ipv6Address receivedFromIpv6Address)
 {
   m_blockHeight = blockHeight;
   m_minerId = minerId;
@@ -32,15 +32,17 @@ Block::Block(int blockHeight, int minerId, int parentBlockMinerId, int blockSize
   m_timeCreated = timeCreated;
   m_timeReceived = timeReceived;
   m_receivedFromIpv6Address = receivedFromIpv6Address;
-  m_nodeId = nodeId;
-  m_nodePublicKey = nodePublicKey;
-  m_signature = signature;
+  m_blockDataMap = blockDataMap;
+
 
 }
 
 Block::Block()
 {
-  Block(0, 0, 0, 0, 0, 0, "", "", 0, Ipv6Address("0::0::0::0"));
+  blockDataTuple blankBlockData = {0, 0, Ipv6Address("0::0::0::0"), "" ,""};
+  std::map<int, blockDataTuple> dataMap;
+  dataMap[0] = blankBlockData;
+  Block(0, 0, 0, 0, 0, dataMap, 0, Ipv6Address("0::0::0::0"));
 
 }
 
@@ -53,9 +55,7 @@ Block::Block (const Block &blockSource)
   m_timeCreated = blockSource.m_timeCreated;
   m_timeReceived = blockSource.m_timeReceived;
   m_receivedFromIpv6Address = blockSource.m_receivedFromIpv6Address;
-  m_nodeId = blockSource.m_nodeId;
-  m_nodePublicKey = blockSource.m_nodePublicKey;
-  m_signature = blockSource.m_signature;
+  m_blockDataMap = blockSource.m_blockDataMap;
 
 }
 
@@ -136,40 +136,13 @@ Block::SetReceivedFromIpv6Address (Ipv6Address receivedFromIpv6Address)
   m_receivedFromIpv6Address = receivedFromIpv6Address;
 }
 
-int
-Block::GetNodeIdOfBlock (void) const
-{
-  return m_nodeId;
+blockDataTuple Block::GetNodeData(int nodeId){
+  blockDataTuple dataTuple = m_blockDataMap[nodeId];
+  return dataTuple;
 }
 
-void
-Block::SetNodeIdOfBlock (int nodeId)
-{
-  m_nodeId = nodeId;
-}
-
-std::string
-Block::GetNodePublicKey (void) const
-{
-  return m_nodePublicKey;
-}
-
-void
-Block::SetNodePublicKey (std::string newPublicKey)
-{
-  m_nodePublicKey = newPublicKey;
-}
-
-std::string
-Block::GetNodePublicKeySignature (void) const
-{
-    return m_signature;
-}
-
-void
-Block::SetNodePublicKeySignature (std::string signature)
-{
-    m_signature = signature;
+void Block::SetNodeData(int nodeId, blockDataTuple blockData){
+  m_blockDataMap[nodeId] = blockData;
 }
 
 bool
@@ -201,89 +174,9 @@ Block::operator= (const Block &blockSource)
   m_timeCreated = blockSource.m_timeCreated;
   m_timeReceived = blockSource.m_timeReceived;
   m_receivedFromIpv6Address = blockSource.m_receivedFromIpv6Address;
-  m_nodeId = blockSource.m_nodeId;
-  m_nodePublicKey = blockSource.m_nodePublicKey;
-  m_signature = blockSource.m_signature;
-
-  return *this;
-}
-
-/**
- *
- * Class BlockChunk functions
- *
- */
-
-BlockChunk::BlockChunk(int blockHeight, int minerId, int chunkId, int parentBlockMinerId, int blockSizeBytes,
-             double timeCreated, std::vector<int> nodeIds, std::vector<std::string> nodePublicKeys, std::vector<std::string> signatures, double timeReceived, Ipv6Address receivedFromIpv6Address) :
-             Block (blockHeight, minerId, parentBlockMinerId, blockSizeBytes,
-                    timeCreated, 0, "", "", timeReceived, receivedFromIpv6Address)
-{
-  m_chunkId = chunkId;
-  m_multiNodeIds = nodeIds;
-  m_multiNodePublicKeys = nodePublicKeys;
-  m_multiNodeSignatures = signatures;
-}
-
-BlockChunk::BlockChunk(int blockHeight, int minerId, int chunkId, int parentBlockMinerId, int blockSizeBytes,
-             double timeCreated, double timeReceived, Ipv6Address receivedFromIpv6Address) :
-             Block (blockHeight, minerId, parentBlockMinerId, blockSizeBytes,
-                    timeCreated, 0, "", "", timeReceived, receivedFromIpv6Address)
-{
-  m_chunkId = chunkId;
-}
-
-BlockChunk::BlockChunk()
-{
-  BlockChunk(0, 0, 0, 0, 0, 0, std::vector<int>(), std::vector<std::string>(), std::vector<std::string>(), 0, Ipv6Address("0::0::0::0"));
-}
-
-BlockChunk::BlockChunk (const BlockChunk &chunkSource)
-{
-  m_blockHeight = chunkSource.m_blockHeight;
-  m_minerId = chunkSource.m_minerId;
-  m_chunkId = chunkSource.m_chunkId;
-  m_parentBlockMinerId = chunkSource.m_parentBlockMinerId;
-  m_blockSizeBytes = chunkSource.m_blockSizeBytes;
-  m_timeCreated = chunkSource.m_timeCreated;
-  m_timeReceived = chunkSource.m_timeReceived;
-  m_receivedFromIpv6Address = chunkSource.m_receivedFromIpv6Address;
-  m_multiNodeIds = chunkSource.m_multiNodeIds;
-  m_multiNodePublicKeys = chunkSource.m_multiNodePublicKeys;
-  m_multiNodeSignatures = chunkSource.m_multiNodeSignatures;
-
-}
-
-BlockChunk::~BlockChunk (void)
-{
-}
-
-int
-BlockChunk::GetChunkId (void) const
-{
-  return m_chunkId;
-}
-
-void
-BlockChunk::SetChunkId (int chunkId)
-{
-  m_chunkId = chunkId;
-}
-
-BlockChunk&
-BlockChunk::operator= (const BlockChunk &chunkSource)
-{
-  m_blockHeight = chunkSource.m_blockHeight;
-  m_minerId = chunkSource.m_minerId;
-  m_chunkId = chunkSource.m_chunkId;
-  m_parentBlockMinerId = chunkSource.m_parentBlockMinerId;
-  m_blockSizeBytes = chunkSource.m_blockSizeBytes;
-  m_timeCreated = chunkSource.m_timeCreated;
-  m_timeReceived = chunkSource.m_timeReceived;
-  m_receivedFromIpv6Address = chunkSource.m_receivedFromIpv6Address;
-  m_multiNodeIds = chunkSource.m_multiNodeIds;
-  m_multiNodePublicKeys = chunkSource.m_multiNodePublicKeys;
-  m_multiNodeSignatures = chunkSource.m_multiNodeSignatures;
+  // m_nodeId = blockSource.m_nodeId;
+  // m_nodePublicKey = blockSource.m_nodePublicKey;
+  // m_signature = blockSource.m_signature;
 
   return *this;
 }
@@ -299,7 +192,10 @@ Blockchain::Blockchain(void)
 {
   m_noStaleBlocks = 0;
   m_totalBlocks = 0;
-  Block genesisBlock(0, -1, -2, 0, 0, 0, "garbage", "garbage", 0, Ipv6Address("0::0::0::0"));
+  blockDataTuple blankBlockData = {0, 0, Ipv6Address("0::0::0::0"), "" ,""};
+  std::map<int, blockDataTuple> dataMap;
+  dataMap[0] = blankBlockData;
+  Block genesisBlock(0, -1, -2, 0, 0, dataMap, 0, Ipv6Address("0::0::0::0"));
   AddBlock(genesisBlock);
 }
 
@@ -384,42 +280,42 @@ Blockchain::HasBlock (int height, int minerId) const
 }
 
 
-std::string
-Blockchain::GetPublickey (int nodeId)
-{
-  std::map<int, std::string>::const_iterator it = m_public_key_map.find(nodeId);
-  if(it != m_public_key_map.end())
-    return it->second;
-
-  return "";
-}
-
-
-Block
-Blockchain::GetPublickeyBlock (int nodeId)
-{
-  std::map<int, Block >::const_iterator it = m_block_map.find(nodeId);
-  if(it == m_block_map.end())
-      return it->second;
-  return Block(-1, -1, -1, -1, -1, -1, "", "", -1, Ipv6Address("0::0::0::0"));
-  //return nullptr;
-
-}
-
-
-std::string
-Blockchain::GetNodePublicKeySignature (int nodeId)
-{
-    Block block = GetPublickeyBlock(nodeId);
-    return block.GetNodePublicKeySignature();
-}
-
-bool
-Blockchain::CheckPublicKeySignature (int nodeId)\
-{
-    Block block = GetPublickeyBlock(nodeId);
-    return true;
-}
+// std::string
+// Blockchain::GetPublickey (int nodeId)
+// {
+//   std::map<int, std::string>::const_iterator it = m_public_key_map.find(nodeId);
+//   if(it != m_public_key_map.end())
+//     return it->second;
+//
+//   return "";
+// }
+//
+//
+// Block
+// Blockchain::GetPublickeyBlock (int nodeId)
+// {
+//   std::map<int, Block >::const_iterator it = m_block_map.find(nodeId);
+//   if(it == m_block_map.end())
+//       return it->second;
+//   return Block(-1, -1, -1, -1, -1, -1, "", "", -1, Ipv6Address("0::0::0::0"));
+//   //return nullptr;
+//
+// }
+//
+//
+// std::string
+// Blockchain::GetNodePublicKeySignature (int nodeId)
+// {
+//     Block block = GetPublickeyBlock(nodeId);
+//     return block.GetNodePublicKeySignature();
+// }
+//
+// bool
+// Blockchain::CheckPublicKeySignature (int nodeId)\
+// {
+//     Block block = GetPublickeyBlock(nodeId);
+//     return true;
+// }
 
 
 Block
@@ -442,7 +338,10 @@ Blockchain::ReturnBlock(int height, int minerId)
       return *block_it;
   }
 
-  return Block(-1, -1, -1, -1, -1, -1, "", "", -1, Ipv6Address("0::0::0::0"));
+  blockDataTuple blankBlockData = {-1, -1, Ipv6Address("0::0::0::0"), "" ,""};
+  std::map<int, blockDataTuple> dataMap;
+  dataMap[0] = blankBlockData;
+  return Block(-1, -1, -1, -1, -1, dataMap, -1, Ipv6Address("0::0::0::0"));
 }
 
 
@@ -556,12 +455,10 @@ Blockchain::GetCurrentTopBlock (void) const
 void
 Blockchain::AddBlock (const Block& newBlock)
 {
-  int nodeId = newBlock.GetNodeIdOfBlock();
   if (m_blocks.size() == 0)
   {
     std::vector<Block> newHeight(1, newBlock);
 	m_blocks.push_back(newHeight);
-  m_block_map[nodeId]=newHeight[0];
   }
   else if (newBlock.GetBlockHeight() > GetCurrentTopBlock()->GetBlockHeight())
   {
@@ -579,7 +476,6 @@ Blockchain::AddBlock (const Block& newBlock)
 
     std::vector<Block> newHeight(1, newBlock);
     m_blocks.push_back(newHeight);
-    m_block_map[nodeId]=newHeight[0];
   }
   else
   {
@@ -589,9 +485,7 @@ Blockchain::AddBlock (const Block& newBlock)
       m_noStaleBlocks++;
 
     m_blocks[newBlock.GetBlockHeight()].push_back(newBlock);
-    m_block_map[nodeId]=newBlock;
   }
-  m_public_key_map[nodeId] = newBlock.GetNodePublicKey();
   m_totalBlocks++;
 }
 
@@ -737,55 +631,19 @@ bool operator== (const Block &block1, const Block &block2)
     return false;
 }
 
-bool operator== (const BlockChunk &chunk1, const BlockChunk &chunk2)
-{
-  if (chunk1.GetBlockHeight() == chunk2.GetBlockHeight() && chunk1.GetMinerId() == chunk2.GetMinerId() && chunk1.GetChunkId() == chunk2.GetChunkId())
-    return true;
-  else
-    return false;
-}
-
-bool operator< (const BlockChunk &chunk1, const BlockChunk &chunk2)
-{
-  if (chunk1.GetBlockHeight() < chunk2.GetBlockHeight())
-    return true;
-  else if (chunk1.GetBlockHeight() == chunk2.GetBlockHeight() && chunk1.GetMinerId() < chunk2.GetMinerId())
-    return true;
-  else if (chunk1.GetBlockHeight() == chunk2.GetBlockHeight() && chunk1.GetMinerId() == chunk2.GetMinerId() && chunk1.GetChunkId() < chunk2.GetChunkId())
-    return true;
-  else
-    return false;
-}
-
 std::ostream& operator<< (std::ostream &out, const Block &block)
 {
 
     out << "(m_blockHeight: " << block.GetBlockHeight() << ", " <<
         "m_minerId: " << block.GetMinerId() << ", " <<
-        "m_nodeId: " << block.GetNodeIdOfBlock() << ", " <<
-        "m_nodePublicKey: " << block.GetNodePublicKey() << ", " <<
-        "m_signature: " << block.GetNodePublicKeySignature() << ", " <<
+        // "m_nodeId: " << block.GetNodeIdOfBlock() << ", " <<
+        // "m_nodePublicKey: " << block.GetNodePublicKey() << ", " <<
+        // "m_signature: " << block.GetNodePublicKeySignature() << ", " <<
         "m_parentBlockMinerId: " << block.GetParentBlockMinerId() << ", " <<
         "m_blockSizeBytes: " << block.GetBlockSizeBytes() << ", " <<
         "m_timeCreated: " << block.GetTimeCreated() << ", " <<
         "m_timeReceived: " << block.GetTimeReceived() << ", " <<
         "m_receivedFromIpv6Address: " << block.GetReceivedFromIpv6Address() <<
-        ")";
-    return out;
-}
-
-std::ostream& operator<< (std::ostream &out, const BlockChunk &chunk)
-{
-
-    out << "(m_blockHeight: " << chunk.GetBlockHeight() << ", " <<
-        "m_minerId: " << chunk.GetMinerId() << ", " <<
-        "chunkId: " << chunk.GetChunkId() << ", " <<
-        "m_nodeId: " << chunk.GetNodeIdOfBlock() << ", " <<
-        "m_parentBlockMinerId: " << chunk.GetParentBlockMinerId() << ", " <<
-        "m_blockSizeBytes: " << chunk.GetBlockSizeBytes() << ", " <<
-        "m_timeCreated: " << chunk.GetTimeCreated() << ", " <<
-        "m_timeReceived: " << chunk.GetTimeReceived() << ", " <<
-        "m_receivedFromIpv6Address: " << chunk.GetReceivedFromIpv6Address() <<
         ")";
     return out;
 }
@@ -824,7 +682,6 @@ const char* getMessageName(enum Messages m)
     case EXT_GET_HEADERS: return "EXT_GET_HEADERS";
     case EXT_HEADERS: return "EXT_HEADERS";
     case EXT_GET_BLOCKS: return "EXT_GET_BLOCKS";
-    case CHUNK: return "CHUNK";
     case EXT_GET_DATA: return "EXT_GET_DATA";
     case SEND_PUBLIC_KEY: return "SEND_PUBLIC_KEY";
     case RECEIVE_PUBLIC_KEY: return "RECEIVE_PUBLIC_KEY";

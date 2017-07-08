@@ -26,7 +26,7 @@
  #include "ns3/applications-module.h"
  #include "ns3/point-to-point-layout-module.h"
  #define N_VALIDATORS 4
- #define N_IOTDEVICE 8
+ #define N_IOTDEVICE 80
  // #include "ns3/mpi-interface.h"
  // #define MPI_TEST
  //

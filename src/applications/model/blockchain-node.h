@@ -124,23 +124,11 @@ protected:
   void ReceivedBlockMessage(std::string &blockInfo, Address &from);
 
   /**
-   * \brief Handle an incoming CHUNK Message.
-   * \param chunkInfo the chunk message info
-   * \param from the address the connection is from
-   */
-  void ReceivedChunkMessage(std::string &chunkInfo, Address &from);
-
-  /**
    * \brief Called when a new block non-orphan block is received
    * \param newBlock the newly received block
    */
   virtual void ReceiveBlock(const Block &newBlock);
 
-  /**
-   * \brief Called when the last chunk of a block is received
-   * \param newBlock the newly received block
-   */
-  void ReceivedLastChunk(const Block &newBlock);
 
   /**
    * \brief Sends a BLOCK message as a response to a GET_DATA message
@@ -148,13 +136,6 @@ protected:
    * \param from the address the GET_DATA was received from
    */
   void SendBlock(std::string packetInfo, Address &from);
-
-  /**
-   * \brief Sends a CHUNK message as a response to a EXT_GET_DATA/CHUNK message
-   * \param packetInfo the info of the CHUNK message
-   * \param from the address the EXT_GET_DATA/CHUNK was received from
-   */
-  void SendChunk(std::string packetInfo, Address &from);
 
   /**
    * \brief Called for blocks with higher score(height)
@@ -192,11 +173,6 @@ protected:
    */
   void AdvertiseFullBlock (const Block &newBlock);
 
-  /**
-   * \brief Advertises the newly validated block when blockTorrent and spv are used
-   * \param newBlock the new block
-   */
-  void AdvertiseFirstChunk (const Block &newBlock);
 
   /**
    * \brief Sends a message to a peer
@@ -235,25 +211,6 @@ protected:
    */
   void PrintInvTimeouts();
 
-  /**
-   * \brief Print m_chunkTimeouts to stdout
-   */
-  void PrintChunkTimeouts();
-
-  /**
-   * \brief Print m_queueChunks to stdout
-   */
-  void PrintQueueChunks();
-
-  /**
-   * \brief Print m_queueChunkPeers to stdout
-   */
-  void PrintQueueChunkPeers();
-
-  /**
-   * \brief Print m_receivedChunks to stdout
-   */
-  void PrintReceivedChunks();
 
   /**
    * \brief Print m_onlyHeadersReceived to stdout
@@ -265,12 +222,6 @@ protected:
    * \param blockHash the block hash for which the timeout expired
    */
   void InvTimeoutExpired (std::string blockHash);
-
-  /**
-   * \brief Called when a timeout for a chunk expires
-   * \param blockHash the chunk hash for which the timeout expired
-   */
-  void ChunkTimeoutExpired (std::string chunk);
 
   /**
    * \brief Checks if a block has been received but not been validated yet (if it is included in m_receivedNotValidated)
@@ -292,12 +243,6 @@ protected:
    */
   bool OnlyHeadersReceived (std::string blockHash);
 
-  /**
-   * \brief Checks if the node has received a particular chunk of a specific block
-   * \param blockHash the block hash
-   * \param blockHash the chunk id
-   */
-  bool HasChunk (std::string blockHash, int chunk);
 
   /**
    * \brief Removes the fist element from m_sendBlockTimes, when a block is sent

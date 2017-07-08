@@ -367,8 +367,11 @@ BlockchainValidator::MineBlock (void)
   if (m_nextBlockSize < m_averageTransactionSize)
     m_nextBlockSize = m_averageTransactionSize + m_headersSizeBytes;
 
+    blockDataTuple blankBlockData = {0, 0, Ipv6Address("0::0::0::0"), "" ,""};
+    std::map<int, blockDataTuple> dataMap;
+    dataMap[0] = blankBlockData;
   Block newBlock (height, minerId, parentBlockMinerId, m_nextBlockSize,
-                  currentTime, 0, "", "", currentTime, Ipv6Address("0::0::0::1"));
+                  currentTime, dataMap, currentTime, Ipv6Address("0::0::0::1"));
 
   switch(m_blockBroadcastType)
   {

@@ -30,7 +30,6 @@ enum Messages
         EXT_GET_HEADERS, //8
         EXT_HEADERS, //9
         EXT_GET_BLOCKS, //10
-        CHUNK,      //11
         EXT_GET_DATA, //12
         SEND_PUBLIC_KEY, //13
         RECEIVE_PUBLIC_KEY, //14
@@ -163,8 +162,9 @@ enum ManufacturerID getManufacturerEnum(uint32_t n);
 class Block
 {
 public:
+        // static blockDataTuple emptyBlockData = {0, 0, Ipv6Address("0::0::0::0"), "" ,""};
         Block (int blockHeight, int minerId, int parentBlockMinerId = 0, int blockSizeBytes = 0,
-               double timeCreated = 0, int nodeId = 0, std::string nodePublicKey = "", std::string signature = "", double timeReceived = 0, Ipv6Address receivedFromIpv6Address = Ipv6Address("0::0::0::0"));
+               double timeCreated = 0, std::map<int, blockDataTuple> blockDataMap = std::map<int, blockDataTuple>(), double timeReceived = 0, Ipv6Address receivedFromIpv6Address = Ipv6Address("0::0::0::0"));
         Block ();
         Block (const Block &blockSource); // Copy constructor
         virtual ~Block (void);
@@ -187,14 +187,9 @@ public:
         Ipv6Address GetReceivedFromIpv6Address (void) const;
         void SetReceivedFromIpv6Address (Ipv6Address receivedFromIpv6Address);
 
-        int GetNodeIdOfBlock (void) const;
-        void SetNodeIdOfBlock (int nodeId);
 
-        std::string GetNodePublicKey (void) const;
-        void SetNodePublicKey (std::string nodePublicKey);
-
-        std::string GetNodePublicKeySignature (void) const;
-        void SetNodePublicKeySignature (std::string signature);
+        blockDataTuple GetNodeData (int nodeId);
+        void SetNodeData (int nodeId, blockDataTuple blockData);
 
         /**
          * Checks if the block provided as the argument is the parent of this block object
@@ -219,38 +214,9 @@ protected:
         double m_timeCreated;                 // The time the block was created
         double m_timeReceived;                // The time the block was received from the node
         Ipv6Address m_receivedFromIpv6Address;       // The Ipv6Address of the node which sent the block to the receiving node
-        int m_nodeId;                           // The id of the node for which the block stores the public key
-        std::string m_nodePublicKey;           // The base64 public key of the block
-        std::string m_signature;                // The signature by the validating node
+        std::map <int, blockDataTuple> m_blockDataMap;           // Map containing all the data for a node.
 };
 
-class BlockChunk : public Block
-{
-public:
-        BlockChunk (int blockHeight, int minerId, int chunkId, int parentBlockMinerId = 0, int blockSizeBytes = 0,
-                    double timeCreated = 0, std::vector<int> nodeIds = std::vector<int>(), std::vector<std::string> nodePublicKeys = std::vector<std::string>(), std::vector<std::string> signatures = std::vector<std::string>(), double timeReceived = 0, Ipv6Address receivedFromIpv6Address = Ipv6Address("0::0::0::0"));
-        BlockChunk (int blockHeight, int minerId, int chunkId, int parentBlockMinerId = 0, int blockSizeBytes = 0,
-                    double timeCreated = 0, double timeReceived = 0, Ipv6Address receivedFromIpv6Address = Ipv6Address("0::0::0::0"));
-        BlockChunk ();
-        BlockChunk (const BlockChunk &chunkSource); // Copy constructor
-        virtual ~BlockChunk (void);
-
-        int GetChunkId (void) const;
-        void SetChunkId (int minerId);
-
-        BlockChunk& operator= (const BlockChunk &chunkSource); //Assignment Constructor
-
-        friend bool operator== (const BlockChunk &chunk, const BlockChunk &chunk2);
-        friend bool operator< (const BlockChunk &chunk, const BlockChunk &chunk2);
-        friend std::ostream& operator<< (std::ostream &out, const BlockChunk &chunk);
-
-protected:
-        int m_chunkId;
-        std::vector<int> m_multiNodeIds;
-        std::vector<std::string> m_multiNodePublicKeys;
-        std::vector<std::string> m_multiNodeSignatures;
-
-};
 
 class Blockchain
 {
@@ -275,10 +241,10 @@ public:
         /**
          * Get the nodes' public key ,its' signature and validate its' signature
          **/
-        std::string GetPublickey (int nodeId);
-        Block GetPublickeyBlock (int nodeId);
-        std::string GetNodePublicKeySignature (int nodeId);
-        bool CheckPublicKeySignature (int nodeId);
+        // std::string GetPublickey (int nodeId);
+        // Block GetPublickeyBlock (int nodeId);
+        // std::string GetNodePublicKeySignature (int nodeId);
+        // bool CheckPublicKeySignature (int nodeId);
 
         /**
          * Return the block with the specified height and minerId.
@@ -348,8 +314,8 @@ public:
          */
         int GetLongestForkSize (void);
 
-        void changePublicKey (Block& Block, std::string newPublicKey);
-        void changePublicKey (int nodeId, std::string newPublicKey);
+        // void changePublicKey (Block& Block, std::string newPublicKey);
+        // void changePublicKey (int nodeId, std::string newPublicKey);
 
         friend std::ostream& operator<< (std::ostream &out, Blockchain &blockchain);
 
@@ -358,8 +324,8 @@ private:
         int m_totalBlocks;                                //total number of blocks including the genesis block
         std::vector<std::vector<Block> >    m_blocks;     //2d vector containing all the blocks of the blockchain. (row->blockHeight, col->sibling blocks)
         std::vector<Block>                 m_orphans;     //vector containing the orphans
-        std::map< int, Block > m_block_map;          //map containing the nodeId to block mapping
-        std::map<int, std::string> m_public_key_map;    //direct map containing mapping of node to public key
+        // std::map< int, Block > m_block_map;          //map containing the nodeId to block mapping
+        // std::map<int, std::string> m_public_key_map;    //direct map containing mapping of node to public key
 
 
 };
