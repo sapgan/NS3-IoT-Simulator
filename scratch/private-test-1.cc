@@ -26,6 +26,7 @@
  #include "ns3/applications-module.h"
  #include "ns3/point-to-point-layout-module.h"
  #define N_VALIDATORS 4
+ #define N_IOTDEVICE 8
  // #include "ns3/mpi-interface.h"
  // #define MPI_TEST
  //
@@ -46,28 +47,15 @@
  main (int argc, char *argv[])
  {
    //#ifdef NS3_MPI
-
-     bool nullmsg = false;
-     bool testScalability = false;
-     bool unsolicited = false;
-     bool relayNetwork = false;
-     bool unsolicitedRelayNetwork = false;
-     bool sendheaders = false;
-     long blockSize = -1;
-     int invTimeoutMins = -1;
-     int chunkSize = -1;
      double tStart = get_wall_time(), tStartSimulation, tFinish;
      const int secsPerMin = 60;
      const uint16_t m_commPort = 5555;
      const double realAverageBlockGenIntervalMinutes = 10; //minutes
-     int targetNumberOfBlocks = 100;
      double averageBlockGenIntervalSeconds = 10 * secsPerMin; //seconds
-     double fixedHashRate = 0.5;
      int start = 0;
 
      int minConnectionsPerNode = -1;
      int maxConnectionsPerNode = -1;
-     double *minersHash;
      enum ManufacturerID manufacturers[N_VALIDATORS+1];
 
      double averageBlockGenIntervalMinutes = averageBlockGenIntervalSeconds/secsPerMin;
@@ -79,8 +67,7 @@
      std::map<uint32_t, std::map<Ipv4Address, double>>    peersUploadSpeeds;
      std::map<uint32_t, nodeInternetSpeeds>               nodesInternetSpeeds;
      std::vector<uint32_t>                                validators;
-     std::map<uint32_t,std::vector<uint32_t> >            gatewayChildMap;
-     std::map<uint32_t, uint32_t>                         gatewayMinerMap;
+     std::map<uint32_t, uint32_t>                         iotValidatorMap;
      uint32_t                                                  nodesInSystemId0 = 0;
      uint32_t                                             totalNoNodes=0;
 
@@ -95,6 +82,13 @@
       totalNoNodes++;
     }
 
+    for(int i=1;i<=N_IOTDEVICE;i++){
+      uint32_t validatorId = rand()%N_VALIDATORS;
+      uint32_t deviceId = N_VALIDATORS+i;
+      iotValidatorMap[deviceId] = validatorId;
+     totalNoNodes++;
+   }
+
     // for(int i=1;i<=N_VALIDATORS;i++){
     //   uint32_t gateway = i*N_VALIDATORS+1;
     //   std::vector<uint32_t> childs;
@@ -104,64 +98,25 @@
     //     totalNoNodes++;
     //   }
     //   gatewayChildMap[gateway] = childs;
-    //   gatewayMinerMap[gateway] = i;
+    //   iotValidatorMap[gateway] = i;
     // }
 
-    uint32_t gateway1 = 5;
-    std::vector<uint32_t> childs;
-    totalNoNodes++;
-    for(int j=1;j<=3;j++){
-      childs.push_back(gateway1+j);
-      totalNoNodes++;
-    }
-    gatewayChildMap[gateway1] = childs;
-    gatewayMinerMap[gateway1] = 1;
-
-    uint32_t gateway2 = 9;
-    std::vector<uint32_t> childs1;
-    totalNoNodes++;
-    for(int j=1;j<=3;j++){
-      childs1.push_back(gateway2+j);
-      totalNoNodes++;
-    }
-    gatewayChildMap[gateway2] = childs1;
-    gatewayMinerMap[gateway2] = 2;
-
-    uint32_t gateway3 = 13;
-    std::vector<uint32_t> childs2;
-    totalNoNodes++;
-    for(int j=1;j<=4;j++){
-      childs2.push_back(gateway3+j);
-      totalNoNodes++;
-    }
-    gatewayChildMap[gateway3] = childs2;
-    gatewayMinerMap[gateway3] = 2;
-
-    uint32_t gateway4 = 18;
-    std::vector<uint32_t> childs3;
-    totalNoNodes++;
-    for(int j=1;j<=5;j++){
-      childs3.push_back(gateway4+j);
-      totalNoNodes++;
-    }
-    gatewayChildMap[gateway4] = childs3;
-    gatewayMinerMap[gateway4] = 4;
 
     NS_LOG_INFO ("Creating Topology");
-     IoTLayerTopologyHelper IoTLayerTopologyHelper (systemCount, totalNoNodes, manufacturers,
+     IoTFlatTopologyHelper IoTFlatTopologyHelper (systemCount, totalNoNodes, manufacturers,
                                                   minConnectionsPerNode,
-                                                  maxConnectionsPerNode, 0, systemId, validators, gatewayChildMap, gatewayMinerMap);
+                                                  maxConnectionsPerNode, 0, systemId, validators, iotValidatorMap);
 
     InternetStackHelper stack;
-    IoTLayerTopologyHelper.InstallStack (stack);
+    IoTFlatTopologyHelper.InstallStack (stack);
     // Assign Addresses to Grid
-    IoTLayerTopologyHelper.AssignIpv4Addresses (Ipv4AddressHelperCustom ("1.0.0.0", "255.255.255.0", false));
-    ipv4InterfaceContainer = IoTLayerTopologyHelper.GetIpv4InterfaceContainer();
-    nodesConnections = IoTLayerTopologyHelper.GetNodesConnectionsIps();
-    validators = IoTLayerTopologyHelper.GetMiners();
-    peersDownloadSpeeds = IoTLayerTopologyHelper.GetPeersDownloadSpeeds();
-    peersUploadSpeeds = IoTLayerTopologyHelper.GetPeersUploadSpeeds();
-    nodesInternetSpeeds = IoTLayerTopologyHelper.GetNodesInternetSpeeds();
+    IoTFlatTopologyHelper.AssignIpv4Addresses (Ipv4AddressHelperCustom ("1.0.0.0", "255.255.255.0", false));
+    ipv4InterfaceContainer = IoTFlatTopologyHelper.GetIpv4InterfaceContainer();
+    nodesConnections = IoTFlatTopologyHelper.GetNodesConnectionsIps();
+    validators = IoTFlatTopologyHelper.GetValidators();
+    peersDownloadSpeeds = IoTFlatTopologyHelper.GetPeersDownloadSpeeds();
+    peersUploadSpeeds = IoTFlatTopologyHelper.GetPeersUploadSpeeds();
+    nodesInternetSpeeds = IoTFlatTopologyHelper.GetNodesInternetSpeeds();
 
     BlockchainValidatorHelper blockchainValidatorHelper ("ns3::TcpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), m_commPort),nodesConnections[validators[0]], validators.size(), peersDownloadSpeeds[0], peersUploadSpeeds[0],nodesInternetSpeeds[0], 5.0);
 
@@ -169,7 +124,7 @@
 
     for(auto &miner : validators)
     {
-    	Ptr<Node> targetNode = IoTLayerTopologyHelper.GetNode (miner);
+    	Ptr<Node> targetNode = IoTFlatTopologyHelper.GetNode (miner);
       blockchainValidatorHelper.SetPeersAddresses (nodesConnections[miner]);
       blockchainValidatorHelper.SetPeersDownloadSpeeds (peersDownloadSpeeds[miner]);
       blockchainValidatorHelper.SetPeersUploadSpeeds (peersUploadSpeeds[miner]);
@@ -184,9 +139,9 @@
     ApplicationContainer blockchainNodes;
 
     //Install gateway nodes
-    //tStartSimulation = get_wall_time();
-    //Simulator::Stop (Minutes (stop + 0.1));
-    //Simulator::Run ();
+    tStartSimulation = get_wall_time();
+    Simulator::Stop (Minutes (stop + 0.1));
+    Simulator::Run ();
     Simulator::Destroy ();
    return 0;
  }

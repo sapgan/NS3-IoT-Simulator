@@ -24,6 +24,7 @@ def build(bld):
 	'model/blockchain-validator.cc',
 	'model/iot-sensor-node.cc',
   'helper/iot-layer-topology-helper.cc',
+  'helper/iot-flat-topology-helper.cc',
   'helper/blockchain-node-helper.cc',
   'helper/blockchain-validator-helper.cc',
         ]
@@ -57,6 +58,7 @@ def build(bld):
 	'model/blockchain-validator.h',
 	'model/iot-sensor-node.h',
   'helper/iot-layer-topology-helper.h',
+  'helper/iot-flat-topology-helper.h',
   'helper/blockchain-node-helper.h',
   'helper/blockchain-validator-helper.h',
         ]

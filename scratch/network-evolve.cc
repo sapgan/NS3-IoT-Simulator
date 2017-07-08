@@ -47,27 +47,15 @@
  {
    //#ifdef NS3_MPI
 
-     bool nullmsg = false;
-     bool testScalability = false;
-     bool unsolicited = false;
-     bool relayNetwork = false;
-     bool unsolicitedRelayNetwork = false;
-     bool sendheaders = false;
-     long blockSize = -1;
-     int invTimeoutMins = -1;
-     int chunkSize = -1;
      double tStart = get_wall_time(), tStartSimulation, tFinish;
      const int secsPerMin = 60;
      const uint16_t m_commPort = 5555;
-     const double realAverageBlockGenIntervalMinutes = 10; //minutes
      int targetNumberOfBlocks = 100;
      double averageBlockGenIntervalSeconds = 10 * secsPerMin; //seconds
-     double fixedHashRate = 0.5;
      int start = 0;
 
      int minConnectionsPerNode = -1;
      int maxConnectionsPerNode = -1;
-     double *minersHash;
      enum ManufacturerID manufacturers[N_VALIDATORS+1];
 
      double averageBlockGenIntervalMinutes = averageBlockGenIntervalSeconds/secsPerMin;

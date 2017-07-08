@@ -142,6 +142,13 @@ typedef struct {
         double uploadSpeed;
 } nodeInternetSpeeds;
 
+typedef struct {
+    int nodeId;
+    int manufacturerId;
+    Ipv6Address ipv6Address;
+    std::string nodePublicKey;
+    std::string signature;
+} blockDataTuple;
 
 /**
  * Fuctions used to convert enumeration values to the corresponding strings.

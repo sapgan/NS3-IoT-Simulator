@@ -16,7 +16,7 @@
  * Author: Saptarshi Gan<sapedu11@gmail.com>
  */
 
-#include "ns3/iot-layer-topology-helper.h"
+#include "ns3/iot-flat-topology-helper.h"
 #include "ns3/internet-stack-helper.h"
 #include "ns3/point-to-point-helper.h"
 #include "ns3/csma-module.h"
@@ -40,35 +40,34 @@
 static double GetWallTime();
 namespace ns3 {
 
-NS_LOG_COMPONENT_DEFINE ("IoTLayerTopologyHelper");
+NS_LOG_COMPONENT_DEFINE ("IoTFlatTopologyHelper");
 
-IoTLayerTopologyHelper::IoTLayerTopologyHelper (uint32_t noCpus, uint32_t totalNoNodes, enum ManufacturerID *manufacturers,
+IoTFlatTopologyHelper::IoTFlatTopologyHelper (uint32_t noCpus, uint32_t totalNoNodes, enum ManufacturerID *manufacturers,
                                                int minConnectionsPerNode, int maxConnectionsPerNode,
-						                      double latencyParetoShapeDivider, uint32_t systemId, std::vector<uint32_t> miners, std::map<uint32_t,std::vector<uint32_t> > gatewayChildMap, std::map<uint32_t, uint32_t> gatewayMinerMap)
+						                      double latencyParetoShapeDivider, uint32_t systemId, std::vector<uint32_t> validators, std::map<uint32_t, uint32_t> iotValidatorMap)
   : m_noCpus(noCpus), m_totalNoNodes(totalNoNodes), m_minConnectionsPerNode (minConnectionsPerNode), m_maxConnectionsPerNode (maxConnectionsPerNode),
 	m_totalNoLinks (0), m_latencyParetoShapeDivider (latencyParetoShapeDivider),
 	m_systemId (systemId), m_minConnectionsPerMiner (10), m_maxConnectionsPerMiner (80),
-	m_minerDownloadSpeed (100), m_minerUploadSpeed (100), m_miners (miners) , m_nodeGatewayMap (gatewayChildMap), m_gatewayMinerMap (gatewayMinerMap)
+	m_minerDownloadSpeed (100), m_minerUploadSpeed (100), m_validators (validators) , m_iotValidatorMap (iotValidatorMap)
 {
   std::vector<uint32_t>     nodes;    //nodes contain the ids of all the nodes
   double                    tStart = GetWallTime();
   double                    tFinish;
 
-  int m_noMiners = miners.size();
-  m_minConnectionsPerMiner = m_noMiners*(m_noMiners/2);
-  int m_gatewayCount = gatewayChildMap.size();
-  m_maxConnectionsPerMiner = m_minConnectionsPerMiner + m_gatewayCount;
+  int m_noValidators = validators.size();
+  m_minConnectionsPerMiner = m_noValidators*(m_noValidators/2);
+  m_maxConnectionsPerMiner = m_minConnectionsPerMiner ;
   //std::map<uint32_t, std::vector<uint32_t>>  m_nodesConnections;
 
   srand (1000);
 
   // Bounds check
-  if (m_noMiners > m_totalNoNodes)
+  if (m_noValidators > m_totalNoNodes)
   {
-    NS_FATAL_ERROR ("The number of miners is larger than the total number of nodes\n");
+    NS_FATAL_ERROR ("The number of validators is larger than the total number of nodes\n");
   }
 
-  if (m_noMiners < 1)
+  if (m_noValidators < 1)
   {
     NS_FATAL_ERROR ("You need at least one miner\n");
   }
@@ -88,10 +87,10 @@ IoTLayerTopologyHelper::IoTLayerTopologyHelper (uint32_t noCpus, uint32_t totalN
   std::array<double,6> connectionsDistributionWeights {10, 40, 30, 13, 6, 1};*/
 
   std::cout << "Building the topology!" << std::endl;
-  m_manufacturers = new enum ManufacturerID[m_noMiners];
-  for (int i = 0; i < m_noMiners; i++)
+  m_manufacturers = new enum ManufacturerID[m_noValidators];
+  for (int i = 0; i < m_noValidators; i++)
   {
-    m_manufacturers[m_miners[i]] = manufacturers[m_miners[i]];
+    m_manufacturers[m_validators[i]] = manufacturers[m_validators[i]];
   }
 
   std::cout << "Creating list of all nodes!" << std::endl;
@@ -104,35 +103,30 @@ IoTLayerTopologyHelper::IoTLayerTopologyHelper (uint32_t noCpus, uint32_t totalN
   }
 
   std::cout << "Forming the validators links!" << std::endl;
-  sort(m_miners.begin(), m_miners.end());
+  sort(m_validators.begin(), m_validators.end());
 
-  //Interconnect the miners
-  for(auto &miner : m_miners)
+  //Interconnect the validators
+  for(auto &miner : m_validators)
   {
-    for(auto &peer : m_miners)
+    for(auto &peer : m_validators)
     {
       if (miner != peer)
         m_nodesConnections[miner].push_back(peer);
 	}
   }
 
-    std::cout << "Forming the gateway links!" << std::endl;
-  std::map<uint32_t, std::vector<uint32_t> >::iterator gateways_it;
-
-  for(gateways_it=m_nodeGatewayMap.begin();gateways_it!=m_nodeGatewayMap.end();gateways_it++)
+    std::cout << "Forming validator and device links!" << std::endl;
+  std::map<uint32_t, uint32_t >::iterator nodeLinkMap_it;
+  //
+  for(nodeLinkMap_it=m_iotValidatorMap.begin();nodeLinkMap_it!=m_iotValidatorMap.end();nodeLinkMap_it++)
   {
-    uint32_t gatewayId = gateways_it->first;
-    std::vector<uint32_t> gatewayChilds = gateways_it->second;
-    //Connect all children to gateway
-    for(auto &child : gatewayChilds)
-    {
-      m_nodesConnections[gatewayId].push_back(child);
-      m_nodesConnections[child].push_back(gatewayId);
-    }
-    uint32_t miner = m_gatewayMinerMap[gatewayId];
-    m_nodesConnections[gatewayId].push_back(miner);
-    m_nodesConnections[miner].push_back(gatewayId);
+    uint32_t iotId = nodeLinkMap_it->first;
+    uint32_t validator = nodeLinkMap_it->second;
+    m_nodesConnections[iotId].push_back(validator);
+    m_nodesConnections[validator].push_back(iotId);
   }
+
+
 
   std::cout << "All links formed!" << std::endl;
   tFinish = GetWallTime();
@@ -179,7 +173,7 @@ IoTLayerTopologyHelper::IoTLayerTopologyHelper (uint32_t noCpus, uint32_t totalN
 
     for(int i = 0; i < m_totalNoNodes; i++)
     {
-      if ( std::find(m_miners.begin(), m_miners.end(), i) == m_miners.end())
+      if ( std::find(m_validators.begin(), m_validators.end(), i) == m_validators.end())
       {
         downloadRegionBandwidths[m_blockchainNodesRegion[i]].push_back(m_nodesInternetSpeeds[i].downloadSpeed);
         uploadRegionBandwidths[m_blockchainNodesRegion[i]].push_back(m_nodesInternetSpeeds[i].uploadSpeed);
@@ -216,11 +210,11 @@ IoTLayerTopologyHelper::IoTLayerTopologyHelper (uint32_t noCpus, uint32_t totalN
   tStart = GetWallTime();
 
   std::cout << "Creating the links between the validator nodes!" << std::endl;
-  //Create first the links between miners
-  for(auto miner = m_miners.begin(); miner != m_miners.end(); miner++)
+  //Create first the links between validators
+  for(auto miner = m_validators.begin(); miner != m_validators.end(); miner++)
   {
 
-    for(std::vector<uint32_t>::const_iterator it = m_nodesConnections[*miner].begin(); it != m_nodesConnections[*miner].begin() + m_miners.size() - 1; it++)
+    for(std::vector<uint32_t>::const_iterator it = m_nodesConnections[*miner].begin(); it != m_nodesConnections[*miner].begin() + m_validators.size() - 1; it++)
     {
       if ( *it > *miner)	//Do not recreate links
       {
@@ -280,8 +274,8 @@ IoTLayerTopologyHelper::IoTLayerTopologyHelper (uint32_t noCpus, uint32_t totalN
     for(std::vector<uint32_t>::const_iterator it = node.second.begin(); it != node.second.end(); it++)
     {
 
-      if ( *it > node.first && (std::find(m_miners.begin(), m_miners.end(), *it) == m_miners.end() ||
-	       std::find(m_miners.begin(), m_miners.end(), node.first) == m_miners.end()))	//Do not recreate links
+      if ( *it > node.first && (std::find(m_validators.begin(), m_validators.end(), *it) == m_validators.end() ||
+	       std::find(m_validators.begin(), m_validators.end(), node.first) == m_validators.end()))	//Do not recreate links
       {
         NetDeviceContainer newDevices;
 
@@ -344,14 +338,14 @@ IoTLayerTopologyHelper::IoTLayerTopologyHelper (uint32_t noCpus, uint32_t totalN
     std::cout << "The total number of links is " << m_totalNoLinks << " (" << tFinish - tStart << "s).\n";
 }
 
-IoTLayerTopologyHelper::~IoTLayerTopologyHelper ()
+IoTFlatTopologyHelper::~IoTFlatTopologyHelper ()
 {
   delete[] m_blockchainNodesRegion;
   delete[] m_manufacturers;
 }
 
 void
-IoTLayerTopologyHelper::InstallStack (InternetStackHelper stack)
+IoTFlatTopologyHelper::InstallStack (InternetStackHelper stack)
 {
   double tStart = GetWallTime();
   double tFinish;
@@ -372,7 +366,7 @@ IoTLayerTopologyHelper::InstallStack (InternetStackHelper stack)
 }
 
 void
-IoTLayerTopologyHelper::AssignIpv4Addresses (Ipv4AddressHelperCustom ip)
+IoTFlatTopologyHelper::AssignIpv4Addresses (Ipv4AddressHelperCustom ip)
 {
   double tStart = GetWallTime();
   double tFinish;
@@ -434,11 +428,11 @@ IoTLayerTopologyHelper::AssignIpv4Addresses (Ipv4AddressHelperCustom ip)
 
 
 Ptr<Node>
-IoTLayerTopologyHelper::GetNode (uint32_t id)
+IoTFlatTopologyHelper::GetNode (uint32_t id)
 {
   if (id > m_nodes.size () - 1 )
     {
-      NS_FATAL_ERROR ("Index out of bounds in IoTLayerTopologyHelper::GetNode.");
+      NS_FATAL_ERROR ("Index out of bounds in IoTFlatTopologyHelper::GetNode.");
     }
 
   return (m_nodes.at (id)).Get (0);
@@ -447,7 +441,7 @@ IoTLayerTopologyHelper::GetNode (uint32_t id)
 
 
 Ipv4InterfaceContainer
-IoTLayerTopologyHelper::GetIpv4InterfaceContainer (void) const
+IoTFlatTopologyHelper::GetIpv4InterfaceContainer (void) const
 {
   Ipv4InterfaceContainer ipv4InterfaceContainer;
 
@@ -459,25 +453,25 @@ IoTLayerTopologyHelper::GetIpv4InterfaceContainer (void) const
 
 
 std::map<uint32_t, std::vector<Ipv4Address>>
-IoTLayerTopologyHelper::GetNodesConnectionsIps (void) const
+IoTFlatTopologyHelper::GetNodesConnectionsIps (void) const
 {
   return m_nodesConnectionsIps;
 }
 
 
 std::vector<uint32_t>
-IoTLayerTopologyHelper::GetMiners (void) const
+IoTFlatTopologyHelper::GetValidators (void) const
 {
-  return m_miners;
+  return m_validators;
 }
 
 void
-IoTLayerTopologyHelper::AssignRegion (uint32_t id)
+IoTFlatTopologyHelper::AssignRegion (uint32_t id)
 {
-  auto index = std::find(m_miners.begin(), m_miners.end(), id);
-  if ( index != m_miners.end() )
+  auto index = std::find(m_validators.begin(), m_validators.end(), id);
+  if ( index != m_validators.end() )
   {
-    m_blockchainNodesRegion[id] = m_manufacturers[index - m_miners.begin()];
+    m_blockchainNodesRegion[id] = m_manufacturers[index - m_validators.begin()];
   }
   else{
     int number = m_nodesDistribution(m_generator);
@@ -490,10 +484,10 @@ IoTLayerTopologyHelper::AssignRegion (uint32_t id)
 
 
 void
-IoTLayerTopologyHelper::AssignInternetSpeeds(uint32_t id)
+IoTFlatTopologyHelper::AssignInternetSpeeds(uint32_t id)
 {
-  auto index = std::find(m_miners.begin(), m_miners.end(), id);
-  if ( index != m_miners.end() )
+  auto index = std::find(m_validators.begin(), m_validators.end(), id);
+  if ( index != m_validators.end() )
   {
     m_nodesInternetSpeeds[id].downloadSpeed = m_minerDownloadSpeed;
     m_nodesInternetSpeeds[id].uploadSpeed = m_minerUploadSpeed;
@@ -549,28 +543,28 @@ IoTLayerTopologyHelper::AssignInternetSpeeds(uint32_t id)
 
 
 uint32_t*
-IoTLayerTopologyHelper::GetBlockchainNodesRegions (void)
+IoTFlatTopologyHelper::GetBlockchainNodesRegions (void)
 {
   return m_blockchainNodesRegion;
 }
 
 
 std::map<uint32_t, std::map<Ipv4Address, double>>
-IoTLayerTopologyHelper::GetPeersDownloadSpeeds (void) const
+IoTFlatTopologyHelper::GetPeersDownloadSpeeds (void) const
 {
   return m_peersDownloadSpeeds;
 }
 
 
 std::map<uint32_t, std::map<Ipv4Address, double>>
-IoTLayerTopologyHelper::GetPeersUploadSpeeds (void) const
+IoTFlatTopologyHelper::GetPeersUploadSpeeds (void) const
 {
   return m_peersUploadSpeeds;
 }
 
 
 std::map<uint32_t, nodeInternetSpeeds>
-IoTLayerTopologyHelper::GetNodesInternetSpeeds (void) const
+IoTFlatTopologyHelper::GetNodesInternetSpeeds (void) const
 {
   return m_nodesInternetSpeeds;
 }
