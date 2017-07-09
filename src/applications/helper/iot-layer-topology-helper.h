@@ -50,7 +50,7 @@ public:
    */
   IoTLayerTopologyHelper (uint32_t noCpus, uint32_t totalNoNodes, enum ManufacturerID *manufacturers,
                          int minConnectionsPerNode, int maxConnectionsPerNode,
-                         double latencyParetoShapeDivider, uint32_t systemId, std::vector<uint32_t> miners, std::map<uint32_t,std::vector<uint32_t> > gatewayChildMap, std::map<uint32_t, uint32_t> gatewayMinerMap);
+                         double latencyParetoShapeDivider, uint32_t systemId, std::vector<uint32_t> validators, std::map<uint32_t,std::vector<uint32_t> > gatewayChildMap, std::map<uint32_t, uint32_t> gatewayValidatorMap, std::map<uint32_t, std::vector<uint32_t> > validatorLinkMap);
 
   ~IoTLayerTopologyHelper ();
 
@@ -111,7 +111,7 @@ public:
 
    std::map<uint32_t, std::vector<Ipv6Address>> GetNodesConnectionsIps (void) const;
 
-   std::vector<uint32_t> GetMiners (void) const;
+   std::vector<uint32_t> GetValidators (void) const;
 
    uint32_t* GetBlockchainNodesRegions (void);
 
@@ -126,24 +126,25 @@ private:
   void AssignInternetSpeeds(uint32_t id);
 
   uint32_t     m_totalNoNodes;                  //!< The total number of nodes
-  uint32_t     m_noMiners;                      //!< The total number of miners
+  uint32_t     m_noValidators;                      //!< The total number of validators
   uint32_t     m_noCpus;                        //!< The number of the available cpus in the simulation
   double       m_latencyParetoShapeDivider;     //!<  The pareto shape for the latency of the point-to-point links
   int          m_minConnectionsPerNode;         //!<  The minimum connections per node
   int          m_maxConnectionsPerNode;         //!<  The maximum connections per node
-  int          m_minConnectionsPerMiner;        //!<  The minimum connections per node
-  int          m_maxConnectionsPerMiner;        //!<  The maximum connections per node
-  double       m_minerDownloadSpeed;            //!<  The download speed of miners
-  double       m_minerUploadSpeed;              //!<  The upload speed of miners
+  int          m_minConnectionsPerValidator;        //!<  The minimum connections per node
+  int          m_maxConnectionsPerValidator;        //!<  The maximum connections per node
+  double       m_validatorDownloadSpeed;            //!<  The download speed of validators
+  double       m_validatorUploadSpeed;              //!<  The upload speed of validators
   uint32_t     m_totalNoLinks;                  //!<  Total number of links
   uint32_t     m_systemId;
 
   enum ManufacturerID                             *m_manufacturers;
-  std::vector<uint32_t>                           m_miners;                  //!< The ids of the miners
+  std::vector<uint32_t>                           m_validators;                  //!< The ids of the validators
   std::map<uint32_t, std::vector<uint32_t>>       m_nodesConnections;        //!< key = nodeId
   std::map<uint32_t, std::vector<Ipv6Address>>    m_nodesConnectionsIps;     //!< key = nodeId
   std::map<uint32_t, std::vector<uint32_t>>    m_nodeGatewayMap;            //!< key = nodeId
-  std::map<uint32_t, uint32_t>                 m_gatewayMinerMap;           //!< key=nodeId
+  std::map<uint32_t, uint32_t>                 m_gatewayValidatorMap;           //!< key=nodeId
+  std::map<uint32_t, std::vector<uint32_t>>    m_validatorLinkMap;            //!< key = nodeId
   std::vector<NodeContainer>                      m_nodes;                   //!< all the nodes in the network
   std::vector<NetDeviceContainer>                 m_devices;                 //!< NetDevices in the network
   std::vector<Ipv6InterfaceContainer>             m_interfaces;              //!< Ipv6 interfaces in the network

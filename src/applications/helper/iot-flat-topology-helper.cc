@@ -44,19 +44,19 @@ NS_LOG_COMPONENT_DEFINE ("IoTFlatTopologyHelper");
 
 IoTFlatTopologyHelper::IoTFlatTopologyHelper (uint32_t noCpus, uint32_t totalNoNodes, enum ManufacturerID *manufacturers,
                                                int minConnectionsPerNode, int maxConnectionsPerNode,
-						                      double latencyParetoShapeDivider, uint32_t systemId, std::vector<uint32_t> validators, std::map<uint32_t, uint32_t> iotValidatorMap)
+						                      double latencyParetoShapeDivider, uint32_t systemId, std::vector<uint32_t> validators, std::map<uint32_t, uint32_t> iotValidatorMap, std::map<uint32_t, std::vector<uint32_t> > validatorLinkMap)
   : m_noCpus(noCpus), m_totalNoNodes(totalNoNodes), m_minConnectionsPerNode (minConnectionsPerNode), m_maxConnectionsPerNode (maxConnectionsPerNode),
 	m_totalNoLinks (0), m_latencyParetoShapeDivider (latencyParetoShapeDivider),
-	m_systemId (systemId), m_minConnectionsPerMiner (10), m_maxConnectionsPerMiner (80),
-	m_minerDownloadSpeed (100), m_minerUploadSpeed (100), m_validators (validators) , m_iotValidatorMap (iotValidatorMap)
+	m_systemId (systemId), m_minConnectionsPerValidator (10), m_maxConnectionsPerValidator (80),
+	m_validatorDownloadSpeed (100), m_validatorUploadSpeed (100), m_validators (validators) , m_iotValidatorMap (iotValidatorMap), m_validatorLinkMap (validatorLinkMap)
 {
   std::vector<uint32_t>     nodes;    //nodes contain the ids of all the nodes
   double                    tStart = GetWallTime();
   double                    tFinish;
 
   int m_noValidators = validators.size();
-  m_minConnectionsPerMiner = m_noValidators*(m_noValidators/2);
-  m_maxConnectionsPerMiner = m_minConnectionsPerMiner ;
+  m_minConnectionsPerValidator = m_noValidators*(m_noValidators/2);
+  m_maxConnectionsPerValidator = m_minConnectionsPerValidator ;
   //std::map<uint32_t, std::vector<uint32_t>>  m_nodesConnections;
 
   srand (1000);
@@ -69,7 +69,7 @@ IoTFlatTopologyHelper::IoTFlatTopologyHelper (uint32_t noCpus, uint32_t totalNoN
 
   if (m_noValidators < 1)
   {
-    NS_FATAL_ERROR ("You need at least one miner\n");
+    NS_FATAL_ERROR ("You need at least one validator\n");
   }
 
   m_blockchainNodesRegion = new uint32_t[m_totalNoNodes];
@@ -106,13 +106,23 @@ IoTFlatTopologyHelper::IoTFlatTopologyHelper (uint32_t noCpus, uint32_t totalNoN
   sort(m_validators.begin(), m_validators.end());
 
   //Interconnect the validators
-  for(auto &miner : m_validators)
-  {
-    for(auto &peer : m_validators)
-    {
-      if (miner != peer)
-        m_nodesConnections[miner].push_back(peer);
-	}
+  // for(auto &validator : m_validators)
+  // {
+  //   for(auto &peer : m_validators)
+  //   {
+  //     if (validator != peer)
+  //       m_nodesConnections[validator].push_back(peer);
+	// }
+  // }
+
+  std::map<uint32_t, std::vector<uint32_t> >::iterator nodeLink_it;
+
+  for(nodeLink_it=m_validatorLinkMap.begin();nodeLink_it!=m_validatorLinkMap.end();nodeLink_it++){
+    uint32_t validatorId = nodeLink_it->first;
+    std::vector<uint32_t> peers = nodeLink_it->second;
+    for(auto &peer: peers){
+      m_nodesConnections[validatorId].push_back(peer);
+    }
   }
 
     std::cout << "Forming validator and device links!" << std::endl;
@@ -211,19 +221,21 @@ IoTFlatTopologyHelper::IoTFlatTopologyHelper (uint32_t noCpus, uint32_t totalNoN
 
   std::cout << "Creating the links between the validator nodes!" << std::endl;
   //Create first the links between validators
-  for(auto miner = m_validators.begin(); miner != m_validators.end(); miner++)
+  for(auto validator = m_validators.begin(); validator != m_validators.end(); validator++)
   {
 
-    for(std::vector<uint32_t>::const_iterator it = m_nodesConnections[*miner].begin(); it != m_nodesConnections[*miner].begin() + m_validators.size() - 1; it++)
+    for(std::vector<uint32_t>::const_iterator it = m_nodesConnections[*validator].begin(); it != m_nodesConnections[*validator].end(); it++)
     {
-      if ( *it > *miner)	//Do not recreate links
+      if(*it > m_noValidators)
+        break;
+      if ( *it > *validator)	//Do not recreate links and don't create links between validator and IoT node
       {
         NetDeviceContainer newDevices;
 
         m_totalNoLinks++;
 
-		/*double bandwidth = std::min(std::min(m_nodesInternetSpeeds[m_nodes.at (*miner).Get (0)->GetId()].uploadSpeed,
-                                    m_nodesInternetSpeeds[m_nodes.at (*miner).Get (0)->GetId()].downloadSpeed),
+		/*double bandwidth = std::min(std::min(m_nodesInternetSpeeds[m_nodes.at (*validator).Get (0)->GetId()].uploadSpeed,
+                                    m_nodesInternetSpeeds[m_nodes.at (*validator).Get (0)->GetId()].downloadSpeed),
                                     std::min(m_nodesInternetSpeeds[m_nodes.at (*it).Get (0)->GetId()].uploadSpeed,
                                     m_nodesInternetSpeeds[m_nodes.at (*it).Get (0)->GetId()].downloadSpeed));*/
       double bandwidth = 10.05;
@@ -237,15 +249,15 @@ IoTFlatTopologyHelper::IoTFlatTopologyHelper (uint32_t noCpus, uint32_t totalNoN
 		/*if (m_latencyParetoShapeDivider > 0)
         {
           Ptr<ParetoRandomVariable> paretoDistribution = CreateObject<ParetoRandomVariable> ();
-          paretoDistribution->SetAttribute ("Mean", DoubleValue (m_regionLatencies[m_blockchainNodesRegion[(m_nodes.at (*miner).Get (0))->GetId()]]
+          paretoDistribution->SetAttribute ("Mean", DoubleValue (m_regionLatencies[m_blockchainNodesRegion[(m_nodes.at (*validator).Get (0))->GetId()]]
                                                                                   [m_blockchainNodesRegion[(m_nodes.at (*it).Get (0))->GetId()]]));
-          paretoDistribution->SetAttribute ("Shape", DoubleValue (m_regionLatencies[m_blockchainNodesRegion[(m_nodes.at (*miner).Get (0))->GetId()]]
+          paretoDistribution->SetAttribute ("Shape", DoubleValue (m_regionLatencies[m_blockchainNodesRegion[(m_nodes.at (*validator).Get (0))->GetId()]]
                                                                                    [m_blockchainNodesRegion[(m_nodes.at (*it).Get (0))->GetId()]] / m_latencyParetoShapeDivider));
           latencyStringStream << paretoDistribution->GetValue() << "ms";
         }
         else
         {
-          latencyStringStream << m_regionLatencies[m_blockchainNodesRegion[(m_nodes.at (*miner).Get (0))->GetId()]]
+          latencyStringStream << m_regionLatencies[m_blockchainNodesRegion[(m_nodes.at (*validator).Get (0))->GetId()]]
                                                   [m_blockchainNodesRegion[(m_nodes.at (*it).Get (0))->GetId()]] << "ms";
         }*/
 
@@ -253,12 +265,12 @@ IoTFlatTopologyHelper::IoTFlatTopologyHelper (uint32_t noCpus, uint32_t totalNoN
 		pointToPoint.SetDeviceAttribute ("DataRate", StringValue (bandwidthStream.str()));
 		//pointToPoint.SetChannelAttribute ("Delay", StringValue (latencyStringStream.str()));
 
-    newDevices.Add (pointToPoint.Install (m_nodes.at (*miner).Get (0), m_nodes.at (*it).Get (0)));
+    newDevices.Add (pointToPoint.Install (m_nodes.at (*validator).Get (0), m_nodes.at (*it).Get (0)));
 		m_devices.push_back (newDevices);
 /* 		if (m_systemId == 0)
           std::cout << "Creating link " << m_totalNoLinks << " between nodes "
-                    << (m_nodes.at (*miner).Get (0))->GetId() << " ("
-                    <<  getManufacturerID(getBlockchainEnum(m_blockchainNodesRegion[(m_nodes.at (*miner).Get (0))->GetId()]))
+                    << (m_nodes.at (*validator).Get (0))->GetId() << " ("
+                    <<  getManufacturerID(getBlockchainEnum(m_blockchainNodesRegion[(m_nodes.at (*validator).Get (0))->GetId()]))
                     << ") and node " << (m_nodes.at (*it).Get (0))->GetId() << " ("
                     <<  getManufacturerID(getBlockchainEnum(m_blockchainNodesRegion[(m_nodes.at (*it).Get (0))->GetId()]))
                     << ") with latency = " << latencyStringStream.str()
@@ -489,12 +501,12 @@ IoTFlatTopologyHelper::AssignInternetSpeeds(uint32_t id)
   auto index = std::find(m_validators.begin(), m_validators.end(), id);
   if ( index != m_validators.end() )
   {
-    m_nodesInternetSpeeds[id].downloadSpeed = m_minerDownloadSpeed;
-    m_nodesInternetSpeeds[id].uploadSpeed = m_minerUploadSpeed;
+    m_nodesInternetSpeeds[id].downloadSpeed = m_validatorDownloadSpeed;
+    m_nodesInternetSpeeds[id].uploadSpeed = m_validatorUploadSpeed;
   }
   else{
-    m_nodesInternetSpeeds[id].downloadSpeed = m_minerDownloadSpeed;
-    m_nodesInternetSpeeds[id].uploadSpeed = m_minerUploadSpeed;
+    m_nodesInternetSpeeds[id].downloadSpeed = m_validatorDownloadSpeed;
+    m_nodesInternetSpeeds[id].uploadSpeed = m_validatorUploadSpeed;
     /*switch(m_blockchainNodesRegion[id])
     {
       case ASIA_PACIFIC:

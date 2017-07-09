@@ -68,6 +68,7 @@
      std::map<uint32_t, nodeInternetSpeeds>               nodesInternetSpeeds;
      std::vector<uint32_t>                                validators;
      std::map<uint32_t, uint32_t>                         iotValidatorMap;
+     std::map<uint32_t, std::vector<uint32_t> >                         validatorLinkMap;
      uint32_t                                                  nodesInSystemId0 = 0;
      uint32_t                                             totalNoNodes=0;
 
@@ -81,6 +82,32 @@
       manufacturers[i] = getRandomManufacturerID();
       totalNoNodes++;
     }
+
+    uint32_t currentValidator = 1;
+    std::vector<uint32_t> linkValidators;
+    linkValidators.push_back(2);
+    linkValidators.push_back(3);
+    linkValidators.push_back(4);
+    validatorLinkMap[currentValidator] = linkValidators;
+
+    uint32_t currentValidator1 = 2;
+    std::vector<uint32_t> linkValidators1;
+    linkValidators1.push_back(1);
+    linkValidators1.push_back(4);
+    validatorLinkMap[currentValidator1] = linkValidators1;
+
+    uint32_t currentValidator2 = 3;
+    std::vector<uint32_t> linkValidators2;
+    linkValidators2.push_back(1);
+    linkValidators2.push_back(4);
+    validatorLinkMap[currentValidator2] = linkValidators2;
+
+    uint32_t currentValidator3 = 4;
+    std::vector<uint32_t> linkValidators3;
+    linkValidators3.push_back(2);
+    linkValidators3.push_back(3);
+    linkValidators3.push_back(1);
+    validatorLinkMap[currentValidator3] = linkValidators3;
 
     for(int i=1;i<=N_IOTDEVICE;i++){
       uint32_t validatorId = rand()%N_VALIDATORS;
@@ -105,7 +132,7 @@
     NS_LOG_INFO ("Creating Topology");
      IoTFlatTopologyHelper IoTFlatTopologyHelper (systemCount, totalNoNodes, manufacturers,
                                                   minConnectionsPerNode,
-                                                  maxConnectionsPerNode, 0, systemId, validators, iotValidatorMap);
+                                                  maxConnectionsPerNode, 0, systemId, validators, iotValidatorMap, validatorLinkMap);
 
     InternetStackHelper stack;
     IoTFlatTopologyHelper.InstallStack (stack);

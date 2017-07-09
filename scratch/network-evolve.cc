@@ -68,7 +68,8 @@
      std::map<uint32_t, nodeInternetSpeeds>               nodesInternetSpeeds;
      std::vector<uint32_t>                                validators;
      std::map<uint32_t,std::vector<uint32_t> >            gatewayChildMap;
-     std::map<uint32_t, uint32_t>                         gatewayMinerMap;
+     std::map<uint32_t, uint32_t>                         gatewayValidatorMap;
+     std::map<uint32_t, std::vector<uint32_t> >                         validatorLinkMap;
      uint32_t                                                  nodesInSystemId0 = 0;
      uint32_t                                             totalNoNodes=0;
 
@@ -83,6 +84,30 @@
       totalNoNodes++;
     }
 
+    uint32_t currentValidator = 1;
+    std::vector<uint32_t> linkValidators;
+    linkValidators.push_back(2);
+    // linkValidators.push_back(3);
+    validatorLinkMap[currentValidator] = linkValidators;
+
+    uint32_t currentValidator1 = 2;
+    std::vector<uint32_t> linkValidators1;
+    linkValidators1.push_back(1);
+    // linkValidators1.push_back(4);
+    validatorLinkMap[currentValidator1] = linkValidators1;
+
+    // uint32_t currentValidator2 = 3;
+    // std::vector<uint32_t> linkValidators2;
+    // linkValidators2.push_back(1);
+    // linkValidators2.push_back(4);
+    // validatorLinkMap[currentValidator2] = linkValidators2;
+    //
+    // uint32_t currentValidator3 = 4;
+    // std::vector<uint32_t> linkValidators3;
+    // linkValidators3.push_back(2);
+    // linkValidators3.push_back(3);
+    // validatorLinkMap[currentValidator3] = linkValidators3;
+
     // for(int i=1;i<=N_VALIDATORS;i++){
     //   uint32_t gateway = i*N_VALIDATORS+1;
     //   std::vector<uint32_t> childs;
@@ -92,7 +117,7 @@
     //     totalNoNodes++;
     //   }
     //   gatewayChildMap[gateway] = childs;
-    //   gatewayMinerMap[gateway] = i;
+    //   gatewayValidatorMap[gateway] = i;
     // }
 
     uint32_t gateway1 = 3;
@@ -103,7 +128,7 @@
       totalNoNodes++;
     }
     gatewayChildMap[gateway1] = childs;
-    gatewayMinerMap[gateway1] = 1;
+    gatewayValidatorMap[gateway1] = 1;
 
     uint32_t gateway2 = 7;
     std::vector<uint32_t> childs1;
@@ -113,7 +138,7 @@
       totalNoNodes++;
     }
     gatewayChildMap[gateway2] = childs1;
-    gatewayMinerMap[gateway2] = 1;
+    gatewayValidatorMap[gateway2] = 1;
 
     uint32_t gateway3 = 9;
     std::vector<uint32_t> childs2;
@@ -123,13 +148,13 @@
       totalNoNodes++;
     }
     gatewayChildMap[gateway3] = childs2;
-    gatewayMinerMap[gateway3] = 2;
+    gatewayValidatorMap[gateway3] = 2;
 
 
     NS_LOG_INFO ("Creating Topology");
      IoTLayerTopologyHelper IoTLayerTopologyHelper (systemCount, totalNoNodes, manufacturers,
                                                   minConnectionsPerNode,
-                                                  maxConnectionsPerNode, 0, systemId, validators, gatewayChildMap, gatewayMinerMap);
+                                                  maxConnectionsPerNode, 0, systemId, validators, gatewayChildMap, gatewayValidatorMap, validatorLinkMap);
 
     InternetStackHelper stack;
     IoTLayerTopologyHelper.InstallStack (stack);
@@ -137,7 +162,7 @@
     IoTLayerTopologyHelper.AssignIpv6Addresses (Ipv6AddressHelperCustom ("1.0.0.0", "255.255.255.0", false));
     ipv6InterfaceContainer = IoTLayerTopologyHelper.GetIpv6InterfaceContainer();
     nodesConnections = IoTLayerTopologyHelper.GetNodesConnectionsIps();
-    validators = IoTLayerTopologyHelper.GetMiners();
+    validators = IoTLayerTopologyHelper.GetValidators();
     peersDownloadSpeeds = IoTLayerTopologyHelper.GetPeersDownloadSpeeds();
     peersUploadSpeeds = IoTLayerTopologyHelper.GetPeersUploadSpeeds();
     nodesInternetSpeeds = IoTLayerTopologyHelper.GetNodesInternetSpeeds();
@@ -146,13 +171,13 @@
 
     ApplicationContainer blockchainValidators;
 
-    for(auto &miner : validators)
+    for(auto &validator : validators)
     {
-    	Ptr<Node> targetNode = IoTLayerTopologyHelper.GetNode (miner);
-      blockchainValidatorHelper.SetPeersAddresses (nodesConnections[miner]);
-      blockchainValidatorHelper.SetPeersDownloadSpeeds (peersDownloadSpeeds[miner]);
-      blockchainValidatorHelper.SetPeersUploadSpeeds (peersUploadSpeeds[miner]);
-      blockchainValidatorHelper.SetNodeInternetSpeeds (nodesInternetSpeeds[miner]);
+    	Ptr<Node> targetNode = IoTLayerTopologyHelper.GetNode (validator);
+      blockchainValidatorHelper.SetPeersAddresses (nodesConnections[validator]);
+      blockchainValidatorHelper.SetPeersDownloadSpeeds (peersDownloadSpeeds[validator]);
+      blockchainValidatorHelper.SetPeersUploadSpeeds (peersUploadSpeeds[validator]);
+      blockchainValidatorHelper.SetNodeInternetSpeeds (nodesInternetSpeeds[validator]);
       blockchainValidators.Add(blockchainValidatorHelper.Install (targetNode));
     }
     blockchainValidators.Start (Seconds (start));

@@ -50,7 +50,7 @@ public:
    */
   IoTFlatTopologyHelper (uint32_t noCpus, uint32_t totalNoNodes, enum ManufacturerID *manufacturers,
                          int minConnectionsPerNode, int maxConnectionsPerNode,
-                         double latencyParetoShapeDivider, uint32_t systemId, std::vector<uint32_t> validators, std::map<uint32_t, uint32_t> iotValidatorMap);
+                         double latencyParetoShapeDivider, uint32_t systemId, std::vector<uint32_t> validators, std::map<uint32_t, uint32_t> iotValidatorMap, std::map<uint32_t, std::vector<uint32_t> > validatorLinkMap);
 
   ~IoTFlatTopologyHelper ();
 
@@ -131,10 +131,10 @@ private:
   double       m_latencyParetoShapeDivider;     //!<  The pareto shape for the latency of the point-to-point links
   int          m_minConnectionsPerNode;         //!<  The minimum connections per node
   int          m_maxConnectionsPerNode;         //!<  The maximum connections per node
-  int          m_minConnectionsPerMiner;        //!<  The minimum connections per node
-  int          m_maxConnectionsPerMiner;        //!<  The maximum connections per node
-  double       m_minerDownloadSpeed;            //!<  The download speed of validators
-  double       m_minerUploadSpeed;              //!<  The upload speed of validators
+  int          m_minConnectionsPerValidator;        //!<  The minimum connections per node
+  int          m_maxConnectionsPerValidator;        //!<  The maximum connections per node
+  double       m_validatorDownloadSpeed;            //!<  The download speed of validators
+  double       m_validatorUploadSpeed;              //!<  The upload speed of validators
   uint32_t     m_totalNoLinks;                  //!<  Total number of links
   uint32_t     m_systemId;
 
@@ -143,6 +143,7 @@ private:
   std::map<uint32_t, std::vector<uint32_t>>       m_nodesConnections;        //!< key = nodeId
   std::map<uint32_t, std::vector<Ipv6Address>>    m_nodesConnectionsIps;     //!< key = nodeId
   std::map<uint32_t, uint32_t>                 m_iotValidatorMap;           //!< key=nodeId
+  std::map<uint32_t, std::vector<uint32_t>>    m_validatorLinkMap;            //!< key = nodeId
   std::vector<NodeContainer>                      m_nodes;                   //!< all the nodes in the network
   std::vector<NetDeviceContainer>                 m_devices;                 //!< NetDevices in the network
   std::vector<Ipv6InterfaceContainer>             m_interfaces;              //!< Ipv6 interfaces in the network
