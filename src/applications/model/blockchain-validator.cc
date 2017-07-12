@@ -300,7 +300,7 @@ BlockchainValidator::ScheduleNextMiningEvent (void)
 
     NS_LOG_DEBUG ("Time " << Simulator::Now ().GetSeconds () << ": Miner " << GetNode ()->GetId ()
                 << " fixed Block Time Generation " << m_fixedBlockTimeGeneration << "s");
-    m_nextMiningEvent = Simulator::Schedule (Seconds(m_fixedBlockTimeGeneration), &BlockchainValidator::MineBlock, this);
+    m_nextMiningEvent = Simulator::Schedule (Seconds(m_fixedBlockTimeGeneration), &BlockchainValidator::ValidateBlock, this);
   }
   else
   {
@@ -308,7 +308,7 @@ BlockchainValidator::ScheduleNextMiningEvent (void)
                     *( m_averageBlockGenIntervalSeconds/m_realAverageBlockGenIntervalSeconds )/m_hashRate;
 
     //NS_LOG_DEBUG("m_nextBlockTime = " << m_nextBlockTime << ", binsize = " << m_blockGenBinSize << ", m_blockGenParameter = " << m_blockGenParameter << ", hashrate = " << m_hashRate);
-    m_nextMiningEvent = Simulator::Schedule (Seconds(m_nextBlockTime), &BlockchainValidator::MineBlock, this);
+    m_nextMiningEvent = Simulator::Schedule (Seconds(m_nextBlockTime), &BlockchainValidator::ValidateBlock, this);
 
     NS_LOG_WARN ("Time " << Simulator::Now ().GetSeconds () << ": Miner " << GetNode ()->GetId () << " will generate a block in "
                  << m_nextBlockTime << "s or " << static_cast<int>(m_nextBlockTime) / m_secondsPerMin
@@ -318,7 +318,7 @@ BlockchainValidator::ScheduleNextMiningEvent (void)
 }
 
 void
-BlockchainValidator::MineBlock (void)
+BlockchainValidator::ValidateBlock (void)
 {
   NS_LOG_FUNCTION (this);
   rapidjson::Document inv;
@@ -571,7 +571,7 @@ BlockchainValidator::MineBlock (void)
 
 
 
-      //Unsolicited for miners
+      //Unsolicited for validators
       value = BLOCK;
       block.AddMember("message", value, block.GetAllocator());
 
@@ -638,7 +638,7 @@ BlockchainValidator::MineBlock (void)
       inv.AddMember("blocks", invArray, inv.GetAllocator());
 
 
-      //Unsolicited for miners
+      //Unsolicited for validators
       value = BLOCK;
       block.AddMember("message", value, block.GetAllocator());
 
@@ -941,7 +941,7 @@ void
 BlockchainValidator::ReceivedHigherBlock(const Block &newBlock)
 {
   NS_LOG_FUNCTION (this);
-  NS_LOG_WARN("Bitcoin miner " << GetNode ()->GetId () << " added a new block in the m_blockchain with higher height: " << newBlock);
+  NS_LOG_WARN("Blockchain validator " << GetNode ()->GetId () << " added a new block in the m_blockchain with higher height: " << newBlock);
   Simulator::Cancel (m_nextMiningEvent);
   ScheduleNextMiningEvent ();
 }

@@ -387,7 +387,7 @@ GatewayNode::ScheduleNextMiningEvent (void)
 
     NS_LOG_DEBUG ("Time " << Simulator::Now ().GetSeconds () << ": Miner " << GetNode ()->GetId ()
                 << " fixed Block Time Generation " << m_fixedBlockTimeGeneration << "s");
-    m_nextMiningEvent = Simulator::Schedule (Seconds(m_fixedBlockTimeGeneration), &GatewayNode::MineBlock, this);
+    m_nextMiningEvent = Simulator::Schedule (Seconds(m_fixedBlockTimeGeneration), &GatewayNode::ValidateBlock, this);
   }
   else
   {
@@ -395,7 +395,7 @@ GatewayNode::ScheduleNextMiningEvent (void)
                     *( m_averageBlockGenIntervalSeconds/m_realAverageBlockGenIntervalSeconds )/m_hashRate;
 
     //NS_LOG_DEBUG("m_nextBlockTime = " << m_nextBlockTime << ", binsize = " << m_blockGenBinSize << ", m_blockGenParameter = " << m_blockGenParameter << ", hashrate = " << m_hashRate);
-    m_nextMiningEvent = Simulator::Schedule (Seconds(m_nextBlockTime), &GatewayNode::MineBlock, this);
+    m_nextMiningEvent = Simulator::Schedule (Seconds(m_nextBlockTime), &GatewayNode::ValidateBlock, this);
 
     NS_LOG_WARN ("Time " << Simulator::Now ().GetSeconds () << ": Miner " << GetNode ()->GetId () << " will generate a block in "
                  << m_nextBlockTime << "s or " << static_cast<int>(m_nextBlockTime) / m_secondsPerMin
@@ -405,7 +405,7 @@ GatewayNode::ScheduleNextMiningEvent (void)
 }
 
 void
-GatewayNode::MineBlock (void)
+GatewayNode::ValidateBlock (void)
 {
   NS_LOG_FUNCTION (this);
   rapidjson::Document inv;

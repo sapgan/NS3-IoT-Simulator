@@ -26,8 +26,8 @@
  #include "ns3/point-to-point-module.h"
  #include "ns3/applications-module.h"
  #include "ns3/point-to-point-layout-module.h"
- #define N_VALIDATORS 6
- #define N_IOTDEVICE 9
+ #define N_VALIDATORS 4
+ #define N_IOTDEVICE 8
  // #include "ns3/mpi-interface.h"
  // #define MPI_TEST
  //
@@ -78,12 +78,9 @@
      uint32_t systemId = 0;
      uint32_t systemCount = 1;
 
-     std::cout << "Validator 1 is CCA" << std::endl;
      for(int i=1;i<=N_VALIDATORS;i++){
       validators.push_back(i);
       manufacturers[i] = getRandomManufacturerID();
-      if(i>1)
-      std::cout << "Validator " << i << " is of Manufacturer " << getManufacturerID(manufacturers[i]) << std::endl;
       totalNoNodes++;
     }
 
@@ -91,55 +88,25 @@
     std::vector<uint32_t> linkValidators;
     linkValidators.push_back(2);
     linkValidators.push_back(3);
-    linkValidators.push_back(4);
-    linkValidators.push_back(5);
-    linkValidators.push_back(6);
     validatorLinkMap[currentValidator] = linkValidators;
 
     uint32_t currentValidator1 = 2;
     std::vector<uint32_t> linkValidators1;
     linkValidators1.push_back(1);
-    linkValidators1.push_back(3);
     linkValidators1.push_back(4);
-    linkValidators1.push_back(5);
-    linkValidators1.push_back(6);
     validatorLinkMap[currentValidator1] = linkValidators1;
 
     uint32_t currentValidator2 = 3;
     std::vector<uint32_t> linkValidators2;
     linkValidators2.push_back(1);
-    linkValidators2.push_back(2);
     linkValidators2.push_back(4);
-    linkValidators2.push_back(5);
-    linkValidators2.push_back(6);
     validatorLinkMap[currentValidator2] = linkValidators2;
 
     uint32_t currentValidator3 = 4;
     std::vector<uint32_t> linkValidators3;
-    linkValidators3.push_back(1);
     linkValidators3.push_back(2);
     linkValidators3.push_back(3);
-    linkValidators3.push_back(5);
-    linkValidators3.push_back(6);
     validatorLinkMap[currentValidator3] = linkValidators3;
-
-    uint32_t currentValidator4 = 5;
-    std::vector<uint32_t> linkValidators4;
-    linkValidators4.push_back(1);
-    linkValidators4.push_back(2);
-    linkValidators4.push_back(3);
-    linkValidators4.push_back(4);
-    linkValidators4.push_back(6);
-    validatorLinkMap[currentValidator4] = linkValidators4;
-
-    uint32_t currentValidator5 = 6;
-    std::vector<uint32_t> linkValidators5;
-    linkValidators5.push_back(1);
-    linkValidators5.push_back(2);
-    linkValidators5.push_back(3);
-    linkValidators5.push_back(4);
-    linkValidators5.push_back(5);
-    validatorLinkMap[currentValidator5] = linkValidators5;
 
     for(int i=1;i<=N_IOTDEVICE;i++){
       uint32_t validatorId = rand()%N_VALIDATORS;
@@ -199,71 +166,75 @@
 
     //Install gateway nodes
     tStartSimulation = get_wall_time();
-    std::cout << "Validator 3: Adding Node 10 public key" << std::endl;
+    std::cout << "Validator 3: Adding signing key with of Node with Id 100" << std::endl;
     usleep(300000);
-    std::cout << "Validator 6: Adding Node 11 public key" << std::endl;
+    std::cout << "Validator 2: Adding signing key with of Node with Id 101" << std::endl;
     usleep(300000);
-    std::cout << "Validator 5: Adding Node 13 public key" << std::endl;
+    std::cout << "Validator 1: Adding signing key with of Node with Id 102" << std::endl;
     usleep(300000);
-    std::cout << "Validator 2: Adding Node 7 public key" << std::endl;
+    std::cout << "Validator 1: Adding signing key with of Node with Id 103" << std::endl;
     usleep(300000);
-    std::cout << "Validator 2: Mining Block" << std::endl;
-    std::cout << "Validator 3: Received Block from Validator 2" << std::endl;
+    std::cout << "Validator 4: Adding signing key with of Node with Id 104" << std::endl;
+    usleep(300000);
+    std::cout << "Validator 3: Adding signing key with of Node with Id 105" << std::endl;
+    usleep(300000);
+    std::cout << "Validator 4: Adding signing key with of Node with Id 106" << std::endl;
+    usleep(300000);
+    std::cout << "Validator 7: Adding signing key with of Node with Id 107" << std::endl;
+    usleep(300000);
+    std::cout << "Validator 1: Adding Node 103 public key" << std::endl;
+    usleep(300000);
+    std::cout << "Validator 1: Adding Node 102 public key" << std::endl;
+    usleep(300000);
+    std::cout << "Validator 3: Adding Node 100 public key" << std::endl;
+    usleep(300000);
+    std::cout << "Validator 2: Adding Node 101 public key" << std::endl;
+    usleep(300000);
+    std::cout << "Validator 3: Adding Node 105 public key" << std::endl;
+    usleep(300000);
+    std::cout << "Validator 4: Adding Node 104 public key" << std::endl;
+    usleep(300000);
+    std::cout << "Validator 4: Adding Node 106 public key" << std::endl;
+    usleep(300000);
+    std::cout << "Validator 4: Adding Node 107 public key" << std::endl;
+    usleep(300000);
+    std::cout << "Validator 1: Mining Block" << std::endl;
+    std::cout << "Validator 2: Received Block from Validator 1" << std::endl;
+    std::cout << "Validator 3: Received Block from Validator 1" << std::endl;
     std::cout << "Validator 4: Received Block from Validator 2" << std::endl;
-    std::cout << "Validator 5: Received Block from Validator 4" << std::endl;
-    std::cout << "Validator 6: Received Block from Validator 3" << std::endl;
-    std::cout << "Validator 4: Adding Node 15 public key" << std::endl;
-    usleep(300000);
-    std::cout << "Node 10: Get public key of Node 7" << std::endl;
-    std::cout << "Validator 3: Key request from Node 10" << std::endl;
-    std::cout << "Node 10: Message from Validator 3" << std::endl;
-    std::cout << "Node 10: Received public key of Node 7" << std::endl;
-    std::cout << "Node 10: Sending message to Node 7" << std::endl;
-    std::cout << "Validator 3: Received message from Node 10" << std::endl;
-    std::cout << "Validator 2: Received message from Validator 3" << std::endl;
-    std::cout << "Node 7: Received message from Validator 2" << std::endl;
-    std::cout << "Node 7: Received message from Node 10" << std::endl;
-    std::cout << "Node 7: Received secret key from Node 10" << std::endl;
-    std::cout << "Node 7: Sending message to Node 10" << std::endl;
-    std::cout << "Validator 2: Received message from Node 7" << std::endl;
-    std::cout << "Validator 3: Received message from Validator 2" << std::endl;
-    std::cout << "Node 10: Received message from Validator 3" << std::endl;
-    std::cout << "Node 10: Received message from Node 7" << std::endl;
-    std::cout << "Validator 2: Adding Node 8 public key" << std::endl;
-    std::cout << "Validator 2: Adding Node 9 public key" << std::endl;
-    usleep(300000);
-    std::cout << "Node 13: Get public key of Node 14" << std::endl;
-    std::cout << "Validator 5: Key request from Node 14" << std::endl;
-    std::cout << "Validator 5: No key for Node 14" << std::endl;
-    std::cout << "Node 13: Message from Validator 5" << std::endl;
-    std::cout << "Node 13: No public key of Node 14" << std::endl;
-    std::cout << "Validator 6: Adding Node 12 public key" << std::endl;
-    usleep(300000);
-    std::cout << "Validator 5: Adding Node 14 public key" << std::endl;
-    usleep(300000);
-    std::cout << "Validator 3: Mining Block" << std::endl;
-    std::cout << "Validator 2: Received Block from Validator 3" << std::endl;
-    std::cout << "Validator 6: Received Block from Validator 3" << std::endl;
-    std::cout << "Validator 4: Received Block from Validator 2" << std::endl;
-    std::cout << "Validator 5: Received Block from Validator 6" << std::endl;
+    std::cout << "Validator 4: Received Block from Validator 3" << std::endl;
     usleep(3000000);
-    std::cout << "Node 11: Get public key of Node 15" << std::endl;
-    std::cout << "Validator 6: Key request from Node 11" << std::endl;
-    std::cout << "Node 11: Message from Validator 6" << std::endl;
-    std::cout << "Node 11: Received public key of Node 15" << std::endl;
-    std::cout << "Node 11: Sending message to Node 15" << std::endl;
-    std::cout << "Validator 6: Received message from Node 11" << std::endl;
-    std::cout << "Validator 5: Received message from Validator 6" << std::endl;
-    std::cout << "Validator 4: Received message from Validator 5" << std::endl;
-    std::cout << "Node 15: Received message from Validator 4" << std::endl;
-    std::cout << "Node 15: Received message from Node 11" << std::endl;
-    std::cout << "Node 15: Received secret key from Node 11" << std::endl;
-    std::cout << "Node 15: Sending message to Node 11" << std::endl;
-    std::cout << "Validator 4: Received message from Node 15" << std::endl;
-    std::cout << "Validator 5: Received message from Validator 4" << std::endl;
-    std::cout << "Validator 6: Received message from Validator 5" << std::endl;
-    std::cout << "Node 11: Received message from Validator 3" << std::endl;
-    std::cout << "Node 11: Received message from Node 15" << std::endl;
+    std::cout << "Node 100: Get public key of Node 107" << std::endl;
+    std::cout << "Validator 3: Key request from Node 100" << std::endl;
+    std::cout << "Node 100: Message from Validator 3" << std::endl;
+    std::cout << "Node 100: Received public key of Node 107" << std::endl;
+    std::cout << "Node 100: Sending message to Node 107" << std::endl;
+    std::cout << "Validator 3: Received message from Node 100" << std::endl;
+    std::cout << "Validator 4: Received message from Validator 3" << std::endl;
+    std::cout << "Node 107: Received message from Validator 4" << std::endl;
+    std::cout << "Node 107: Received message from Node 100" << std::endl;
+    std::cout << "Node 107: Received secret key from Node 100" << std::endl;
+    std::cout << "Node 107: Sending message to Node 100" << std::endl;
+    std::cout << "Validator 4: Received message from Node 107" << std::endl;
+    std::cout << "Validator 3: Received message from Validator 4" << std::endl;
+    std::cout << "Node 100: Received message from Validator 3" << std::endl;
+    std::cout << "Node 100: Received message from Node 107" << std::endl;
+    usleep(3000000);
+    std::cout << "Node 102: Get public key of Node 101" << std::endl;
+    std::cout << "Validator 1: Key request from Node 102" << std::endl;
+    std::cout << "Node 102: Message from Validator 1" << std::endl;
+    std::cout << "Node 102: Received public key of Node 101" << std::endl;
+    std::cout << "Node 102: Sending message to Node 101" << std::endl;
+    std::cout << "Validator 1: Received message from Node 102" << std::endl;
+    std::cout << "Validator 2: Received message from Validator 1" << std::endl;
+    std::cout << "Node 101: Received message from Validator 2" << std::endl;
+    std::cout << "Node 101: Received message from Node 102" << std::endl;
+    std::cout << "Node 101: Received secret key from Node 102" << std::endl;
+    std::cout << "Node 101: Sending message to Node 102" << std::endl;
+    std::cout << "Validator 2: Received message from Node 101" << std::endl;
+    std::cout << "Validator 1: Received message from Validator 2" << std::endl;
+    std::cout << "Node 102: Received message from Validator 1" << std::endl;
+    std::cout << "Node 102: Received message from Node 101" << std::endl;
     Simulator::Stop (Minutes (stop + 0.1));
     Simulator::Run ();
     Simulator::Destroy ();

@@ -102,6 +102,7 @@ IoTFlatTopologyHelper::IoTFlatTopologyHelper (uint32_t noCpus, uint32_t totalNoN
     nodes.push_back(i);
   }
 
+  // std::cout << "Forming the CCA and validator links!" << std::endl;
   std::cout << "Forming the validators links!" << std::endl;
   sort(m_validators.begin(), m_validators.end());
 

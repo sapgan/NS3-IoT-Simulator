@@ -109,12 +109,12 @@ protected:
   void ScheduleNextMiningEvent (void);
 
   /**
-   * \brief Mines a new block and advertises it to its peers
+   * \brief Validates a new block and advertises it to its peers
    */
-  virtual void MineBlock (void);
+  virtual void ValidateBlock (void);
 
   /**
-   * \brief Called for blocks with better score(height). Removes m_nextMiningEvent and call MineBlock again.
+   * \brief Called for blocks with better score(height). Removes m_nextMiningEvent and call ValidateBlock again.
    * \param newBlock the new block which was received
    */
   virtual void ReceivedHigherBlock(const Block &newBlock);
