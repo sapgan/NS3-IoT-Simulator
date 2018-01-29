@@ -1,3 +1,11 @@
+  An IoT Simulator built for the NS3 which supports blockchain functionalities.
+
+  #Installation:
+    1) Install crypto++ library (install from standard repos or build it yourself)
+    2) Install python and python-dev packages (sudo apt-get install python python-dev libgcrypt20-dev).
+    3)  sudo apt-get install gdb valgrind gcc g++ python python-dev build-essential mercurial python-setuptools git qt4-dev-tools libqt4-dev cmake libc6-dev libc6-dev-i386 g++-multilib gsl-bin libgsl2 libgsl-dev sqlite sqlite3 libsqlite3-dev 
+    3) Enable CXXFLAGS="-std=c++11" ./waf configure --build-profile=optimized --out=build/optimized --with-pybindgen=/home/bitspleaz/sigsec/pybindgen/pybindgen-0.17.0.post41+ngd10fa60 --enable-mpi
+
 
     The Network Simulator, Version 3
     --------------------------------
@@ -18,7 +26,7 @@ http://www.nsnam.org
 -------------------------
 
 ns-3 is a free open source project aiming to build a discrete-event
-network simulator targeted for simulation research and education.   
+network simulator targeted for simulation research and education.
 This is a collaborative project; we hope that
 the missing pieces of the models we have not yet implemented
 will be contributed by the community in an open collaboration
@@ -44,14 +52,14 @@ use of these ns-3 libraries.
 
 To build the set of default libraries and the example
 programs included in this package, you need to use the
-tool 'waf'. Detailed information on how use waf is 
+tool 'waf'. Detailed information on how use waf is
 included in the file doc/build.txt
 
 However, the real quick and dirty way to get started is to
 type the command
   ./waf configure --enable-examples
 followed by
-  ./waf 
+  ./waf
 in the the directory which contains
 this README file. The files built will be copied in the
 build/ directory.
@@ -59,8 +67,8 @@ build/ directory.
 The current codebase is expected to build and run on the
 set of platforms listed in the RELEASE_NOTES file.
 
-Other platforms may or may not work: we welcome patches to 
-improve the portability of the code to these other platforms. 
+Other platforms may or may not work: we welcome patches to
+improve the portability of the code to these other platforms.
 
 3) Running ns-3
 ---------------
@@ -71,7 +79,7 @@ following command, such as:
 
   ./waf --run simple-global-routing
 
-That program should generate a simple-global-routing.tr text 
+That program should generate a simple-global-routing.tr text
 trace file and a set of simple-global-routing-xx-xx.pcap binary
 pcap trace files, which can be read by tcpdump -tt -r filename.pcap
 The program source can be found in the examples/routing directory.
@@ -82,7 +90,7 @@ The program source can be found in the examples/routing directory.
 Once you have verified that your build of ns-3 works by running
 the simple-point-to-point example as outlined in 4) above, it is
 quite likely that you will want to get started on reading
-some ns-3 documentation. 
+some ns-3 documentation.
 
 All of that documentation should always be available from
 the ns-3 website: http:://www.nsnam.org/documentation/.
@@ -90,7 +98,7 @@ the ns-3 website: http:://www.nsnam.org/documentation/.
 This documentation includes:
 
   - a tutorial
- 
+
   - a reference manual
 
   - models in the ns-3 model library
@@ -98,14 +106,14 @@ This documentation includes:
   - a wiki for user-contributed tips: http://www.nsnam.org/wiki/
 
   - API documentation generated using doxygen: this is
-    a reference manual, most likely not very well suited 
+    a reference manual, most likely not very well suited
     as introductory text:
     http://www.nsnam.org/doxygen/index.html
 
 5) Working with the development version of ns-3
 -----------------------------------------------
 
-If you want to download and use the development version 
+If you want to download and use the development version
 of ns-3, you need to use the tool 'mercurial'. A quick and
 dirty cheat sheet is included in doc/mercurial.txt but
 reading through the mercurial tutorials included on the
