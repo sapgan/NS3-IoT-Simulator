@@ -1,4 +1,5 @@
 build/*
+.waf*
 # Compiled source #
 ###################
 *.com
