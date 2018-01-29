@@ -1,5 +1,6 @@
 build/*
 .waf*
+.lock*
 # Compiled source #
 ###################
 *.com
@@ -8,6 +9,7 @@ build/*
 *.exe
 *.o
 *.so
+*.pyc
 
 # Packages #
 ############
