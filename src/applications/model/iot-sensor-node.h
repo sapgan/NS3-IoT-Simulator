@@ -18,9 +18,9 @@
 #include "../../rapidjson/writer.h"
 #include "../../rapidjson/stringbuffer.h"
 #include <random>
-#include <crypto++/rsa.h>
-#include <crypto++/aes.h>
-#include <crypto++/osrng.h>
+#include <cryptopp/rsa.h>
+#include <cryptopp/aes.h>
+#include <cryptopp/osrng.h>
 
 namespace ns3 {
 

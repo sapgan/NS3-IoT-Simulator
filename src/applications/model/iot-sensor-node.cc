@@ -30,12 +30,12 @@
  #include "blockchain.h"
  #include "ns3/boolean.h"
  #include "ns3/address-utils.h"
- #include <crypto++/rsa.h>
- #include <crypto++/aes.h>
- #include <crypto++/osrng.h>
- #include <crypto++/files.h>
- #include <crypto++/filters.h>
- #include <crypto++/modes.h>
+ #include <cryptopp/rsa.h>
+ #include <cryptopp/aes.h>
+ #include <cryptopp/osrng.h>
+ #include <cryptopp/files.h>
+ #include <cryptopp/filters.h>
+ #include <cryptopp/modes.h>
 
 namespace ns3 {
 
